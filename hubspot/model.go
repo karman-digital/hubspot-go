@@ -17,8 +17,8 @@ type credentials struct {
 type HubspotAPI interface {
 	RetrieveAccessToken() apptypes.AccessToken
 	RetrieveRefreshToken() apptypes.RefreshToken
-	SetAccessToken(accessToken string)
-	SetRefreshToken(refreshToken string)
+	SetAccessToken(accessToken string) error
+	SetRefreshToken(refreshToken string) error
 	RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error
 	ValidateBearerToken() (bool, error)
 }
