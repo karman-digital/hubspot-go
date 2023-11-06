@@ -1,12 +1,16 @@
 package hubspot
 
-import "fmt"
+import (
+	"fmt"
+
+	apptypes "github.com/karman-digital/hatch-shared/types"
+)
 
 func (c *credentials) SetAccessToken(accessToken string) error {
 	if accessToken == "" {
 		return fmt.Errorf("access token cannot be empty")
 	}
-	c.AccessToken = AccessToken(accessToken)
+	c.AccessToken = apptypes.AccessToken(accessToken)
 	return nil
 }
 
@@ -14,14 +18,14 @@ func (c *credentials) SetRefreshToken(refreshToken string) error {
 	if refreshToken == "" {
 		return fmt.Errorf("refresh token cannot be empty")
 	}
-	c.RefreshToken = RefreshToken(refreshToken)
+	c.RefreshToken = apptypes.RefreshToken(refreshToken)
 	return nil
 }
 
-func (c *credentials) RetrieveAccessToken() AccessToken {
+func (c *credentials) RetrieveAccessToken() apptypes.AccessToken {
 	return c.AccessToken
 }
 
-func (c *credentials) RetrieveRefreshToken() RefreshToken {
+func (c *credentials) RetrieveRefreshToken() apptypes.RefreshToken {
 	return c.RefreshToken
 }

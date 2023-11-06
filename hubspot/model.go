@@ -1,29 +1,24 @@
 package hubspot
 
-import "github.com/hashicorp/go-retryablehttp"
+import (
+	"github.com/hashicorp/go-retryablehttp"
+	apptypes "github.com/karman-digital/hatch-shared/types"
+)
 
 type AccessToken string
 type RefreshToken string
 
 type credentials struct {
 	Client       *retryablehttp.Client
-	AccessToken  AccessToken
-	RefreshToken RefreshToken
+	AccessToken  apptypes.AccessToken
+	RefreshToken apptypes.RefreshToken
 }
 
 type HubspotAPI interface {
-	RetrieveAccessToken() AccessToken
-	RetrieveRefreshToken() RefreshToken
+	RetrieveAccessToken() apptypes.AccessToken
+	RetrieveRefreshToken() apptypes.RefreshToken
 	SetAccessToken(accessToken string)
 	SetRefreshToken(refreshToken string)
 	RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error
 	ValidateBearerToken() (bool, error)
-}
-
-func (r RefreshToken) String() string {
-	return string(r)
-}
-
-func (a AccessToken) String() string {
-	return string(a)
 }
