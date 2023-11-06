@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/karman-digital/hubspot/hubspot/models"
+	hubspotmodels "github.com/karman-digital/hubspot/hubspot/models"
 )
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
-	tokenBody := models.TokenBody{}
+	tokenBody := hubspotmodels.TokenBody{}
 	client := &http.Client{}
 
 	data := url.Values{

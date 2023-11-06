@@ -1,4 +1,4 @@
-package models
+package hubspotmodels
 
 type Payload struct {
 	ObjectID         int    `json:"objectId"`
