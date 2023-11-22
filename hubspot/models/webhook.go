@@ -14,3 +14,11 @@ type Payload struct {
 	AttemptNumber    int    `json:"attemptNumber"`
 	SourceId         string `json:"sourceId,omitempty"`
 }
+
+type AccountDataPayload struct {
+	ActionType string `json:"actionType"`
+	PortalId   string `json:"portalId"`
+	UserId     string `json:"userId"`
+	UserEmail  string `json:"userEmail"`
+	AppId      string `json:"appId"`
+}
