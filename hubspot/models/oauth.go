@@ -1,4 +1,4 @@
-package hubspotmodels
+package models
 
 type TokenBody struct {
 	AccessToken  string `json:"access_token"`

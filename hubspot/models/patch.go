@@ -1,4 +1,4 @@
-package hubspotmodels
+package models
 
 type PatchBody struct {
 	Properties Properties `json:"properties"`

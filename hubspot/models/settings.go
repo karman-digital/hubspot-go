@@ -1,4 +1,4 @@
-package hubspotmodels
+package models
 
 type AccountDataResponse struct {
 	Response AccountsResponse `json:"response"`

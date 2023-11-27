@@ -6,11 +6,11 @@ import (
 	"io"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/models"
+	"github.com/karman-digital/hubspot/hubspot/models"
 )
 
-func (c *credentials) UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error) {
-	var contactResp hubspotmodels.ContactResponse
+func (c *credentials) UpdateContact(id int, patchBody models.PatchBody) (models.ContactResponse, error) {
+	var contactResp models.ContactResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/contacts/%d", id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
