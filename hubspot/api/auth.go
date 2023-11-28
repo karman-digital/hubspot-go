@@ -8,10 +8,13 @@ import (
 	"net/url"
 	"strings"
 
+	apptypes "github.com/karman-digital/hatch-shared/types"
 	"github.com/karman-digital/hubspot/hubspot/models"
 )
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
+	var accessToken apptypes.AccessToken
+	var refreshToken apptypes.RefreshToken
 	tokenBody := models.TokenBody{}
 	client := &http.Client{}
 
@@ -45,9 +48,10 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 	if err != nil {
 		return fmt.Errorf("error parsing body: %s", err)
 	}
-	c.SetAccessToken(tokenBody.AccessToken)
-	c.SetRefreshToken(tokenBody.RefreshToken)
-
+	accessToken.Set(tokenBody.AccessToken)
+	refreshToken.Set(tokenBody.RefreshToken)
+	c.SetAccessToken(accessToken)
+	c.SetRefreshToken(refreshToken)
 	return nil
 }
 

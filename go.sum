@@ -14,6 +14,8 @@ github.com/karman-digital/hatch-shared v0.0.0-20231103084719-87f02864929d h1:/BI
 github.com/karman-digital/hatch-shared v0.0.0-20231103084719-87f02864929d/go.mod h1:wpVmtzzwoJ4+2w7RlSThVosCaU7pxBqD40Pu3iZiT0A=
 github.com/karman-digital/hatch-shared v0.0.0-20231122131906-5fa356b4db12 h1:UheqWCfLIXjhMyljlzQqShGiKmc33v0LGoddaFJrM28=
 github.com/karman-digital/hatch-shared v0.0.0-20231122131906-5fa356b4db12/go.mod h1:wpVmtzzwoJ4+2w7RlSThVosCaU7pxBqD40Pu3iZiT0A=
+github.com/karman-digital/hatch-shared v0.0.0-20231128172512-343be475c011 h1:Q6fvepbEk9LAwitoiUIpZUvaMxwTge0mO36JftSUK4I=
+github.com/karman-digital/hatch-shared v0.0.0-20231128172512-343be475c011/go.mod h1:QSiA5IT+PkAokDZreSrWItJX0DD8B5LTy/9h2D43ToM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
