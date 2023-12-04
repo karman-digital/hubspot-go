@@ -3,11 +3,8 @@ package hubspot
 import (
 	"github.com/hashicorp/go-retryablehttp"
 	apptypes "github.com/karman-digital/hatch-shared/types"
-	"github.com/karman-digital/hubspot/hubspot/models"
+	"github.com/karman-digital/hubspot/hubspot/api/models"
 )
-
-type AccessToken string
-type RefreshToken string
 
 type credentials struct {
 	Client       *retryablehttp.Client
