@@ -2,8 +2,8 @@ package hubspot
 
 import (
 	"github.com/hashicorp/go-retryablehttp"
-	apptypes "github.com/karman-digital/hatch-shared/types"
 	"github.com/karman-digital/hubspot/hubspot/api/models"
+	apptypes "github.com/karman-digital/integrations/types"
 )
 
 type credentials struct {

@@ -1,7 +1,7 @@
 package hubspot
 
 import (
-	apptypes "github.com/karman-digital/hatch-shared/types"
+	apptypes "github.com/karman-digital/integrations/types"
 )
 
 func (c *credentials) SetAccessToken(accessToken apptypes.AccessToken) {
