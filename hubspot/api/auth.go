@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"strings"
 
-	apptypes "github.com/karman-digital/hatch-shared/types"
-	"github.com/karman-digital/hubspot/hubspot/models"
+	"github.com/karman-digital/hubspot/hubspot/api/models"
+	apptypes "github.com/karman-digital/integrations/types"
 )
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {

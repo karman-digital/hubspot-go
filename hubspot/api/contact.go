@@ -6,7 +6,7 @@ import (
 	"io"
 
 	"github.com/hashicorp/go-retryablehttp"
-	"github.com/karman-digital/hubspot/hubspot/models"
+	"github.com/karman-digital/hubspot/hubspot/api/models"
 )
 
 func (c *credentials) UpdateContact(id int, patchBody models.PatchBody) (models.ContactResponse, error) {
