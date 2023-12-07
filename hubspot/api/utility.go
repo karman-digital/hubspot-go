@@ -19,3 +19,11 @@ func (c *credentials) RetrieveAccessToken() apptypes.AccessToken {
 func (c *credentials) RetrieveRefreshToken() apptypes.RefreshToken {
 	return c.RefreshToken
 }
+
+func (c *credentials) RetrievePortalId() apptypes.AppId {
+	return c.PortalId
+}
+
+func (c *credentials) SetPortalId(portalId apptypes.AppId) {
+	c.PortalId = portalId
+}
