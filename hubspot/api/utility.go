@@ -20,10 +20,10 @@ func (c *credentials) RetrieveRefreshToken() apptypes.RefreshToken {
 	return c.RefreshToken
 }
 
-func (c *credentials) RetrievePortalId() apptypes.AppId {
+func (c *credentials) RetrievePortalId() apptypes.PortalId {
 	return c.PortalId
 }
 
-func (c *credentials) SetPortalId(portalId apptypes.AppId) {
+func (c *credentials) SetPortalId(portalId apptypes.PortalId) {
 	c.PortalId = portalId
 }
