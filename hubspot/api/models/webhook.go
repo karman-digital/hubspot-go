@@ -1,4 +1,4 @@
-package husbpotmodels
+package hubspotmodels
 
 import apptypes "github.com/karman-digital/hatch-shared/types"
 

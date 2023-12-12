@@ -2,7 +2,7 @@ package hubspot
 
 import (
 	"github.com/hashicorp/go-retryablehttp"
-	husbpotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 	apptypes "github.com/karman-digital/integrations/types"
 )
 
@@ -22,7 +22,7 @@ type HubspotAPI interface {
 	SetPortalId(portalId apptypes.PortalId)
 	RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error
 	ValidateBearerToken() (bool, error)
-	UpdateContact(id int, patchBody husbpotmodels.PatchBody) (husbpotmodels.ContactResponse, error)
-	BatchCreateContact(body []husbpotmodels.PostBody) (husbpotmodels.BatchContactResponse, error)
-	CreateContact(body husbpotmodels.PostBody) (husbpotmodels.ContactResponse, error)
+	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error)
+	BatchCreateContact(body []hubspotmodels.PostBody) (hubspotmodels.BatchContactResponse, error)
+	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
 }

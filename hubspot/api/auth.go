@@ -8,14 +8,14 @@ import (
 	"net/url"
 	"strings"
 
-	husbpotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 	apptypes "github.com/karman-digital/integrations/types"
 )
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
 	var accessToken apptypes.AccessToken
 	var refreshToken apptypes.RefreshToken
-	tokenBody := husbpotmodels.TokenBody{}
+	tokenBody := hubspotmodels.TokenBody{}
 	client := &http.Client{}
 
 	data := url.Values{

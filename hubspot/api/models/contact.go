@@ -1,4 +1,4 @@
-package husbpotmodels
+package hubspotmodels
 
 import "time"
 
