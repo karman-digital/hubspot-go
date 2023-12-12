@@ -41,8 +41,8 @@ func (c *credentials) CreateContact(body models.PostBody) (models.ContactRespons
 	return contactResp, nil
 }
 
-func (c *credentials) BatchCreateContact(body []models.PostBody) ([]models.ContactResponse, error) {
-	var contactResp []models.ContactResponse
+func (c *credentials) BatchCreateContact(body []models.PostBody) (models.BatchContactResponse, error) {
+	var contactResp models.BatchContactResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/contacts/batch/create"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
