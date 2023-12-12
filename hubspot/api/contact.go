@@ -6,11 +6,11 @@ import (
 	"io"
 
 	"github.com/hashicorp/go-retryablehttp"
-	"github.com/karman-digital/hubspot/hubspot/api/models"
+	husbpotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 )
 
-func (c *credentials) CreateContact(body models.PostBody) (models.ContactResponse, error) {
-	var contactResp models.ContactResponse
+func (c *credentials) CreateContact(body husbpotmodels.PostBody) (husbpotmodels.ContactResponse, error) {
+	var contactResp husbpotmodels.ContactResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/contacts"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -41,8 +41,8 @@ func (c *credentials) CreateContact(body models.PostBody) (models.ContactRespons
 	return contactResp, nil
 }
 
-func (c *credentials) BatchCreateContact(body []models.PostBody) (models.BatchContactResponse, error) {
-	var contactResp models.BatchContactResponse
+func (c *credentials) BatchCreateContact(body []husbpotmodels.PostBody) (husbpotmodels.BatchContactResponse, error) {
+	var contactResp husbpotmodels.BatchContactResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/contacts/batch/create"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -73,8 +73,8 @@ func (c *credentials) BatchCreateContact(body []models.PostBody) (models.BatchCo
 	return contactResp, nil
 }
 
-func (c *credentials) UpdateContact(id int, patchBody models.PatchBody) (models.ContactResponse, error) {
-	var contactResp models.ContactResponse
+func (c *credentials) UpdateContact(id int, patchBody husbpotmodels.PatchBody) (husbpotmodels.ContactResponse, error) {
+	var contactResp husbpotmodels.ContactResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/contacts/%d", id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {

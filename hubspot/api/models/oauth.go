@@ -1,4 +1,4 @@
-package models
+package husbpotmodels
 
 type TokenBody struct {
 	AccessToken  string `json:"access_token"`

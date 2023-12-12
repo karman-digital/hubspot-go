@@ -1,4 +1,4 @@
-package models
+package husbpotmodels
 
 type PatchBody struct {
 	Properties Properties `json:"properties"`
