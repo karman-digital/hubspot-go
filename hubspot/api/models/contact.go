@@ -12,10 +12,12 @@ type ContactResponse struct {
 
 type BatchContactResponse struct {
 	CompletedAt time.Time         `json:"completedAt"`
+	NumErrors   int               `json:"numErrors"`
 	RequestedAt time.Time         `json:"requestedAt"`
 	StartedAt   time.Time         `json:"startedAt"`
 	Links       map[string]string `json:"links"`
 	Results     []Result          `json:"results"`
+	Errors      []ErrorDetail     `json:"errors"`
 	Status      string            `json:"status"`
 }
 
@@ -25,4 +27,23 @@ type Result struct {
 	CreatedAt  time.Time  `json:"createdAt"`
 	UpdatedAt  time.Time  `json:"updatedAt"`
 	Archived   bool       `json:"archived"`
+}
+
+type ErrorDetail struct {
+	SubCategory map[string]interface{} `json:"subCategory"`
+	Context     map[string][]string    `json:"context"`
+	Links       map[string]string      `json:"links"`
+	ID          string                 `json:"id"`
+	Category    string                 `json:"category"`
+	Message     string                 `json:"message"`
+	Errors      []NestedError          `json:"errors"`
+	Status      string                 `json:"status"`
+}
+
+type NestedError struct {
+	SubCategory string              `json:"subCategory"`
+	Code        string              `json:"code"`
+	In          string              `json:"in"`
+	Context     map[string][]string `json:"context"`
+	Message     string              `json:"message"`
 }
