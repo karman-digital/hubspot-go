@@ -10,7 +10,7 @@ type ContactResponse struct {
 	Archived   bool           `json:"archived"`
 }
 
-type BatchContactResponse struct {
+type BatchResponse struct {
 	CompletedAt time.Time         `json:"completedAt"`
 	NumErrors   int               `json:"numErrors"`
 	RequestedAt time.Time         `json:"requestedAt"`

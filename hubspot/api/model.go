@@ -23,7 +23,7 @@ type HubspotAPI interface {
 	RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error
 	ValidateBearerToken() (bool, error)
 	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error)
-	BatchCreateContact(body []hubspotmodels.PostBody) (hubspotmodels.BatchContactResponse, error)
+	BatchCreateContact(body []hubspotmodels.PostBody) (hubspotmodels.BatchResponse, error)
 	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
 	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 }
