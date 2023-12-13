@@ -25,4 +25,5 @@ type HubspotAPI interface {
 	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error)
 	BatchCreateContact(body []hubspotmodels.PostBody) (hubspotmodels.BatchContactResponse, error)
 	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
+	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 }
