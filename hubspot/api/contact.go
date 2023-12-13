@@ -103,12 +103,20 @@ func (c *credentials) BatchGetContacts(body hubspotmodels.BatchGetBody) (hubspot
 	if err != nil {
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 200 {
-		return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
+	if resp.StatusCode != 201 && resp.StatusCode != 207 {
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(contactRawBody, &errorResp)
+		if err != nil {
+			return contactResp, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return contactResp, handleBatchResponseCodes(errorResp, resp.StatusCode)
 	}
 	err = json.Unmarshal(contactRawBody, &contactResp)
 	if err != nil {
 		return contactResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	if resp.StatusCode == 207 {
+		return contactResp, ErrBatchCreate
 	}
 	return contactResp, nil
 }
