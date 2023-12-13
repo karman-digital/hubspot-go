@@ -45,6 +45,6 @@ func handleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusC
 		fmt.Printf("object already exists: %s", errorResp.Message)
 		return ErrObjectAlreadyExists
 	default:
-		return ErrBatchCreate
+		return ErrApiCall
 	}
 }
