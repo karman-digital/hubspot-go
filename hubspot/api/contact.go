@@ -103,7 +103,7 @@ func (c *credentials) BatchGetContacts(body hubspotmodels.BatchGetBody) (hubspot
 	if err != nil {
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 201 && resp.StatusCode != 207 {
+	if resp.StatusCode != 200 && resp.StatusCode != 207 {
 		var errorResp hubspotmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
