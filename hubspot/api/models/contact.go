@@ -25,6 +25,10 @@ type BatchUpdateBody struct {
 	Inputs []BatchUpdateInput `json:"inputs"`
 }
 
+type BatchCreateBody struct {
+	Inputs []PostBody `json:"inputs"`
+}
+
 type BatchUpdateInput struct {
 	Id         string         `json:"id"`
 	Properties map[string]any `json:"properties"`
