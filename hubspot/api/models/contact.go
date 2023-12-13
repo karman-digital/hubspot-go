@@ -21,6 +21,15 @@ type BatchContactResponse struct {
 	Status      string            `json:"status"`
 }
 
+type BatchUpdateBody struct {
+	Inputs []BatchUpdateInput `json:"inputs"`
+}
+
+type BatchUpdateInput struct {
+	Id         string         `json:"id"`
+	Properties map[string]any `json:"properties"`
+}
+
 type Result struct {
 	ID         string     `json:"id"`
 	Properties Properties `json:"properties"`
@@ -46,4 +55,15 @@ type NestedError struct {
 	In          string              `json:"in"`
 	Context     map[string][]string `json:"context"`
 	Message     string              `json:"message"`
+}
+
+type BatchGetBody struct {
+	PropertiesWithHistory []string        `json:"propertiesWithHistory,omitempty"`
+	IDProperty            string          `json:"idProperty,omitempty"`
+	Inputs                []BatchGetInput `json:"inputs,omitempty"`
+	Properties            []string        `json:"properties,omitempty"`
+}
+
+type BatchGetInput struct {
+	ID string `json:"id,omitempty"`
 }
