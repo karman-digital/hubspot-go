@@ -29,3 +29,10 @@ type HubspotAPI interface {
 	BatchGetContacts(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error)
 	BatchUpdateContacts(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error)
 }
+
+type HubspotObject string
+
+var Contact = HubspotObject("contacts")
+var Company = HubspotObject("companies")
+var Deal = HubspotObject("deals")
+var Ticket = HubspotObject("tickets")
