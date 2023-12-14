@@ -34,7 +34,16 @@ type HubspotAPI interface {
 
 type HubspotObject string
 
-var Contact = HubspotObject("contacts")
-var Company = HubspotObject("companies")
-var Deal = HubspotObject("deals")
-var Ticket = HubspotObject("tickets")
+type hubspotDefaultObjects struct {
+	Contact HubspotObject
+	Company HubspotObject
+	Deal    HubspotObject
+	Ticket  HubspotObject
+}
+
+var DefaultObjects = hubspotDefaultObjects{
+	Contact: "contacts",
+	Company: "companies",
+	Deal:    "deals",
+	Ticket:  "tickets",
+}
