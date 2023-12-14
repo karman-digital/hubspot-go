@@ -38,7 +38,7 @@ func (c *credentials) CreateDefaultAssociation(fromObject, toObject string, from
 	return associationResp, nil
 }
 
-func (c *credentials) BatchCreateDefaultAssociations(fromObject, toObject string, associations []hubspotmodels.BatchCreateDefaultAssociationsBody) (hubspotmodels.BatchResponse, error) {
+func (c *credentials) BatchCreateDefaultAssociations(fromObject, toObject string, associations hubspotmodels.BatchCreateDefaultAssociationsBody) (hubspotmodels.BatchResponse, error) {
 	var associationResp hubspotmodels.BatchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/associate/default", fromObject, toObject)
 	reqBody, err := json.Marshal(associations)
