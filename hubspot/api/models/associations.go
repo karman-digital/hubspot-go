@@ -12,3 +12,17 @@ type AssociationId struct {
 type BatchCreateDefaultAssociationsBody struct {
 	Inputs []AssociationPair `json:"inputs"`
 }
+
+type BatchCreateAssociationBody struct {
+	Inputs []BatchCreateAssociationInput `json:"inputs"`
+}
+
+type BatchCreateAssociationInput struct {
+	Types []AssociationType `json:"types"`
+	AssociationPair
+}
+
+type AssociationType struct {
+	AssociationCategory string `json:"associationCategory"`
+	AssociationTypeId   int    `json:"associationTypeId"`
+}
