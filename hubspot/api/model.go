@@ -35,10 +35,10 @@ type HubspotAPI interface {
 type HubspotObject string
 
 type hubspotDefaultObjects struct {
-	Contact HubspotObject
-	Company HubspotObject
-	Deal    HubspotObject
-	Ticket  HubspotObject
+	Contact string
+	Company string
+	Deal    string
+	Ticket  string
 }
 
 var DefaultObjectNames = hubspotDefaultObjects{
