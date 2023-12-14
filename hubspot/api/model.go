@@ -41,7 +41,7 @@ type hubspotDefaultObjects struct {
 	Ticket  HubspotObject
 }
 
-var DefaultObjects = hubspotDefaultObjects{
+var DefaultObjectNames = hubspotDefaultObjects{
 	Contact: "contacts",
 	Company: "companies",
 	Deal:    "deals",
