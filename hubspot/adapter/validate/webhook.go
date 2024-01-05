@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"hash"
 	"math"
-	"net/url"
 	"strconv"
 	"time"
 )
@@ -25,11 +24,7 @@ func ValidateWebhookSignature(secret []byte, host string, urlPath string, timest
 			}
 			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, JSONString, timestamp)
 		} else {
-			formDataString, err := toFormDataString(body)
-			if err != nil {
-				return err
-			}
-			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, formDataString, timestamp)
+			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, string(body), timestamp)
 		}
 	} else {
 		checkSum = fmt.Sprintf("%shttps://%s%s%s", method, host, urlPath, timestamp)
@@ -58,15 +53,6 @@ func toCompactJSONString(input []byte) (string, error) {
 func isJSON(input []byte) bool {
 	var js json.RawMessage
 	return json.Unmarshal(input, &js) == nil
-}
-
-func toFormDataString(input []byte) (string, error) {
-	data, err := url.ParseQuery(string(input))
-	if err != nil {
-		return "", err
-	}
-	fmt.Println(data.Encode())
-	return data.Encode(), nil
 }
 
 func ValidateTimeStamp(timestamp string) error {
