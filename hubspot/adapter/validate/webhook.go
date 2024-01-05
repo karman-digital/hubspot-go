@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"hash"
 	"math"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -17,11 +18,19 @@ import (
 func ValidateWebhookSignature(secret []byte, host string, urlPath string, timestamp string, method string, signature string, body []byte) error {
 	checkSum := ""
 	if method == "POST" {
-		JSONString, err := toCompactJSONString(body)
-		if err != nil {
-			return err
+		if isJSON(body) {
+			JSONString, err := toCompactJSONString(body)
+			if err != nil {
+				return err
+			}
+			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, JSONString, timestamp)
+		} else {
+			formDataString, err := toFormDataString(body)
+			if err != nil {
+				return err
+			}
+			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, formDataString, timestamp)
 		}
-		checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, JSONString, timestamp)
 	} else {
 		checkSum = fmt.Sprintf("%shttps://%s%s%s", method, host, urlPath, timestamp)
 	}
@@ -44,6 +53,20 @@ func toCompactJSONString(input []byte) (string, error) {
 		return "", err
 	}
 	return buffer.String(), nil
+}
+
+func isJSON(input []byte) bool {
+	var js json.RawMessage
+	return json.Unmarshal(input, &js) == nil
+}
+
+func toFormDataString(input []byte) (string, error) {
+	data, err := url.ParseQuery(string(input))
+	if err != nil {
+		return "", err
+	}
+	fmt.Println(data.Encode())
+	return data.Encode(), nil
 }
 
 func ValidateTimeStamp(timestamp string) error {

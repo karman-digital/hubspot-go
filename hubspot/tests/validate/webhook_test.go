@@ -55,6 +55,17 @@ var hubspotWebhookSignatureTests = []hubspotWebhookSignatureTest{
 		body:      nil,
 		want:      nil,
 	},
+	{
+		name:      "Valid Post url encoded form body",
+		secret:    []byte("secret"),
+		host:      "www.example.com",
+		urlPath:   "/webhook",
+		timestamp: "123456789",
+		method:    "POST",
+		signature: "Gu/2MwEt0G0rb90ZDBpPtGR/xxT2a/n09buSowOaVWg=",
+		body:      []byte(`test=test&test2=test2`),
+		want:      nil,
+	},
 }
 
 func TestValidateHubspotPostWebhookSignature(t *testing.T) {
