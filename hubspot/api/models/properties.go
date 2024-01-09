@@ -19,3 +19,7 @@ type EnumerationOptions struct {
 	Value  string `json:"value"`
 	Hidden bool   `json:"hidden"`
 }
+
+type PropertyOptions struct {
+	Options []EnumerationOptions `json:"options"`
+}
