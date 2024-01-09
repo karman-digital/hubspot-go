@@ -30,6 +30,8 @@ type HubspotAPI interface {
 	BatchUpdateContacts(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error)
 	CreateDefaultAssociation(fromObject, toObject string, fromId, toId int) (hubspotmodels.BatchResponse, error)
 	BatchCreateDefaultAssociations(fromObject, toObject string, associations hubspotmodels.BatchCreateDefaultAssociationsBody) (hubspotmodels.BatchResponse, error)
+	CreatePropertyGroup(propertyGroup hubspotmodels.PropertyGroupBody, objectType string) error
+	CreateProperty(objectType string, propertyData hubspotmodels.PropertyBody) error
 }
 
 type HubspotObject string
