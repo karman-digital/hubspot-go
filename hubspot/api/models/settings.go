@@ -12,3 +12,17 @@ type Account struct {
 	AccountId   string `json:"accountId"`
 	AccountName string `json:"accountName"`
 }
+
+type SettingsDropdownResponse struct {
+	Response SettingsDropdownOptions `json:"response"`
+}
+
+type SettingsDropdownOptions struct {
+	Options        []SettingsDropdown `json:"options"`
+	SelectedOption string             `json:"selectedOption"`
+}
+
+type SettingsDropdown struct {
+	Text  string `json:"text"`
+	Value string `json:"value"`
+}
