@@ -32,6 +32,7 @@ type HubspotAPI interface {
 	BatchCreateDefaultAssociations(fromObject, toObject string, associations hubspotmodels.BatchCreateDefaultAssociationsBody) (hubspotmodels.BatchResponse, error)
 	CreatePropertyGroup(propertyGroup hubspotmodels.PropertyGroupBody, objectType string) error
 	CreateProperty(objectType string, propertyData hubspotmodels.PropertyBody) error
+	GetOwner(id int) (hubspotmodels.Owner, error)
 }
 
 type HubspotObject string

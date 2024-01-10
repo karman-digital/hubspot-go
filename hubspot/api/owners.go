@@ -47,3 +47,34 @@ func (c *credentials) GetOwners(after ...string) (hubspotmodels.OwnerResponse, e
 	}
 	return ownerResponse, nil
 }
+
+func (c *credentials) GetOwner(id int) (hubspotmodels.Owner, error) {
+	owner := hubspotmodels.Owner{}
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/owners/%d", id)
+	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
+	if err != nil {
+		return owner, err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	req.Header.Set("Content-Type", "application/json")
+	client := retryablehttp.NewClient()
+	resp, err := client.Do(req)
+	if err != nil {
+		return owner, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return owner, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		err = fmt.Errorf("error making http get request returned code: %d \n with body %v", resp.StatusCode, string(body))
+		return owner, err
+	}
+	err = json.Unmarshal(body, &owner)
+	if err != nil {
+		return owner, err
+	}
+	return owner, nil
+}
