@@ -36,3 +36,13 @@ type SettingsActionPayload struct {
 	AccountId      string `json:"accountId"`
 	SelectedOption string `json:"selectedOption"`
 }
+
+type SettingsActionDropdownResponse struct {
+	Response SettingsActionDropdownOptions `json:"response"`
+}
+
+type SettingsActionDropdownOptions struct {
+	ActionType     string `json:"actionType"`
+	SelectedOption string `json:"selectedOption"`
+	Message        string `json:"message"`
+}

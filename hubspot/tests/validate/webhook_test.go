@@ -66,6 +66,17 @@ var hubspotWebhookSignatureTests = []hubspotWebhookSignatureTest{
 		body:      []byte(`test=test&test2=test2`),
 		want:      nil,
 	},
+	{
+		name:      "Valid Post url encoded form body with special characters",
+		secret:    []byte("secret"),
+		host:      "www.example.com",
+		urlPath:   "/webhook",
+		timestamp: "123456789",
+		method:    "POST",
+		signature: "Wj314GEOIaSBzVQqfpL7O+xo074sa1pPfhasCgr1RFI=",
+		body:      []byte(`{"actionType":"DROPDOWN_UPDATE","portalId":"139569339","userId":"25057815","userEmail":"jaime@clients-first.co.uk","appId":"1670746","accountId":"81","selectedOption":"3"}`),
+		want:      nil,
+	},
 }
 
 func TestValidateHubspotPostWebhookSignature(t *testing.T) {
