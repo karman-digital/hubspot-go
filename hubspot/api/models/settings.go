@@ -26,3 +26,13 @@ type SettingsDropdown struct {
 	Text  string `json:"text"`
 	Value string `json:"value"`
 }
+
+type SettingsActionPayload struct {
+	ActionType     string `json:"actionType"`
+	PortalId       string `json:"portalId"`
+	UserId         string `json:"userId"`
+	UserEmail      string `json:"userEmail"`
+	AppId          string `json:"appId"`
+	AccountId      string `json:"accountId"`
+	SelectedOption string `json:"selectedOption"`
+}
