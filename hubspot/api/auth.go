@@ -84,8 +84,6 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 	if err != nil {
 		return fmt.Errorf("error parsing body: %s", err)
 	}
-	accessToken.Set(tokenBody.AccessToken)
-	refreshToken.Set(tokenBody.RefreshToken)
 	c.SetAccessToken(accessToken)
 	c.SetRefreshToken(refreshToken)
 	return nil
@@ -100,4 +98,23 @@ func (c *credentials) ValidateBearerToken() (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func GetBearerTokenData(bearerToken string) (hubspotmodels.BearerTokenBody, error) {
+	resBodyStruct := hubspotmodels.BearerTokenBody{}
+
+	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", bearerToken))
+	if err != nil {
+		return resBodyStruct, err
+	}
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return resBodyStruct, err
+	}
+	if res.StatusCode != 200 {
+		return resBodyStruct, errors.New(string(resBody))
+	}
+	json.Unmarshal(resBody, &resBodyStruct)
+
+	return resBodyStruct, nil
 }
