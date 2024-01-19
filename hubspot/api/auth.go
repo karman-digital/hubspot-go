@@ -2,15 +2,51 @@ package hubspot
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 	apptypes "github.com/karman-digital/integrations/types"
 )
+
+func GenerateTokenPair(code string, clientId string, clientSecret string, redirectURI string) (hubspotmodels.TokenBody, error) {
+	resBodyStruct := hubspotmodels.TokenBody{}
+	data := url.Values{}
+	data.Set("grant_type", "authorization_code")
+	data.Set("code", code)
+	data.Set("client_id", clientId)
+	data.Set("client_secret", clientSecret)
+	data.Set("redirect_uri", redirectURI)
+	req, err := http.NewRequest(http.MethodPost, "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
+	if err != nil {
+		return resBodyStruct, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := http.Client{
+		Timeout: 30 * time.Second,
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return resBodyStruct, err
+	}
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return resBodyStruct, err
+	}
+	if res.StatusCode != 200 {
+		return resBodyStruct, errors.New(string(resBody))
+	}
+	err = json.Unmarshal(resBody, &resBodyStruct)
+	if err != nil {
+		return resBodyStruct, err
+	}
+	return resBodyStruct, nil
+}
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
 	var accessToken apptypes.AccessToken
