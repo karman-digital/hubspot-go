@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
-	apptypes "github.com/karman-digital/integrations/types"
 )
 
 func GenerateTokenPair(code string, clientId string, clientSecret string, redirectURI string) (hubspotmodels.TokenBody, error) {
@@ -49,10 +49,7 @@ func GenerateTokenPair(code string, clientId string, clientSecret string, redire
 }
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
-	var accessToken apptypes.AccessToken
-	var refreshToken apptypes.RefreshToken
 	tokenBody := hubspotmodels.TokenBody{}
-	client := &http.Client{}
 
 	data := url.Values{
 		"grant_type":    []string{"refresh_token"},
@@ -62,13 +59,13 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 		"refresh_token": []string{c.RefreshToken.String()},
 	}
 
-	req, err := http.NewRequest("POST", "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
+	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %s", err)
 	}
@@ -84,8 +81,8 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 	if err != nil {
 		return fmt.Errorf("error parsing body: %s", err)
 	}
-	c.SetAccessToken(accessToken)
-	c.SetRefreshToken(refreshToken)
+	c.SetAccessToken(tokenBody.AccessToken)
+	c.SetRefreshToken(tokenBody.RefreshToken)
 	return nil
 }
 
