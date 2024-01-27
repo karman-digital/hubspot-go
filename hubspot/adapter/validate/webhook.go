@@ -63,7 +63,7 @@ func ValidateTimeStamp(timestamp string) error {
 	timeUnix := time.Unix(int64(math.Round(float64(timestampInt/1000))), 0)
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
 	if timeUnix.Before(fiveMinutesAgo) {
-		return ErrTimestampTooOld
+		return ErrTimestampExpired
 	} else if timeUnix.After(time.Now()) {
 		return ErrTimestampInvalid
 	}
