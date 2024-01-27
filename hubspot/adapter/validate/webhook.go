@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"hash"
 	"math"
@@ -31,7 +30,8 @@ func ValidateWebhookSignature(secret []byte, host string, urlPath string, timest
 	}
 	hash := encrypt(secret, checkSum)
 	if base64.StdEncoding.EncodeToString(hash.Sum(nil)) != signature {
-		return fmt.Errorf("signatures mismatched sent: %s, generated: %s", signature, base64.StdEncoding.EncodeToString(hash.Sum(nil)))
+		fmt.Printf("signatures mismatched sent: %s, generated: %s", signature, base64.StdEncoding.EncodeToString(hash.Sum(nil)))
+		return ErrMismatchedSignatures
 	}
 	return nil
 }
@@ -58,14 +58,14 @@ func isJSON(input []byte) bool {
 func ValidateTimeStamp(timestamp string) error {
 	timestampInt, err := strconv.ParseInt(timestamp, 10, 64)
 	if err != nil {
-		return errors.New("could not parse timestamp")
+		return ErrTimestampInvalid
 	}
 	timeUnix := time.Unix(int64(math.Round(float64(timestampInt/1000))), 0)
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
 	if timeUnix.Before(fiveMinutesAgo) {
-		return errors.New("timestamp more than 5 minutes ago")
+		return ErrTimestampTooOld
 	} else if timeUnix.After(time.Now()) {
-		return errors.New("timestamp is in the future")
+		return ErrTimestampInvalid
 	}
 	return nil
 }
