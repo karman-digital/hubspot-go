@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
@@ -206,6 +207,56 @@ func (c *credentials) SearchContacts(body hubspotmodels.SearchBody) (hubspotmode
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	resp, err := c.Client.Do(req)
+	if err != nil {
+		return contactResp, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	contactRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return contactResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 {
+		return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
+	}
+	err = json.Unmarshal(contactRawBody, &contactResp)
+	if err != nil {
+		return contactResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return contactResp, nil
+}
+
+func (c *credentials) GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.ContactResponse, error) {
+	var contactResp hubspotmodels.ContactResponse
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/contacts/%d", id)
+	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
+	if err != nil {
+		return contactResp, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	queryParams := url.Values{}
+	if len(opts) != 0 {
+		if len(opts[0].Properties) != 0 {
+			for _, property := range opts[0].Properties {
+				queryParams.Add("properties", property)
+			}
+		}
+		if len(opts[0].PropertiesWithHistory) != 0 {
+			for _, property := range opts[0].PropertiesWithHistory {
+				queryParams.Add("propertiesWithHistory", property)
+			}
+		}
+		if len(opts[0].Associations) != 0 {
+			for _, association := range opts[0].Associations {
+				queryParams.Add("associations", association)
+			}
+		}
+		if opts[0].Archived {
+			queryParams.Add("archived", "true")
+		}
+	}
+	req.URL.RawQuery = queryParams.Encode()
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return contactResp, fmt.Errorf("error making request: %s", err)
