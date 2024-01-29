@@ -226,8 +226,8 @@ func (c *credentials) SearchContacts(body hubspotmodels.SearchBody) (hubspotmode
 	return contactResp, nil
 }
 
-func (c *credentials) GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.ContactResponse, error) {
-	var contactResp hubspotmodels.ContactResponse
+func (c *credentials) GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.Result, error) {
+	var contactResp hubspotmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/contacts/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
