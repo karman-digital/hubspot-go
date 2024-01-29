@@ -35,6 +35,7 @@ type HubspotAPI interface {
 	GetOwner(id int) (hubspotmodels.Owner, error)
 	GetProperty(ObjectType string, PropertyName string) (hubspotmodels.PropertyResponse, error)
 	UpdateProperty(ObjectType string, PropertyName string, propertyData hubspotmodels.PropertyBody) error
+	GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.ContactResponse, error)
 }
 
 type HubspotObject string
