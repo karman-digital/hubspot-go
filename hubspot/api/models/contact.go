@@ -35,11 +35,27 @@ type BatchUpdateInput struct {
 }
 
 type Result struct {
-	ID         string     `json:"id"`
-	Properties Properties `json:"properties"`
-	CreatedAt  time.Time  `json:"createdAt"`
-	UpdatedAt  time.Time  `json:"updatedAt"`
-	Archived   bool       `json:"archived"`
+	ID           string       `json:"id"`
+	Properties   Properties   `json:"properties"`
+	CreatedAt    time.Time    `json:"createdAt"`
+	UpdatedAt    time.Time    `json:"updatedAt"`
+	Archived     bool         `json:"archived"`
+	Associations Associations `json:"associations"`
+}
+
+type Associations struct {
+	Companies AssociationResult `json:"companies"`
+	Deals     AssociationResult `json:"deals"`
+	Contacts  AssociationResult `json:"contacts"`
+}
+
+type AssociationResult struct {
+	Results []AssociationResultPair `json:"results,omitempty"`
+}
+
+type AssociationResultPair struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
 }
 
 type ErrorDetail struct {
