@@ -1,7 +1,5 @@
 package hubspotmodels
 
-import apptypes "github.com/karman-digital/hatch-shared/types"
-
 type Payload struct {
 	ObjectID         int    `json:"objectId"`
 	PropertyName     string `json:"propertyName"`
@@ -18,9 +16,9 @@ type Payload struct {
 }
 
 type AccountDataPayload struct {
-	ActionType string            `json:"actionType"`
-	PortalId   apptypes.PortalId `json:"portalId"`
-	UserId     string            `json:"userId"`
-	UserEmail  string            `json:"userEmail"`
-	AppId      apptypes.AppId    `json:"appId"`
+	ActionType string `json:"actionType"`
+	PortalId   int    `json:"portalId"`
+	UserId     string `json:"userId"`
+	UserEmail  string `json:"userEmail"`
+	AppId      int    `json:"appId"`
 }
