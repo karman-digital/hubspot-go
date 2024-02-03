@@ -12,6 +12,24 @@ import (
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 )
 
+func (c *credentials) GetAllOwners() ([]hubspotmodels.Owner, error) {
+	var allOwners []hubspotmodels.Owner
+	after := ""
+	for {
+		ownerResponse, err := c.GetOwners(after)
+		if err != nil {
+			return nil, err
+		}
+		allOwners = append(allOwners, ownerResponse.Results...)
+		if ownerResponse.Paging.Next.After != "" {
+			after = ownerResponse.Paging.Next.After
+		} else {
+			break
+		}
+	}
+	return allOwners, nil
+}
+
 func (c *credentials) GetOwners(after ...string) (hubspotmodels.OwnerResponse, error) {
 	ownerResponse := hubspotmodels.OwnerResponse{}
 	reqUrl := "https://api.hubapi.com/crm/v3/owners"
