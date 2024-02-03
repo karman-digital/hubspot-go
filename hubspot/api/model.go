@@ -33,6 +33,7 @@ type HubspotAPI interface {
 	CreatePropertyGroup(propertyGroup hubspotmodels.PropertyGroupBody, objectType string) error
 	CreateProperty(objectType string, propertyData hubspotmodels.PropertyBody) error
 	GetOwner(id int) (hubspotmodels.Owner, error)
+	GetOwners(after ...string) (hubspotmodels.OwnerResponse, error)
 	GetProperty(ObjectType string, PropertyName string) (hubspotmodels.PropertyResponse, error)
 	UpdateProperty(ObjectType string, PropertyName string, propertyData hubspotmodels.PropertyBody) error
 	GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.Result, error)
