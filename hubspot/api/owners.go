@@ -41,7 +41,9 @@ func (c *credentials) GetOwners(after ...string) (hubspotmodels.OwnerResponse, e
 	req.Header.Set("Content-Type", "application/json")
 	queryParams := url.Values{}
 	if len(after) != 0 {
-		queryParams.Add("after", after[0])
+		if after[0] != "" {
+			queryParams.Add("after", after[0])
+		}
 	}
 	req.URL.RawQuery = queryParams.Encode()
 	client := retryablehttp.NewClient()
