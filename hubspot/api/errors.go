@@ -11,3 +11,5 @@ var ErrObjectAlreadyExists = errors.New("object already exists")
 var ErrApiCall = errors.New("error making api call")
 
 var ErrAlreadyExists = errors.New("resource already exists")
+
+var ErrResourceAlreadyExists = errors.New("resource already exists")

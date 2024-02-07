@@ -33,7 +33,7 @@ func (c *credentials) CreatePropertyGroup(propertyGroup hubspotmodels.PropertyGr
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		if resp.StatusCode == http.StatusConflict {
-			return ErrAlreadyExists
+			return ErrResourceAlreadyExists
 		}
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
@@ -64,7 +64,7 @@ func (c *credentials) CreateProperty(objectType string, propertyData hubspotmode
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		if resp.StatusCode == http.StatusConflict {
-			return ErrAlreadyExists
+			return ErrResourceAlreadyExists
 		}
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
