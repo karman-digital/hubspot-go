@@ -17,8 +17,8 @@ type Payload struct {
 
 type AccountDataPayload struct {
 	ActionType string `json:"actionType"`
-	PortalId   int    `json:"portalId"`
+	PortalId   string `json:"portalId"`
 	UserId     string `json:"userId"`
 	UserEmail  string `json:"userEmail"`
-	AppId      int    `json:"appId"`
+	AppId      string `json:"appId"`
 }
