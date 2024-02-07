@@ -39,6 +39,7 @@ type HubspotAPI interface {
 	GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.Result, error)
 	GetAllOwners() ([]hubspotmodels.Owner, error)
 	GetCommunicationPreferences() (hubspotmodels.CommunicationPreferencesResponse, error)
+	UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error
 }
 
 type HubspotObject string

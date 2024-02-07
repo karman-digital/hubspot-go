@@ -18,3 +18,14 @@ type SubscriptionDefinition struct {
 	CreatedAt           time.Time `json:"createdAt"`
 	UpdatedAt           time.Time `json:"updatedAt"`
 }
+
+type CommunicationPreferencesPostBody struct {
+	EmailAddress   string `json:"emailAddress"`
+	SubscriptionId string `json:"subscriptionId"`
+	CommunicationLegalBasis
+}
+
+type CommunicationLegalBasis struct {
+	LegalBasis            string `json:"legalBasis,omitempty"`
+	LegalBasisExplanation string `json:"legalBasisExplanation,omitempty"`
+}
