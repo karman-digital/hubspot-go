@@ -19,7 +19,7 @@ type SettingsDropdownResponse struct {
 
 type SettingsDropdownOptions struct {
 	Options        []SettingsDropdown `json:"options"`
-	SelectedOption string             `json:"selectedOption"`
+	SelectedOption string             `json:"selectedOption,omitempty"`
 }
 
 type SettingsDropdown struct {
