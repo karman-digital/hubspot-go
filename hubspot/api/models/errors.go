@@ -6,3 +6,7 @@ type ErrorResponseBody struct {
 	Category      string `json:"category"`
 	CorrelationId string `json:"correlationId"`
 }
+
+func (e ErrorResponseBody) Error() string {
+	return e.Message
+}
