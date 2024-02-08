@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
@@ -32,7 +33,7 @@ func (c *credentials) CreateContact(body hubspotmodels.PostBody) (hubspotmodels.
 	if err != nil {
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusCreated {
 		return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
 	err = json.Unmarshal(contactRawBody, &contactResp)
@@ -184,7 +185,7 @@ func (c *credentials) UpdateContact(id int, patchBody hubspotmodels.PatchBody) (
 	if err != nil {
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		return contactResp, fmt.Errorf("error returned by endpoint, status code:%d \nBody: %s", resp.StatusCode, contactRawBody)
 	}
 	err = json.Unmarshal(contactRawBody, &contactResp)
