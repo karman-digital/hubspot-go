@@ -40,6 +40,7 @@ type HubspotAPI interface {
 	GetAllOwners() ([]hubspotmodels.Owner, error)
 	GetCommunicationPreferences() (hubspotmodels.CommunicationPreferencesResponse, error)
 	UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error
+	SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error
 }
 
 type HubspotObject string
