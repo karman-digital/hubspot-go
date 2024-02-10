@@ -267,7 +267,6 @@ func (c *credentials) GetContact(id int, opts ...hubspotmodels.ContactGetOptions
 	if err != nil {
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
-	fmt.Println(string(contactRawBody))
 	if resp.StatusCode != 200 {
 		return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
