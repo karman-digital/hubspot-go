@@ -1,5 +1,5 @@
 package hubspotvalidator
 
-type HubspotValidator interface {
+type Validator interface {
 	ValidateHubspotToken() error
 }
