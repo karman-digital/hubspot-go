@@ -13,6 +13,15 @@ type Hubspot struct {
 	ApiClient
 }
 
+func InitHubspot() *Hubspot {
+	return &Hubspot{}
+}
+
+func (h *Hubspot) InitClient(credentials *credentials.Credentials) {
+	h.Credentials = *credentials
+	h.ApiClient = NewApiClient(credentials)
+}
+
 func NewApiClient(credentials *credentials.Credentials) ApiClient {
 	return ApiClient{
 		Auth:                     auth.NewAuthService(credentials),
