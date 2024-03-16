@@ -2,7 +2,6 @@ package credentials
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -11,10 +10,8 @@ type Credentials struct {
 	Client       *retryablehttp.Client
 	AccessToken  AccessToken
 	RefreshToken RefreshToken
-	PortalId     PortalId
 }
 
-type PortalId int
 type AccessToken string
 type RefreshToken string
 
@@ -40,20 +37,4 @@ func (a *AccessToken) Set(s string) error {
 
 func (a AccessToken) String() string {
 	return string(a)
-}
-
-func (p *PortalId) Set(i int) error {
-	if i == 0 {
-		return errors.New("portal id cannot be zero")
-	}
-	*p = PortalId(i)
-	return nil
-}
-
-func (p PortalId) Int() int {
-	return int(p)
-}
-
-func (p PortalId) String() string {
-	return strconv.Itoa(int(p))
 }

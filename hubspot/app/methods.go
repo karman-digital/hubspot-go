@@ -1,6 +1,8 @@
 package hubspotapp
 
 import (
+	"fmt"
+
 	"github.com/karman-digital/hubspot/hubspot/api/auth"
 	"github.com/karman-digital/hubspot/hubspot/api/communicationpreferences"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
@@ -11,6 +13,7 @@ import (
 type Hubspot struct {
 	credentials.Credentials
 	ApiClient
+	PortalId
 }
 
 func InitHubspot() *Hubspot {
@@ -41,4 +44,17 @@ type ApiClient struct {
 	interfaces.Auth
 	crm.CRM
 	interfaces.CommunicationPreferences
+}
+
+func (c Hubspot) RetrievePortalId() PortalId {
+	return c.PortalId
+}
+
+func (c *Hubspot) SetPortalId(portalId int) error {
+	var id PortalId
+	if err := id.Set(portalId); err != nil {
+		return fmt.Errorf("error setting portal id: %w", err)
+	}
+	c.PortalId = id
+	return nil
 }

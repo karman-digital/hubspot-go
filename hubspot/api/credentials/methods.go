@@ -27,16 +27,3 @@ func (c *Credentials) RetrieveAccessToken() *AccessToken {
 func (c *Credentials) RetrieveRefreshToken() *RefreshToken {
 	return &c.RefreshToken
 }
-
-func (c *Credentials) RetrievePortalId() *PortalId {
-	return &c.PortalId
-}
-
-func (c *Credentials) SetPortalId(portalId int) error {
-	var id PortalId
-	if err := id.Set(portalId); err != nil {
-		return fmt.Errorf("error setting portal id: %w", err)
-	}
-	c.PortalId = id
-	return nil
-}
