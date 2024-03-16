@@ -1,6 +1,8 @@
 package hubspot
 
-import "github.com/hashicorp/go-retryablehttp"
+import (
+	"github.com/hashicorp/go-retryablehttp"
+)
 
 func InitHubspotAPI() HubspotAPI {
 	client := retryablehttp.NewClient()
@@ -9,3 +11,5 @@ func InitHubspotAPI() HubspotAPI {
 		Client: client,
 	}
 }
+
+type HubspotInitFunc func() HubspotAPI
