@@ -50,7 +50,6 @@ func GenerateTokenPair(code string, clientId string, clientSecret string, redire
 
 func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
 	tokenBody := hubspotmodels.TokenBody{}
-
 	data := url.Values{
 		"grant_type":    []string{"refresh_token"},
 		"redirect_uri":  []string{redirectUri},
@@ -58,13 +57,11 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 		"client_secret": []string{clientSecret},
 		"refresh_token": []string{c.RefreshToken.String()},
 	}
-
 	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %s", err)
@@ -81,8 +78,16 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 	if err != nil {
 		return fmt.Errorf("error parsing body: %s", err)
 	}
-	c.SetAccessToken(tokenBody.AccessToken)
-	c.SetRefreshToken(tokenBody.RefreshToken)
+	return c.SetTokens(tokenBody.AccessToken, tokenBody.RefreshToken)
+}
+
+func (c *credentials) SetTokens(accessToken string, refreshToken string) error {
+	if err := c.SetAccessToken(accessToken); err != nil {
+		return fmt.Errorf("error setting access token: %w", err)
+	}
+	if err := c.SetRefreshToken(refreshToken); err != nil {
+		return fmt.Errorf("error setting refresh token: %w", err)
+	}
 	return nil
 }
 

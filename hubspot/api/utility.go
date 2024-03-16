@@ -4,31 +4,45 @@ import (
 	"fmt"
 
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
-	apptypes "github.com/karman-digital/integrations/types"
 )
 
-func (c *credentials) SetAccessToken(accessToken apptypes.AccessToken) {
-	c.AccessToken = accessToken
+func (c *credentials) SetAccessToken(accessToken string) error {
+	var token AccessToken
+	if err := token.Set(accessToken); err != nil {
+		return fmt.Errorf("error setting access token: %w", err)
+	}
+	c.AccessToken = token
+	return nil
 }
 
-func (c *credentials) SetRefreshToken(refreshToken apptypes.RefreshToken) {
-	c.RefreshToken = refreshToken
+func (c *credentials) SetRefreshToken(refreshToken string) error {
+	var token RefreshToken
+	if err := token.Set(refreshToken); err != nil {
+		return fmt.Errorf("error setting refresh token: %w", err)
+	}
+	c.RefreshToken = token
+	return nil
 }
 
-func (c *credentials) RetrieveAccessToken() apptypes.AccessToken {
+func (c *credentials) RetrieveAccessToken() AccessToken {
 	return c.AccessToken
 }
 
-func (c *credentials) RetrieveRefreshToken() apptypes.RefreshToken {
+func (c *credentials) RetrieveRefreshToken() RefreshToken {
 	return c.RefreshToken
 }
 
-func (c *credentials) RetrievePortalId() apptypes.PortalId {
+func (c *credentials) RetrievePortalId() PortalId {
 	return c.PortalId
 }
 
-func (c *credentials) SetPortalId(portalId apptypes.PortalId) {
-	c.PortalId = portalId
+func (c *credentials) SetPortalId(portalId int) error {
+	var id PortalId
+	if err := id.Set(portalId); err != nil {
+		return fmt.Errorf("error setting portal id: %w", err)
+	}
+	c.PortalId = id
+	return nil
 }
 
 func handleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusCode int) error {
