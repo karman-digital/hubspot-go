@@ -81,11 +81,11 @@ func (c *AuthService) RefreshTokenPair(clientSecret string, clientId string, red
 	return c.SetTokens(tokenBody.AccessToken, tokenBody.RefreshToken)
 }
 
-func (c *AuthService) SetTokens(accessToken string, refreshToken string) error {
-	if err := c.creds.SetAccessToken(accessToken); err != nil {
+func (c *AuthService) SetTokens(accessToken hubspotmodels.AccessToken, refreshToken hubspotmodels.RefreshToken) error {
+	if err := c.creds.SetAccessToken(accessToken.String()); err != nil {
 		return fmt.Errorf("error setting access token: %w", err)
 	}
-	if err := c.creds.SetRefreshToken(refreshToken); err != nil {
+	if err := c.creds.SetRefreshToken(refreshToken.String()); err != nil {
 		return fmt.Errorf("error setting refresh token: %w", err)
 	}
 	return nil

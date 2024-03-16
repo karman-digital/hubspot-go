@@ -1,9 +1,13 @@
 package credentials
 
-import "fmt"
+import (
+	"fmt"
+
+	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+)
 
 func (c *Credentials) SetAccessToken(accessToken string) error {
-	var token AccessToken
+	var token hubspotmodels.AccessToken
 	if err := token.Set(accessToken); err != nil {
 		return fmt.Errorf("error setting access token: %w", err)
 	}
@@ -12,7 +16,7 @@ func (c *Credentials) SetAccessToken(accessToken string) error {
 }
 
 func (c *Credentials) SetRefreshToken(refreshToken string) error {
-	var token RefreshToken
+	var token hubspotmodels.RefreshToken
 	if err := token.Set(refreshToken); err != nil {
 		return fmt.Errorf("error setting refresh token: %w", err)
 	}
@@ -20,10 +24,10 @@ func (c *Credentials) SetRefreshToken(refreshToken string) error {
 	return nil
 }
 
-func (c *Credentials) RetrieveAccessToken() *AccessToken {
+func (c *Credentials) RetrieveAccessToken() *hubspotmodels.AccessToken {
 	return &c.AccessToken
 }
 
-func (c *Credentials) RetrieveRefreshToken() *RefreshToken {
+func (c *Credentials) RetrieveRefreshToken() *hubspotmodels.RefreshToken {
 	return &c.RefreshToken
 }

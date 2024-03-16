@@ -78,7 +78,7 @@ func (c *credentials) RefreshTokenPair(clientSecret string, clientId string, red
 	if err != nil {
 		return fmt.Errorf("error parsing body: %s", err)
 	}
-	return c.SetTokens(tokenBody.AccessToken, tokenBody.RefreshToken)
+	return c.SetTokens(tokenBody.AccessToken.String(), tokenBody.RefreshToken.String())
 }
 
 func (c *credentials) SetTokens(accessToken string, refreshToken string) error {
