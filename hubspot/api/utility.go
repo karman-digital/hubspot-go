@@ -24,16 +24,16 @@ func (c *credentials) SetRefreshToken(refreshToken string) error {
 	return nil
 }
 
-func (c *credentials) RetrieveAccessToken() AccessToken {
-	return c.AccessToken
+func (c *credentials) RetrieveAccessToken() *AccessToken {
+	return &c.AccessToken
 }
 
-func (c *credentials) RetrieveRefreshToken() RefreshToken {
-	return c.RefreshToken
+func (c *credentials) RetrieveRefreshToken() *RefreshToken {
+	return &c.RefreshToken
 }
 
-func (c *credentials) RetrievePortalId() PortalId {
-	return c.PortalId
+func (c *credentials) RetrievePortalId() *PortalId {
+	return &c.PortalId
 }
 
 func (c *credentials) SetPortalId(portalId int) error {

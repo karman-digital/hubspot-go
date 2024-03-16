@@ -13,9 +13,9 @@ type credentials struct {
 }
 
 type HubspotAPI interface {
-	RetrieveAccessToken() AccessToken
-	RetrieveRefreshToken() RefreshToken
-	RetrievePortalId() PortalId
+	RetrieveAccessToken() *AccessToken
+	RetrieveRefreshToken() *RefreshToken
+	RetrievePortalId() *PortalId
 	SetAccessToken(accessToken string) error
 	SetRefreshToken(refreshToken string) error
 	SetPortalId(portalId int) error
