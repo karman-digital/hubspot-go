@@ -10,9 +10,9 @@ import (
 
 func NewCrmService(creds *credentials.Credentials) CRM {
 	return CRM{
-		ContactService:     contact.NewContactService(creds),
-		OwnerService:       owners.NewOwnerService(creds),
-		AssociationService: associations.NewAssociationService(creds),
-		PropertiesService:  properties.NewPropertiesService(creds),
+		Contacts:     contact.NewContactService(creds),
+		Owners:       owners.NewOwnerService(creds),
+		Associations: associations.NewAssociationService(creds),
+		Properties:   properties.NewPropertiesService(creds),
 	}
 }
