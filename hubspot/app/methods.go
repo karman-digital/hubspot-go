@@ -42,7 +42,7 @@ func NewHubspotInstance(credentials *credentials.Credentials) *Hubspot {
 
 type ApiClient struct {
 	interfaces.Auth
-	crm.CRM
+	CRM crm.CRM
 	interfaces.CommunicationPreferences
 }
 
