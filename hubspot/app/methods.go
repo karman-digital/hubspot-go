@@ -3,7 +3,6 @@ package hubspotapp
 import (
 	"fmt"
 
-	"github.com/karman-digital/hubspot/hubspot/api/auth"
 	"github.com/karman-digital/hubspot/hubspot/api/communicationpreferences"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
@@ -11,7 +10,7 @@ import (
 )
 
 type Hubspot struct {
-	credentials.Credentials
+	*credentials.Credentials
 	ApiClient
 	PortalId
 }
@@ -21,13 +20,12 @@ func InitHubspot() *Hubspot {
 }
 
 func (h *Hubspot) InitClient(credentials *credentials.Credentials) {
-	h.Credentials = *credentials
+	h.Credentials = credentials
 	h.ApiClient = NewApiClient(credentials)
 }
 
 func NewApiClient(credentials *credentials.Credentials) ApiClient {
 	return ApiClient{
-		Auth:                     auth.NewAuthService(credentials),
 		CRM:                      crm.NewCrmService(credentials),
 		CommunicationPreferences: communicationpreferences.NewCommunicationPreferencesService(credentials),
 	}
@@ -35,13 +33,12 @@ func NewApiClient(credentials *credentials.Credentials) ApiClient {
 
 func NewHubspotInstance(credentials *credentials.Credentials) *Hubspot {
 	return &Hubspot{
-		Credentials: *credentials,
+		Credentials: credentials,
 		ApiClient:   NewApiClient(credentials),
 	}
 }
 
 type ApiClient struct {
-	interfaces.Auth
 	CRM crm.CRM
 	interfaces.CommunicationPreferences
 }
