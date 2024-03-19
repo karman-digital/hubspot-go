@@ -5,5 +5,5 @@ import (
 )
 
 type CommunicationPreferencesService struct {
-	creds *credentials.Credentials
+	*credentials.Credentials
 }

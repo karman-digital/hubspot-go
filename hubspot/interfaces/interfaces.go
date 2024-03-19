@@ -3,7 +3,7 @@ package interfaces
 import hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 
 type Auth interface {
-	RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error
+	RefreshTokenPair() error
 	ValidateBearerToken() (bool, error)
 }
 

@@ -6,7 +6,10 @@ import (
 )
 
 type Credentials struct {
-	Client       *retryablehttp.Client
-	AccessToken  hubspotmodels.AccessToken
-	RefreshToken hubspotmodels.RefreshToken
+	client       *retryablehttp.Client
+	accessToken  hubspotmodels.AccessToken
+	refreshToken hubspotmodels.RefreshToken
+	clientId     hubspotmodels.ClientId
+	clientSecret hubspotmodels.ClientSecret
+	redirectUri  hubspotmodels.RedirectUri
 }

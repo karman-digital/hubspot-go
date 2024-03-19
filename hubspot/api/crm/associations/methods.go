@@ -17,8 +17,8 @@ func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject strin
 		return associationResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return associationResp, fmt.Errorf("error making request: %s", err)
 	}
@@ -50,8 +50,8 @@ func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject
 		return associationResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return associationResp, fmt.Errorf("error making request: %s", err)
 	}

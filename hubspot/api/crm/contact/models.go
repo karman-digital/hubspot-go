@@ -6,6 +6,6 @@ import (
 )
 
 type ContactService struct {
+	*credentials.Credentials
 	interfaces.Batch
-	creds *credentials.Credentials
 }

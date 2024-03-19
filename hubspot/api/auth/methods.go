@@ -48,21 +48,21 @@ func GenerateTokenPair(code string, clientId string, clientSecret string, redire
 	return resBodyStruct, nil
 }
 
-func (c *AuthService) RefreshTokenPair(clientSecret string, clientId string, redirectUri string) error {
+func (c *AuthService) RefreshTokenPair() error {
 	tokenBody := hubspotmodels.TokenBody{}
 	data := url.Values{
 		"grant_type":    []string{"refresh_token"},
-		"redirect_uri":  []string{redirectUri},
-		"client_id":     []string{clientId},
-		"client_secret": []string{clientSecret},
-		"refresh_token": []string{c.creds.RefreshToken.String()},
+		"redirect_uri":  []string{c.RedirectUri().String()},
+		"client_id":     []string{c.ClientId().String()},
+		"client_secret": []string{c.ClientSecret().String()},
+		"refresh_token": []string{c.RefreshToken().String()},
 	}
 	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	resp, err := c.creds.Client.Do(req)
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %s", err)
 	}
@@ -82,17 +82,17 @@ func (c *AuthService) RefreshTokenPair(clientSecret string, clientId string, red
 }
 
 func (c *AuthService) SetTokens(accessToken hubspotmodels.AccessToken, refreshToken hubspotmodels.RefreshToken) error {
-	if err := c.creds.SetAccessToken(accessToken.String()); err != nil {
+	if err := c.SetAccessToken(accessToken.String()); err != nil {
 		return fmt.Errorf("error setting access token: %w", err)
 	}
-	if err := c.creds.SetRefreshToken(refreshToken.String()); err != nil {
+	if err := c.SetRefreshToken(refreshToken.String()); err != nil {
 		return fmt.Errorf("error setting refresh token: %w", err)
 	}
 	return nil
 }
 
 func (c *AuthService) ValidateBearerToken() (bool, error) {
-	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.creds.AccessToken))
+	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.AccessToken()))
 	if err != nil {
 		return false, err
 	}

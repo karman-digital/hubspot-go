@@ -6,6 +6,6 @@ import (
 
 func NewCommunicationPreferencesService(creds *credentials.Credentials) *CommunicationPreferencesService {
 	return &CommunicationPreferencesService{
-		creds: creds,
+		creds,
 	}
 }

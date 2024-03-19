@@ -23,8 +23,8 @@ func (c *ContactService) CreateContact(body hubspotmodels.PostBody) (hubspotmode
 		return contactResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return contactResp, fmt.Errorf("error making request: %s", err)
 	}
@@ -55,8 +55,8 @@ func (c *ContactService) UpdateContact(id int, patchBody hubspotmodels.PatchBody
 		return contactResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return contactResp, fmt.Errorf("error making request: %s", err)
 	}
@@ -87,8 +87,8 @@ func (c *ContactService) SearchContacts(body hubspotmodels.SearchBody) (hubspotm
 		return contactResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return contactResp, fmt.Errorf("error making request: %s", err)
 	}
@@ -115,7 +115,7 @@ func (c *ContactService) GetContact(id int, opts ...hubspotmodels.ContactGetOpti
 		return contactResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	queryParams := url.Values{}
 	if len(opts) != 0 {
 		if len(opts[0].Properties) != 0 {
@@ -138,7 +138,7 @@ func (c *ContactService) GetContact(id int, opts ...hubspotmodels.ContactGetOpti
 		}
 	}
 	req.URL.RawQuery = queryParams.Encode()
-	resp, err := c.creds.Client.Do(req)
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return contactResp, fmt.Errorf("error making request: %s", err)
 	}

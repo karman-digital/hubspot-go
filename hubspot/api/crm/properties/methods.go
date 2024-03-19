@@ -18,15 +18,13 @@ func (c *PropertiesService) CreatePropertyGroup(propertyGroup hubspotmodels.Prop
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	r, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer(body))
+	req, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer(body))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
-	r.Header.Set("Content-Type", "application/json")
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	r.Header.Set("User-Agent", "Hatch Integration")
-	r.Header.Set("Accept", "application/json")
-	resp, err := c.creds.Client.Do(r)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %v", err)
 	}
@@ -50,13 +48,13 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData hubsp
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	r, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer([]byte(body)))
+	req, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer([]byte(body)))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
-	r.Header.Set("Content-Type", "application/json")
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(r)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %s", err)
 	}
@@ -76,13 +74,13 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData hubsp
 
 func (c *PropertiesService) GetProperty(ObjectType string, PropertyName string) (hubspotmodels.PropertyResponse, error) {
 	geturl := fmt.Sprintf("https://api.hubapi.com/crm/v3/properties/%s/%s", ObjectType, PropertyName)
-	r, err := retryablehttp.NewRequest(http.MethodGet, geturl, nil)
+	req, err := retryablehttp.NewRequest(http.MethodGet, geturl, nil)
 	if err != nil {
 		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error creating request: %s", err)
 	}
-	r.Header.Set("Content-Type", "application/json")
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(r)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error making post request: %s", err)
 	}
@@ -108,13 +106,13 @@ func (c *PropertiesService) UpdateProperty(ObjectType string, PropertyName strin
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	r, err := retryablehttp.NewRequest(http.MethodPut, puturl, bytes.NewBuffer([]byte(body)))
+	req, err := retryablehttp.NewRequest(http.MethodPut, puturl, bytes.NewBuffer([]byte(body)))
 	if err != nil {
 		return fmt.Errorf("error creating request: %s", err)
 	}
-	r.Header.Set("Content-Type", "application/json")
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(r)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making post request: %s", err)
 	}

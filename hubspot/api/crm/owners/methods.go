@@ -37,7 +37,7 @@ func (c *OwnerService) GetOwners(after ...string) (hubspotmodels.OwnerResponse, 
 	if err != nil {
 		return ownerResponse, err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	req.Header.Set("Content-Type", "application/json")
 	queryParams := url.Values{}
 	if len(after) != 0 {
@@ -46,7 +46,7 @@ func (c *OwnerService) GetOwners(after ...string) (hubspotmodels.OwnerResponse, 
 		}
 	}
 	req.URL.RawQuery = queryParams.Encode()
-	resp, err := c.creds.Client.Do(req)
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return ownerResponse, err
 	}
@@ -74,9 +74,9 @@ func (c *OwnerService) GetOwner(id int) (hubspotmodels.Owner, error) {
 	if err != nil {
 		return owner, err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
 	req.Header.Set("Content-Type", "application/json")
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return owner, err
 	}

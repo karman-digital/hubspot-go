@@ -19,8 +19,8 @@ func (c *CommunicationPreferencesService) GetCommunicationPreferences() (hubspot
 		return communicationPreferencesResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return communicationPreferencesResp, fmt.Errorf("error making request: %s", err)
 	}
@@ -57,8 +57,8 @@ func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference
 		return fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}
@@ -103,8 +103,8 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 		return fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.creds.AccessToken))
-	resp, err := c.creds.Client.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}

@@ -7,7 +7,7 @@ import (
 
 func NewContactService(creds *credentials.Credentials) *ContactService {
 	return &ContactService{
-		creds: creds,
-		Batch: batchcontact.NewBatchContactService(creds),
+		creds,
+		batchcontact.NewBatchContactService(creds),
 	}
 }
