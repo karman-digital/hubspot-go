@@ -6,7 +6,7 @@ type CommunicationPreferencesResponse struct {
 	SubscriptionDefinitions []SubscriptionDefinition `json:"subscriptionDefinitions"`
 }
 
-type CommunicationPreferenceStatus struct {
+type CommunicationPreferenceStatusResponse struct {
 	Recipient            string               `json:"recipient"`
 	SubscriptionStatuses []SubscriptionStatus `json:"subscriptionStatuses"`
 }
