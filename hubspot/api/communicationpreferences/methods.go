@@ -130,3 +130,31 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 	}
 	return nil
 }
+
+func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatus, error) {
+	var communicationPreferenceStatus hubspotmodels.CommunicationPreferenceStatus
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status?email=%s", contactEmail)
+	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
+	if err != nil {
+		return communicationPreferenceStatus, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return communicationPreferenceStatus, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	communicationPreferenceStatusRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return communicationPreferenceStatus, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 {
+		return communicationPreferenceStatus, fmt.Errorf("error returned by endpoint: %s", communicationPreferenceStatusRawBody)
+	}
+	err = json.Unmarshal(communicationPreferenceStatusRawBody, &communicationPreferenceStatus)
+	if err != nil {
+		return communicationPreferenceStatus, fmt.Errorf("error parsing body: %s", err)
+	}
+	return communicationPreferenceStatus, nil
+}
