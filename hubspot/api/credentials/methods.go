@@ -90,3 +90,14 @@ func (c *Credentials) SetTokens(accessToken hubspotmodels.AccessToken, refreshTo
 	}
 	return nil
 }
+
+func (c *Credentials) ValidateBearerToken() (bool, error) {
+	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.AccessToken().String()))
+	if err != nil {
+		return false, err
+	}
+	if res.StatusCode != 200 {
+		return false, nil
+	}
+	return true, nil
+}
