@@ -133,7 +133,7 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 
 func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatusResponse, error) {
 	var communicationPreferenceStatus hubspotmodels.CommunicationPreferenceStatusResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status?email=%s", contactEmail)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status/email/%s", contactEmail)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return communicationPreferenceStatus, fmt.Errorf("error creating request: %s", err)
