@@ -35,7 +35,7 @@ type CommunicationPreferences interface {
 	GetCommunicationPreferences() (hubspotmodels.CommunicationPreferencesResponse, error)
 	UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error
 	SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error
-	GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatus, error)
+	GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatusResponse, error)
 }
 
 type Batch interface {

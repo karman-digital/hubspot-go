@@ -131,8 +131,8 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 	return nil
 }
 
-func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatus, error) {
-	var communicationPreferenceStatus hubspotmodels.CommunicationPreferenceStatus
+func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatusResponse, error) {
+	var communicationPreferenceStatus hubspotmodels.CommunicationPreferenceStatusResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status?email=%s", contactEmail)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
