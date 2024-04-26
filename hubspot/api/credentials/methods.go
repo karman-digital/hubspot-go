@@ -101,3 +101,22 @@ func (c *Credentials) ValidateBearerToken() (bool, error) {
 	}
 	return true, nil
 }
+
+func GetBearerTokenData(bearerToken string) (hubspotmodels.BearerTokenBody, error) {
+	resBodyStruct := hubspotmodels.BearerTokenBody{}
+
+	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", bearerToken))
+	if err != nil {
+		return resBodyStruct, err
+	}
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return resBodyStruct, err
+	}
+	if res.StatusCode != 200 {
+		return resBodyStruct, errors.New(string(resBody))
+	}
+	json.Unmarshal(resBody, &resBodyStruct)
+
+	return resBodyStruct, nil
+}
