@@ -73,7 +73,7 @@ func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject
 
 func (c *AssociationService) BatchGetAssociations(fromObject, toObject string, body hubspotmodels.BatchGetAssociationsBody) (hubspotmodels.BatchAssociationGetResponse, error) {
 	var batchResp hubspotmodels.BatchAssociationGetResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/read ", fromObject, toObject)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/read", fromObject, toObject)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
