@@ -75,14 +75,14 @@ type BatchGetAssociationsInput struct {
 }
 
 type ErrorDetail struct {
-	SubCategory map[string]interface{} `json:"subCategory"`
-	Context     map[string][]string    `json:"context"`
-	Links       map[string]string      `json:"links"`
-	ID          string                 `json:"id"`
-	Category    string                 `json:"category"`
-	Message     string                 `json:"message"`
-	Errors      []NestedError          `json:"errors"`
-	Status      string                 `json:"status"`
+	SubCategory any                 `json:"subCategory"`
+	Context     map[string][]string `json:"context"`
+	Links       map[string]string   `json:"links"`
+	ID          string              `json:"id"`
+	Category    string              `json:"category"`
+	Message     string              `json:"message"`
+	Errors      []NestedError       `json:"errors"`
+	Status      string              `json:"status"`
 }
 
 type NestedError struct {
