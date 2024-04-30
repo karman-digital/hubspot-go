@@ -31,8 +31,10 @@ type BatchAssociationGetResponse struct {
 	CompletedAt string                   `json:"completedAt"`
 	RequestedAt string                   `json:"requestedAt"`
 	StartedAt   string                   `json:"startedAt"`
+	NumErrors   int                      `json:"numErrors"`
 	Links       map[string]string        `json:"links"`
 	Results     []BatchAssociationResult `json:"results"`
+	Errors      []ErrorDetail            `json:"errors,omitempty"`
 	Status      string                   `json:"status"`
 }
 
@@ -70,4 +72,23 @@ type BatchGetAssociationsBody struct {
 type BatchGetAssociationsInput struct {
 	Id    string `json:"id"`
 	After string `json:"after,omitempty"`
+}
+
+type ErrorDetail struct {
+	SubCategory map[string]interface{} `json:"subCategory"`
+	Context     map[string][]string    `json:"context"`
+	Links       map[string]string      `json:"links"`
+	ID          string                 `json:"id"`
+	Category    string                 `json:"category"`
+	Message     string                 `json:"message"`
+	Errors      []NestedError          `json:"errors"`
+	Status      string                 `json:"status"`
+}
+
+type NestedError struct {
+	SubCategory string              `json:"subCategory"`
+	Code        string              `json:"code"`
+	In          string              `json:"in"`
+	Context     map[string][]string `json:"context"`
+	Message     string              `json:"message"`
 }

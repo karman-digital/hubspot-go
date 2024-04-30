@@ -52,25 +52,6 @@ type AssociationResultPair struct {
 	Type string `json:"type"`
 }
 
-type ErrorDetail struct {
-	SubCategory map[string]interface{} `json:"subCategory"`
-	Context     map[string][]string    `json:"context"`
-	Links       map[string]string      `json:"links"`
-	ID          string                 `json:"id"`
-	Category    string                 `json:"category"`
-	Message     string                 `json:"message"`
-	Errors      []NestedError          `json:"errors"`
-	Status      string                 `json:"status"`
-}
-
-type NestedError struct {
-	SubCategory string              `json:"subCategory"`
-	Code        string              `json:"code"`
-	In          string              `json:"in"`
-	Context     map[string][]string `json:"context"`
-	Message     string              `json:"message"`
-}
-
 type BatchGetBody struct {
 	PropertiesWithHistory []string        `json:"propertiesWithHistory,omitempty"`
 	IDProperty            string          `json:"idProperty,omitempty"`
