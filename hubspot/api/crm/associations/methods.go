@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject string, fromId, toId int) (hubspotmodels.BatchResponse, error) {
@@ -68,4 +69,44 @@ func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject
 		return associationResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	return associationResp, nil
+}
+
+func (c *AssociationService) BatchGetAssociations(fromObject, toObject string, body hubspotmodels.BatchGetAssociationsBody) (hubspotmodels.BatchAssociationGetResponse, error) {
+	var batchResp hubspotmodels.BatchAssociationGetResponse
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/read ", fromObject, toObject)
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
+	}
+	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		return batchResp, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return batchResp, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	contactRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 && resp.StatusCode != 207 {
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(contactRawBody, &errorResp)
+		if err != nil {
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return batchResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
+	}
+	err = json.Unmarshal(contactRawBody, &batchResp)
+	if err != nil {
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	if resp.StatusCode == 207 {
+		return batchResp, shared.ErrBatchGet
+	}
+	return batchResp, nil
 }
