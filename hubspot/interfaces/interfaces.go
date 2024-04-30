@@ -64,4 +64,5 @@ type CustomBatch interface {
 	BatchCreate(body hubspotmodels.BatchCreateBody, objectType string) (hubspotmodels.BatchResponse, error)
 	BatchGet(body hubspotmodels.BatchGetBody, objectType string) (hubspotmodels.BatchResponse, error)
 	BatchUpdate(body hubspotmodels.BatchUpdateBody, objectType string) (hubspotmodels.BatchResponse, error)
+	BatchGetAssociations(body hubspotmodels.BatchGetAssociationsBody, fromObjectType string, toObjectType string) (hubspotmodels.BatchAssociationGetResponse, error)
 }

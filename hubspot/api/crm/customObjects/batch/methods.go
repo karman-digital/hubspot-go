@@ -11,121 +11,161 @@ import (
 )
 
 func (c *BatchCustomObjectService) BatchUpdate(body hubspotmodels.BatchUpdateBody, objectType string) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+	var batchResp hubspotmodels.BatchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/update", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
 	}
 	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
 	if err != nil {
-		return dealResp, fmt.Errorf("error creating request: %s", err)
+		return batchResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	resp, err := c.Client().Do(req)
 	if err != nil {
-		return dealResp, fmt.Errorf("error making request: %s", err)
+		return batchResp, fmt.Errorf("error making request: %s", err)
 	}
 	defer resp.Body.Close()
 	contactRawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error reading body: %s", err)
+		return batchResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 200 && resp.StatusCode != 207 {
 		var errorResp hubspotmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
-			return dealResp, fmt.Errorf("error parsing error body: %s", err)
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
 		}
-		return dealResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
+		return batchResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
 	}
-	err = json.Unmarshal(contactRawBody, &dealResp)
+	err = json.Unmarshal(contactRawBody, &batchResp)
 	if err != nil {
-		return dealResp, fmt.Errorf("error parsing body: %s", err)
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	if resp.StatusCode == 207 {
-		return dealResp, shared.ErrBatchCreate
+		return batchResp, shared.ErrBatchCreate
 	}
-	return dealResp, nil
+	return batchResp, nil
 }
 
 func (c *BatchCustomObjectService) BatchCreate(body hubspotmodels.BatchCreateBody, objectType string) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+	var batchResp hubspotmodels.BatchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/create", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
 	}
 	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
 	if err != nil {
-		return dealResp, fmt.Errorf("error creating request: %s", err)
+		return batchResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	resp, err := c.Client().Do(req)
 	if err != nil {
-		return dealResp, fmt.Errorf("error making request: %s", err)
+		return batchResp, fmt.Errorf("error making request: %s", err)
 	}
 	defer resp.Body.Close()
 	contactRawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error reading body: %s", err)
+		return batchResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 && resp.StatusCode != 207 {
 		var errorResp hubspotmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
-			return dealResp, fmt.Errorf("error parsing error body: %s", err)
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
 		}
-		return dealResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
+		return batchResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
 	}
-	err = json.Unmarshal(contactRawBody, &dealResp)
+	err = json.Unmarshal(contactRawBody, &batchResp)
 	if err != nil {
-		return dealResp, fmt.Errorf("error parsing body: %s", err)
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	if resp.StatusCode == 207 {
-		return dealResp, shared.ErrBatchCreate
+		return batchResp, shared.ErrBatchCreate
 	}
-	return dealResp, nil
+	return batchResp, nil
 }
 
 func (c *BatchCustomObjectService) BatchGet(body hubspotmodels.BatchGetBody, objectType string) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+	var batchResp hubspotmodels.BatchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/read", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
 	}
 	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
 	if err != nil {
-		return dealResp, fmt.Errorf("error creating request: %s", err)
+		return batchResp, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	resp, err := c.Client().Do(req)
 	if err != nil {
-		return dealResp, fmt.Errorf("error making request: %s", err)
+		return batchResp, fmt.Errorf("error making request: %s", err)
 	}
 	defer resp.Body.Close()
 	contactRawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return dealResp, fmt.Errorf("error reading body: %s", err)
+		return batchResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 200 && resp.StatusCode != 207 {
 		var errorResp hubspotmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
-			return dealResp, fmt.Errorf("error parsing error body: %s", err)
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
 		}
-		return dealResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
+		return batchResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
 	}
-	err = json.Unmarshal(contactRawBody, &dealResp)
+	err = json.Unmarshal(contactRawBody, &batchResp)
 	if err != nil {
-		return dealResp, fmt.Errorf("error parsing body: %s", err)
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	if resp.StatusCode == 207 {
-		return dealResp, shared.ErrBatchGet
+		return batchResp, shared.ErrBatchGet
 	}
-	return dealResp, nil
+	return batchResp, nil
+}
+
+func (c *BatchCustomObjectService) BatchGetAssociations(body hubspotmodels.BatchGetAssociationsBody, fromObjectType string, toObjectType string) (hubspotmodels.BatchAssociationGetResponse, error) {
+	var batchResp hubspotmodels.BatchAssociationGetResponse
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/read ", fromObjectType, toObjectType)
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
+	}
+	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		return batchResp, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return batchResp, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	contactRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 && resp.StatusCode != 207 {
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(contactRawBody, &errorResp)
+		if err != nil {
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return batchResp, shared.HandleBatchResponseCodes(errorResp, resp.StatusCode)
+	}
+	err = json.Unmarshal(contactRawBody, &batchResp)
+	if err != nil {
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	if resp.StatusCode == 207 {
+		return batchResp, shared.ErrBatchGet
+	}
+	return batchResp, nil
 }
