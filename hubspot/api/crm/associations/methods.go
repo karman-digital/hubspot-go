@@ -39,6 +39,34 @@ func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject strin
 	return associationResp, nil
 }
 
+func (c *AssociationService) GetAssociations(fromObject, toObject string, id int) (hubspotmodels.AssociationGetResponse, error) {
+	var association hubspotmodels.AssociationGetResponse
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/objects/%s/%d/associations/%s", fromObject, id, toObject)
+	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
+	if err != nil {
+		return association, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return association, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	associationRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return association, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 {
+		return association, fmt.Errorf("error returned by endpoint: %s", associationRawBody)
+	}
+	err = json.Unmarshal(associationRawBody, &association)
+	if err != nil {
+		return association, fmt.Errorf("error parsing body: %s", err)
+	}
+	return association, nil
+}
+
 func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject string, associations hubspotmodels.BatchCreateDefaultAssociationsBody) (hubspotmodels.BatchResponse, error) {
 	var associationResp hubspotmodels.BatchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/associate/default", fromObject, toObject)

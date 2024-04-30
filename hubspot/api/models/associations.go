@@ -92,3 +92,8 @@ type NestedError struct {
 	Context     map[string][]string `json:"context"`
 	Message     string              `json:"message"`
 }
+
+type AssociationGetResponse struct {
+	Paging  Paging   `json:"paging"`
+	Results []ToItem `json:"results"`
+}
