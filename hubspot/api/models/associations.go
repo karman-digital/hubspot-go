@@ -56,7 +56,7 @@ type Navigation struct {
 
 type ToItem struct {
 	AssociationTypes []BatchAssociationType `json:"associationTypes"`
-	ToObjectId       string                 `json:"toObjectId"`
+	ToObjectId       int                    `json:"toObjectId"`
 }
 
 type BatchAssociationType struct {
