@@ -17,7 +17,23 @@ type Contact interface {
 	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error)
 	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
 	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
-	GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.Result, error)
+	GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+}
+
+type Deal interface {
+	Batch
+	UpdateDeal(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error)
+	CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
+	GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
+}
+
+type CustomObject interface {
+	CustomBatch
+	UpdateCustomObject(id int, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error)
+	CreateCustomObject(body hubspotmodels.PostBody, objectType string) (hubspotmodels.Result, error)
+	GetCustomObject(id int, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error)
 }
 
 type Owners interface {
@@ -42,4 +58,10 @@ type Batch interface {
 	BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error)
 	BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error)
 	BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error)
+}
+
+type CustomBatch interface {
+	BatchCreate(body hubspotmodels.BatchCreateBody, objectType string) (hubspotmodels.BatchResponse, error)
+	BatchGet(body hubspotmodels.BatchGetBody, objectType string) (hubspotmodels.BatchResponse, error)
+	BatchUpdate(body hubspotmodels.BatchUpdateBody, objectType string) (hubspotmodels.BatchResponse, error)
 }

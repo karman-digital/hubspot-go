@@ -107,7 +107,7 @@ func (c *ContactService) SearchContacts(body hubspotmodels.SearchBody) (hubspotm
 	return contactResp, nil
 }
 
-func (c *ContactService) GetContact(id int, opts ...hubspotmodels.ContactGetOptions) (hubspotmodels.Result, error) {
+func (c *ContactService) GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
 	var contactResp hubspotmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/contacts/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
