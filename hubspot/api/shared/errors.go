@@ -2,9 +2,9 @@ package shared
 
 import "errors"
 
-var ErrBatchCreate = errors.New("error creating batch of contacts")
+var ErrBatchCreate = errors.New("error in batch create")
 
-var ErrBatchGet = errors.New("error getting batch of contacts")
+var ErrBatchGet = errors.New("error in batch get")
 
 var ErrPropertyValidation = errors.New("error validating properties")
 
