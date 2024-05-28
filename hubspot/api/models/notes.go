@@ -2,7 +2,7 @@ package hubspotmodels
 
 type NotePostBody struct {
 	Properties   NoteProperties              `json:"properties"`
-	Associations []ObjectCreationAssociation `json:"associations"`
+	Associations []ObjectCreationAssociation `json:"associations,omitempty"`
 }
 
 type NoteProperties struct {
