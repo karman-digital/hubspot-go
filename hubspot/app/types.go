@@ -3,6 +3,10 @@ package hubspotapp
 import (
 	"errors"
 	"strconv"
+
+	"github.com/karman-digital/hubspot/hubspot/api/credentials"
+	"github.com/karman-digital/hubspot/hubspot/api/crm"
+	"github.com/karman-digital/hubspot/hubspot/interfaces"
 )
 
 type PortalId int
@@ -21,4 +25,15 @@ func (p PortalId) Int() int {
 
 func (p PortalId) String() string {
 	return strconv.Itoa(int(p))
+}
+
+type ApiClient struct {
+	CRM crm.CRM
+	interfaces.CommunicationPreferences
+}
+
+type Hubspot struct {
+	*credentials.Credentials
+	ApiClient
+	PortalId
 }

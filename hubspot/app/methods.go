@@ -6,14 +6,7 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/communicationpreferences"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
-	"github.com/karman-digital/hubspot/hubspot/interfaces"
 )
-
-type Hubspot struct {
-	*credentials.Credentials
-	ApiClient
-	PortalId
-}
 
 func InitHubspot() *Hubspot {
 	return &Hubspot{}
@@ -36,11 +29,6 @@ func NewHubspotInstance(credentials *credentials.Credentials) *Hubspot {
 		Credentials: credentials,
 		ApiClient:   NewApiClient(credentials),
 	}
-}
-
-type ApiClient struct {
-	CRM crm.CRM
-	interfaces.CommunicationPreferences
 }
 
 func (c Hubspot) RetrievePortalId() PortalId {

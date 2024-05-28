@@ -27,6 +27,11 @@ type AssociationType struct {
 	AssociationTypeId   int    `json:"associationTypeId"`
 }
 
+type ObjectCreationAssociation struct {
+	Types []AssociationType `json:"types"`
+	To    AssociationId     `json:"to"`
+}
+
 type BatchAssociationGetResponse struct {
 	CompletedAt string                   `json:"completedAt"`
 	RequestedAt string                   `json:"requestedAt"`

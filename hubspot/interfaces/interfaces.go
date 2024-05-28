@@ -67,3 +67,7 @@ type CustomBatch interface {
 	BatchGet(body hubspotmodels.BatchGetBody, objectType string) (hubspotmodels.BatchResponse, error)
 	BatchUpdate(body hubspotmodels.BatchUpdateBody, objectType string) (hubspotmodels.BatchResponse, error)
 }
+
+type Notes interface {
+	CreateNoteWithAssociations(body hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.ObjectResponse, error)
+}
