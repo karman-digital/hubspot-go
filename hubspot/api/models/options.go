@@ -5,4 +5,5 @@ type GetOptions struct {
 	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
 	Associations          []string `url:"associations,omitempty"`
 	Archived              bool     `url:"archived,omitempty"`
+	After                 string   `url:"after,omitempty"`
 }

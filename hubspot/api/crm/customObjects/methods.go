@@ -157,9 +157,14 @@ func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ..
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
+	var respStruct hubspotmodels.ListResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
+	if len(opts) != 0 {
+		if opts[0].After != "" {
+			reqUrl = fmt.Sprintf("%s?after=%s", reqUrl, opts[0].After)
+		}
+	}
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)

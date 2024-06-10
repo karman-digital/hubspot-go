@@ -34,15 +34,6 @@ type BatchUpdateInput struct {
 	Properties map[string]any `json:"properties"`
 }
 
-type Result struct {
-	ID           string                 `json:"id"`
-	Properties   Properties             `json:"properties"`
-	CreatedAt    time.Time              `json:"createdAt"`
-	UpdatedAt    time.Time              `json:"updatedAt"`
-	Archived     bool                   `json:"archived"`
-	Associations map[string]Association `json:"associations"`
-}
-
 type Association struct {
 	Results []AssociationResultPair `json:"results,omitempty"`
 }
