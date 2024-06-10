@@ -160,11 +160,6 @@ func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ..
 func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
 	var respStruct hubspotmodels.ListResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
-	if len(opts) != 0 {
-		if opts[0].After != "" {
-			reqUrl = fmt.Sprintf("%s?after=%s", reqUrl, opts[0].After)
-		}
-	}
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)
@@ -173,6 +168,9 @@ func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspo
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	queryParams := url.Values{}
 	if len(opts) != 0 {
+		if opts[0].After != "" {
+			queryParams.Add("after", opts[0].After)
+		}
 		if len(opts[0].Properties) != 0 {
 			for _, property := range opts[0].Properties {
 				queryParams.Add("properties", property)

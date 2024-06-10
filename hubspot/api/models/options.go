@@ -6,4 +6,5 @@ type GetOptions struct {
 	Associations          []string `url:"associations,omitempty"`
 	Archived              bool     `url:"archived,omitempty"`
 	After                 string   `url:"after,omitempty"`
+	Limit                 int      `url:"limit,omitempty"`
 }
