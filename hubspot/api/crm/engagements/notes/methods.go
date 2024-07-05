@@ -3,15 +3,14 @@ package notes
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	"net/http"
 
-	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.ObjectResponse, error) {
-	var notesResp hubspotmodels.ObjectResponse
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/notes"
+func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error) {
+	var notesResp hubspotmodels.Result
 	for _, association := range associations {
 		if noteBody.Associations == nil {
 			noteBody.Associations = []hubspotmodels.ObjectCreationAssociation{}
@@ -22,27 +21,10 @@ func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePos
 	if err != nil {
 		return notesResp, err
 	}
-	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
+	resp, err := n.SendRequest(http.MethodPost, "/crm/v3/objects/notes", reqBody)
 	if err != nil {
-		return notesResp, fmt.Errorf("error creating request: %s", err)
+		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.AccessToken()))
-	resp, err := n.Client().Do(req)
-	if err != nil {
-		return notesResp, fmt.Errorf("error making request: %s", err)
-	}
-	defer resp.Body.Close()
-	contactRawBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return notesResp, fmt.Errorf("error reading body: %s", err)
-	}
-	if resp.StatusCode != 201 {
-		return notesResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
-	}
-	err = json.Unmarshal(contactRawBody, &resp)
-	if err != nil {
-		return notesResp, fmt.Errorf("error parsing body: %s", err)
-	}
-	return notesResp, nil
+	return shared.HandleResponse(resp)
+
 }

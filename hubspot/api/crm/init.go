@@ -7,6 +7,7 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/crm/contact"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/customObjects"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/deals"
+	"github.com/karman-digital/hubspot/hubspot/api/crm/engagements"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/owners"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/properties"
 )
@@ -20,5 +21,6 @@ func NewCrmService(creds *credentials.Credentials) CRM {
 		Deals:         deals.NewDealService(creds),
 		CustomObjects: customObjects.NewCustomObjectService(creds),
 		Companies:     company.NewCompanyService(creds),
+		Engagements:   engagements.NewEngagementService(creds),
 	}
 }

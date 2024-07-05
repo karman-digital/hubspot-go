@@ -78,5 +78,5 @@ type CustomBatch interface {
 }
 
 type Notes interface {
-	CreateNoteWithAssociations(body hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.ObjectResponse, error)
+	CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error)
 }
