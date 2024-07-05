@@ -22,6 +22,14 @@ type Contact interface {
 	GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
+type Company interface {
+	Batch
+	UpdateCompany(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error)
+	CreateCompany(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
+	SearchCompanies(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
+	GetCompany(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+}
+
 type Deal interface {
 	Batch
 	UpdateDeal(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error)

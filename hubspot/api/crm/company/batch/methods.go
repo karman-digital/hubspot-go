@@ -1,4 +1,4 @@
-package batchcontact
+package batchcompany
 
 import (
 	"encoding/json"
@@ -9,36 +9,36 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *BatchContactService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error) {
+func (b *BatchCompanyService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, "/crm/v3/objects/contacts/batch/update", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/companies/batch/update", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleBatchResponse(resp)
 }
 
-func (c *BatchContactService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error) {
+func (b *BatchCompanyService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, "/crm/v3/objects/contacts/batch/create", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/companies/batch/create", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleBatchResponse(resp)
 }
 
-func (c *BatchContactService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error) {
+func (b *BatchCompanyService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, "/crm/v3/objects/contacts/batch/read", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/companies/batch/read", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
