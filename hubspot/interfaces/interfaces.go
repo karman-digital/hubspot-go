@@ -36,6 +36,7 @@ type Deal interface {
 	CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 	GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
+	DeleteDeal(id int) error
 }
 
 type CustomObject interface {

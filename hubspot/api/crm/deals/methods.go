@@ -156,3 +156,26 @@ func (c *DealService) GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspot
 	}
 	return respStruct, nil
 }
+
+func (c *DealService) DeleteDeal(id int) error {
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/deals/%d", id)
+	req, err := retryablehttp.NewRequest("DELETE", reqUrl, nil)
+	if err != nil {
+		return fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	contactRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("error returned by endpoint: %s", contactRawBody)
+	}
+	return nil
+}
