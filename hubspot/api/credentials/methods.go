@@ -116,7 +116,9 @@ func GetBearerTokenData(bearerToken string) (hubspotmodels.BearerTokenBody, erro
 	if res.StatusCode != 200 {
 		return resBodyStruct, errors.New(string(resBody))
 	}
-	json.Unmarshal(resBody, &resBodyStruct)
-
+	err = json.Unmarshal(resBody, &resBodyStruct)
+	if err != nil {
+		return resBodyStruct, err
+	}
 	return resBodyStruct, nil
 }

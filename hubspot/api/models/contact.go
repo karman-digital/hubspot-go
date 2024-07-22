@@ -21,6 +21,16 @@ type BatchResponse struct {
 	Status      string            `json:"status"`
 }
 
+type BatchResponseBase struct {
+	CompletedAt time.Time         `json:"completedAt"`
+	NumErrors   int               `json:"numErrors"`
+	RequestedAt time.Time         `json:"requestedAt"`
+	StartedAt   time.Time         `json:"startedAt"`
+	Links       map[string]string `json:"links"`
+	Errors      []ErrorDetail     `json:"errors"`
+	Status      string            `json:"status"`
+}
+
 type BatchUpdateBody struct {
 	Inputs []BatchUpdateInput `json:"inputs"`
 }

@@ -45,3 +45,34 @@ type SubscriptionStatus struct {
 	LegalBasis            string `json:"legalBasis"`
 	LegalBasisExplanation string `json:"legalBasisExplanation"`
 }
+
+type BatchCommunicationPreferencesPostBody struct {
+	Inputs []CommunicationPreferencesBatchInputs `json:"inputs"`
+}
+
+type CommunicationPreferencesBatchInputs struct {
+	StatusState           string `json:"statusState"`
+	Channel               string `json:"channel"`
+	SubscriberIdString    string `json:"subscriberIdString"`
+	LegalBasis            string `json:"legalBasis,omitempty"`
+	SubscriptionId        int    `json:"subscriptionId"`
+	LegalBasisExplanation string `json:"legalBasisExplanation,omitempty"`
+}
+
+type BatchCommunicationPreferencesResponse struct {
+	BatchResponseBase
+	Results []V4CommunicationPreferenceResult `json:"results"`
+}
+
+type V4CommunicationPreferenceResult struct {
+	Channel                string    `json:"channel"`
+	SubscriberIdString     string    `json:"subscriberIdString"`
+	LegalBasis             string    `json:"legalBasis"`
+	SetStatisSuccessReason string    `json:"setStatisSuccessReason"`
+	Source                 string    `json:"source"`
+	SubscriptionId         int       `json:"subscriptionId"`
+	LegalBasisExplanation  string    `json:"legalBasisExplanation"`
+	BusinessUnitId         int       `json:"businessUnitId"`
+	Status                 string    `json:"status"`
+	TimeStamp              time.Time `json:"timeStamp"`
+}

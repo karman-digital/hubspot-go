@@ -32,6 +32,29 @@ func HandleBatchResponse(resp *http.Response) (batchResp hubspotmodels.BatchResp
 	return batchResp, nil
 }
 
+func HandleBatchCommunicationPreferencesResponse(resp *http.Response) (batchResp hubspotmodels.BatchCommunicationPreferencesResponse, err error) {
+	rawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 201 && resp.StatusCode != 200 && resp.StatusCode != 207 {
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(rawBody, &errorResp)
+		if err != nil {
+			return batchResp, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return batchResp, HandleBatchResponseCodes(errorResp, resp.StatusCode)
+	}
+	err = json.Unmarshal(rawBody, &batchResp)
+	if err != nil {
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	if resp.StatusCode == 207 {
+		return batchResp, ErrBatchCreate
+	}
+	return batchResp, nil
+}
+
 func HandleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusCode int) error {
 	switch statusCode {
 	case 200:
