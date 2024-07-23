@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
+	hshelpers "github.com/karman-digital/hubspot/hubspot/adapter/helpers"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 )
 
@@ -34,7 +35,11 @@ func (c *ContactService) CreateContact(body hubspotmodels.PostBody) (hubspotmode
 		return contactResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != http.StatusCreated {
-		return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
+		parsedError, err := hshelpers.ParseErrorResponse(contactRawBody)
+		if err != nil {
+			return contactResp, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
+		}
+		return contactResp, parsedError
 	}
 	err = json.Unmarshal(contactRawBody, &contactResp)
 	if err != nil {

@@ -7,6 +7,17 @@ type ErrorResponseBody struct {
 	CorrelationId string `json:"correlationId"`
 }
 
+type NestedMessage struct {
+	IsValid bool   `json:"isValid"`
+	Message string `json:"message"`
+	Error   string `json:"error"`
+	Name    string `json:"name"`
+}
+
+type ParsedMessage struct {
+	PropertyValues []NestedMessage `json:"Property values were not valid"`
+}
+
 func (e ErrorResponseBody) Error() string {
 	return e.Message
 }
