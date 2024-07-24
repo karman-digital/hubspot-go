@@ -21,3 +21,13 @@ type ParsedMessage struct {
 func (e ErrorResponseBody) Error() string {
 	return e.Message
 }
+
+func (p ParsedMessage) EmailInvalidError() bool {
+	emailValidation := false
+	for _, msg := range p.PropertyValues {
+		if msg.Error == "INVALID_EMAIL" {
+			emailValidation = true
+		}
+	}
+	return emailValidation
+}
