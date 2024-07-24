@@ -31,6 +31,14 @@ func PasrseErrorAsErrorResponse(err error) (hubspotmodels.ErrorResponseBody, err
 	return hubspotmodels.ErrorResponseBody{}, err
 }
 
+func ParseErrorAsValidationErrors(err error) (hubspotmodels.ParsedMessage, error) {
+	errResp, err := PasrseErrorAsErrorResponse(err)
+	if err != nil {
+		return hubspotmodels.ParsedMessage{}, err
+	}
+	return ParseValidationErrors(errResp)
+}
+
 func IsEmailInvalidError(err hubspotmodels.ErrorResponseBody) bool {
 	if err.Category == "VALIDATION_ERROR" {
 		message, err := ParseValidationErrors(err)
