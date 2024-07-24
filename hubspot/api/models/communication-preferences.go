@@ -47,10 +47,10 @@ type SubscriptionStatus struct {
 }
 
 type BatchCommunicationPreferencesPostBody struct {
-	Inputs []CommunicationPreferencesBatchInputs `json:"inputs"`
+	Inputs []CommunicationPreferencesBatchInput `json:"inputs"`
 }
 
-type CommunicationPreferencesBatchInputs struct {
+type CommunicationPreferencesBatchInput struct {
 	StatusState           string `json:"statusState"`
 	Channel               string `json:"channel"`
 	SubscriberIdString    string `json:"subscriberIdString"`
