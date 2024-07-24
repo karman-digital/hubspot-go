@@ -47,4 +47,5 @@ func IsEmailInvalidError(err hubspotmodels.ErrorResponseBody) bool {
 		}
 		return message.EmailInvalidError()
 	}
+	return false
 }
