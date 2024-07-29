@@ -13,4 +13,5 @@ type TaskProperties struct {
 	HsTaskPriority  string `json:"hs_task_priority"`
 	HsTaskSubject   string `json:"hs_task_subject"`
 	HsTaskReminders string `json:"hs_task_reminders"`
+	HubspotOwnerId  int    `json:"hubspot_owner_id"`
 }
