@@ -83,6 +83,10 @@ type Notes interface {
 	CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error)
 }
 
+type Tasks interface {
+	CreateTaskWithAssociations(taskBody hubspotmodels.TaskPostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error)
+}
+
 type BatchPreferences interface {
 	BatchUpdateCommunicationPreferences(body hubspotmodels.BatchCommunicationPreferencesPostBody) (hubspotmodels.BatchCommunicationPreferencesResponse, error)
 }
