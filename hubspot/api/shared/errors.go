@@ -19,3 +19,5 @@ var ErrResourceAlreadyExists = errors.New("resource already exists")
 var ErrSubscriptionAlreadyUnsubscribed = errors.New("subscription already unsubscribed")
 
 var ErrSubscriptionAlreadySubscribed = errors.New("subscription already subscribed")
+
+var ErrResourceNotFound = errors.New("resource not found")
