@@ -20,6 +20,7 @@ type Contact interface {
 	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
 	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	GetContactByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type Company interface {
@@ -28,6 +29,7 @@ type Company interface {
 	CreateCompany(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 	SearchCompanies(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	GetCompany(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	GetCompanyByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type Deal interface {
@@ -37,6 +39,7 @@ type Deal interface {
 	GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	DeleteDeal(id int) error
+	GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type CustomObject interface {

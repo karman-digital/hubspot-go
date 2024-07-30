@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 func (c *DealService) CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Result, error) {
@@ -178,4 +179,15 @@ func (c *DealService) DeleteDeal(id int) error {
 		return fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
 	return nil
+}
+
+func (c *DealService) GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
+	if opts[0].IdProperty == "" {
+		return hubspotmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
+	}
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/deals/%s", value), nil, opts...)
+	if err != nil {
+		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleResponse(resp)
 }

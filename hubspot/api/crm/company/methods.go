@@ -52,3 +52,14 @@ func (c *CompanyService) SearchCompanies(body hubspotmodels.SearchBody) (hubspot
 	}
 	return shared.HandleSearchResponse(resp)
 }
+
+func (c *CompanyService) GetCompanyByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
+	if opts[0].IdProperty == "" {
+		return hubspotmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
+	}
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/companies/%s", value), nil, opts...)
+	if err != nil {
+		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleResponse(resp)
+}

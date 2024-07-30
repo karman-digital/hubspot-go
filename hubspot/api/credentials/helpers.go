@@ -47,5 +47,8 @@ func generateQueryParams(opts hubspotmodels.GetOptions) url.Values {
 	if opts.Archived {
 		queryParams.Add("archived", "true")
 	}
+	if opts.IdProperty != "" {
+		queryParams.Add("idProperty", opts.IdProperty)
+	}
 	return queryParams
 }

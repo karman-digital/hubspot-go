@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 	hshelpers "github.com/karman-digital/hubspot/hubspot/adapter/helpers"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 func (c *ContactService) CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error) {
@@ -160,4 +161,15 @@ func (c *ContactService) GetContact(id int, opts ...hubspotmodels.GetOptions) (h
 		return contactResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	return contactResp, nil
+}
+
+func (c *ContactService) GetContactByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
+	if opts[0].IdProperty == "" {
+		return hubspotmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
+	}
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/contacts/%s", value), nil, opts...)
+	if err != nil {
+		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleResponse(resp)
 }

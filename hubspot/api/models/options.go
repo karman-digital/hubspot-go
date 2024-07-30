@@ -7,4 +7,5 @@ type GetOptions struct {
 	Archived              bool     `url:"archived,omitempty"`
 	After                 string   `url:"after,omitempty"`
 	Limit                 int      `url:"limit,omitempty"`
+	IdProperty            string   `url:"idProperty,omitempty"`
 }
