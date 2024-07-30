@@ -93,3 +93,11 @@ type Tasks interface {
 type BatchPreferences interface {
 	BatchUpdateCommunicationPreferences(body hubspotmodels.BatchCommunicationPreferencesPostBody) (hubspotmodels.BatchCommunicationPreferencesResponse, error)
 }
+
+type Products interface {
+	GetProductByUniqueId(uniqueId string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+}
+
+type LineItems interface {
+	CreateLineItem(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
+}

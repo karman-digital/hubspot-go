@@ -14,4 +14,6 @@ type CRM struct {
 	CustomObjects interfaces.CustomObject
 	Engagements   engagements.Engagements
 	Companies     interfaces.Company
+	Products      interfaces.Products
+	LineItems     interfaces.LineItems
 }
