@@ -1,8 +1,8 @@
 package hubspotmodels
 
 type FileImportResponse struct {
-	Links []FileImportStatus `json:"links"`
-	ID    string             `json:"id"`
+	Links FileImportStatus `json:"links"`
+	ID    string           `json:"id"`
 }
 
 type FileImportStatus struct {
