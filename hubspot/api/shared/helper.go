@@ -116,13 +116,29 @@ func handleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
 	return rawBody, nil
 }
 
+func handleCustomResponseCode(resp *http.Response, code int) (rawBody []byte, err error) {
+	rawBody, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != code {
+		if resp.StatusCode == 404 {
+			return rawBody, ErrResourceNotFound
+		}
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(rawBody, &errorResp)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return rawBody, fmt.Errorf("error returned by endpoint: %+v", errorResp)
+	}
+	return rawBody, nil
+}
+
 func HandleFileImportResponse(resp *http.Response) (fileImportResp hubspotmodels.FileImportResponse, err error) {
-	rawBody, err := handleBasicResponseCode(resp)
+	rawBody, err := handleCustomResponseCode(resp, http.StatusAccepted)
 	if err != nil {
 		return fileImportResp, fmt.Errorf("error reading body: %s", err)
-	}
-	if resp.StatusCode != 202 {
-		return fileImportResp, fmt.Errorf("error returned by endpoint: %s", string(rawBody))
 	}
 	err = json.Unmarshal(rawBody, &fileImportResp)
 	if err != nil {
