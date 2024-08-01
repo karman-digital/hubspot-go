@@ -115,3 +115,18 @@ func handleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
 	}
 	return rawBody, nil
 }
+
+func HandleFileImportResponse(resp *http.Response) (fileImportResp hubspotmodels.FileImportResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return fileImportResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 202 {
+		return fileImportResp, fmt.Errorf("error returned by endpoint: %s", string(rawBody))
+	}
+	err = json.Unmarshal(rawBody, &fileImportResp)
+	if err != nil {
+		return fileImportResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return fileImportResp, nil
+}

@@ -101,3 +101,7 @@ type Products interface {
 type LineItems interface {
 	CreateLineItem(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 }
+
+type Files interface {
+	ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileImportResponse, error)
+}

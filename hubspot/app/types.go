@@ -6,6 +6,7 @@ import (
 
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
+	"github.com/karman-digital/hubspot/hubspot/api/filesystem"
 	"github.com/karman-digital/hubspot/hubspot/interfaces"
 )
 
@@ -30,6 +31,7 @@ func (p PortalId) String() string {
 type ApiClient struct {
 	CRM crm.CRM
 	interfaces.CommunicationPreferences
+	FileSystem filesystem.Filesystem
 }
 
 type Hubspot struct {
