@@ -18,7 +18,7 @@ func (c *BatchContactService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (h
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
-	return shared.HandleBatchResponse(resp)
+	return shared.HandleBatchResponse(resp, http.MethodPatch)
 }
 
 func (c *BatchContactService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error) {
@@ -30,7 +30,7 @@ func (c *BatchContactService) BatchCreate(body hubspotmodels.BatchCreateBody) (h
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
-	return shared.HandleBatchResponse(resp)
+	return shared.HandleBatchResponse(resp, http.MethodPost)
 }
 
 func (c *BatchContactService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error) {
@@ -42,5 +42,5 @@ func (c *BatchContactService) BatchGet(body hubspotmodels.BatchGetBody) (hubspot
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
-	return shared.HandleBatchResponse(resp)
+	return shared.HandleBatchResponse(resp, http.MethodGet)
 }

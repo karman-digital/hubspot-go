@@ -9,7 +9,7 @@ import (
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 )
 
-func HandleBatchResponse(resp *http.Response) (batchResp hubspotmodels.BatchResponse, err error) {
+func HandleBatchResponse(resp *http.Response, method string) (batchResp hubspotmodels.BatchResponse, err error) {
 	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error reading body: %s", err)
@@ -27,6 +27,9 @@ func HandleBatchResponse(resp *http.Response) (batchResp hubspotmodels.BatchResp
 		return batchResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	if resp.StatusCode == 207 {
+		if method == http.MethodGet {
+			return batchResp, ErrBatchGet
+		}
 		return batchResp, ErrBatchCreate
 	}
 	return batchResp, nil
