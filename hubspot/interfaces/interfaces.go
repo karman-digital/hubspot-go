@@ -99,6 +99,7 @@ type Products interface {
 }
 
 type LineItems interface {
+	Batch
 	CreateLineItem(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 	GetLineItem(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	UpdateLineItem(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error)
