@@ -18,7 +18,7 @@ func (s *LineItemsService) CreateLineItem(body hubspotmodels.PostBody) (hubspotm
 	if err != nil {
 		return hubspotmodels.Result{}, err
 	}
-	return shared.HandleResponse(resp)
+	return shared.HandleCreateResponse(resp)
 }
 
 func (s *LineItemsService) UpdateLineItem(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error) {

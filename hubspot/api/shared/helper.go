@@ -85,6 +85,18 @@ func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err erro
 	return objResp, nil
 }
 
+func HandleCreateResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
+	rawBody, err := handleCustomResponseCode(resp, http.StatusCreated)
+	if err != nil {
+		return objResp, fmt.Errorf("error reading body: %s", err)
+	}
+	err = json.Unmarshal(rawBody, &objResp)
+	if err != nil {
+		return objResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return objResp, nil
+}
+
 func HandleSearchResponse(resp *http.Response) (searchResp hubspotmodels.SearchResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
