@@ -14,7 +14,7 @@ func (b *BatchLineItemService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/deals/batch/update", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/line_items/batch/update", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -26,7 +26,7 @@ func (b *BatchLineItemService) BatchCreate(body hubspotmodels.BatchCreateBody) (
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/deals/batch/create", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/line_items/batch/create", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -38,7 +38,7 @@ func (b *BatchLineItemService) BatchGet(body hubspotmodels.BatchGetBody) (hubspo
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/companies/batch/read", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/line_items/batch/read", reqBody)
 	if err != nil {
 		return hubspotmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
