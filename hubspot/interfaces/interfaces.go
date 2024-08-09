@@ -95,6 +95,7 @@ type BatchPreferences interface {
 }
 
 type Products interface {
+	Batch
 	GetProductByUniqueId(uniqueId string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
