@@ -76,7 +76,7 @@ func HandleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusC
 func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
-		return objResp, fmt.Errorf("error reading body: %s", err)
+		return objResp, err
 	}
 	err = json.Unmarshal(rawBody, &objResp)
 	if err != nil {
@@ -88,7 +88,7 @@ func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err erro
 func HandleCreateResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
 	rawBody, err := handleCustomResponseCode(resp, http.StatusCreated)
 	if err != nil {
-		return objResp, fmt.Errorf("error reading body: %s", err)
+		return objResp, err
 	}
 	err = json.Unmarshal(rawBody, &objResp)
 	if err != nil {
@@ -100,7 +100,7 @@ func HandleCreateResponse(resp *http.Response) (objResp hubspotmodels.Result, er
 func HandleSearchResponse(resp *http.Response) (searchResp hubspotmodels.SearchResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
-		return searchResp, fmt.Errorf("error reading body: %s", err)
+		return searchResp, err
 	}
 	err = json.Unmarshal(rawBody, &searchResp)
 	if err != nil {
@@ -150,7 +150,7 @@ func handleCustomResponseCode(resp *http.Response, code int) (rawBody []byte, er
 func HandleFileImportResponse(resp *http.Response) (fileImportResp hubspotmodels.FileImportResponse, err error) {
 	rawBody, err := handleCustomResponseCode(resp, http.StatusAccepted)
 	if err != nil {
-		return fileImportResp, fmt.Errorf("error reading body: %s", err)
+		return fileImportResp, err
 	}
 	err = json.Unmarshal(rawBody, &fileImportResp)
 	if err != nil {
