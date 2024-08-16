@@ -191,3 +191,11 @@ func (c *DealService) GetDealByUniqueProperty(value string, opts ...hubspotmodel
 	}
 	return shared.HandleResponse(resp)
 }
+
+func (c *DealService) GetDeals(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
+	resp, err := c.SendRequest(http.MethodGet, "/crm/v3/objects/deals", nil, opts...)
+	if err != nil {
+		return hubspotmodels.ListResponse{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleListResponse(resp)
+}

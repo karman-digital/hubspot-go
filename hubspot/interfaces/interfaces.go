@@ -40,6 +40,7 @@ type Deal interface {
 	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	DeleteDeal(id int) error
 	GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	GetDeals(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
 }
 
 type CustomObject interface {
