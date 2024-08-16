@@ -88,6 +88,13 @@ func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err erro
 	return objResp, nil
 }
 
+func HandleError(resp *http.Response, returnedErr error) (objResp hubspotmodels.Result, err error) {
+	if _, err = handleBasicResponseCode(resp); err != nil {
+		return objResp, err
+	}
+	return objResp, nil
+}
+
 func HandleListResponse(resp *http.Response) (listResp hubspotmodels.ListResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
