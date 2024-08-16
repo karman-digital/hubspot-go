@@ -44,6 +44,12 @@ func generateQueryParams(opts hubspotmodels.GetOptions) url.Values {
 			queryParams.Add("associations", association)
 		}
 	}
+	if opts.After != "" {
+		queryParams.Add("after", opts.After)
+	}
+	if opts.Limit != 0 {
+		queryParams.Add("limit", fmt.Sprintf("%d", opts.Limit))
+	}
 	if opts.Archived {
 		queryParams.Add("archived", "true")
 	}
