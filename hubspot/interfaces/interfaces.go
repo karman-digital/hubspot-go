@@ -50,6 +50,7 @@ type CustomObject interface {
 	GetCustomObject(id int, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error)
 	GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
+	GetCustomObjectByUniqueProperty(id string, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type Owners interface {
