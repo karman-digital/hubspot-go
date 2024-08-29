@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 func (c *CustomObjectService) CreateCustomObject(body hubspotmodels.PostBody, objectType string) (hubspotmodels.Result, error) {
@@ -73,6 +74,18 @@ func (c *CustomObjectService) UpdateCustomObject(id int, patchBody hubspotmodels
 		return respStruct, fmt.Errorf("error parsing body: %s", err)
 	}
 	return respStruct, nil
+}
+
+func (c *CustomObjectService) UpdateCustomObjectByUniqueId(id, idProperty string, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error) {
+	reqBody, err := json.Marshal(patchBody)
+	if err != nil {
+		return hubspotmodels.Result{}, fmt.Errorf("error marshalling patch body: %s", err)
+	}
+	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/objects/%s/%s?idProperty=%s", objectType, id, idProperty), reqBody)
+	if err != nil {
+		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleResponse(resp)
 }
 
 func (c *CustomObjectService) SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error) {
@@ -201,6 +214,9 @@ func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectT
 		return respStruct, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 200 {
+		if resp.StatusCode == 404 {
+			return respStruct, shared.ErrResourceNotFound
+		}
 		return respStruct, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
 	err = json.Unmarshal(contactRawBody, &respStruct)

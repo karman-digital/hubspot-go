@@ -46,6 +46,7 @@ type Deal interface {
 type CustomObject interface {
 	CustomBatch
 	UpdateCustomObject(id int, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error)
+	UpdateCustomObjectByUniqueId(id, idProperty string, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error)
 	CreateCustomObject(body hubspotmodels.PostBody, objectType string) (hubspotmodels.Result, error)
 	GetCustomObject(id int, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error)
