@@ -74,11 +74,7 @@ func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference
 			if err != nil {
 				return fmt.Errorf("error parsing error body: %s", err)
 			}
-			if errBody.Category == "VALIDATION_ERROR" {
-				return shared.ErrSubscriptionAlreadySubscribed
-			} else {
-				return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
-			}
+			return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
 		}
 		return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
 	}

@@ -40,15 +40,18 @@ type Deal interface {
 	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	DeleteDeal(id int) error
 	GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	GetDeals(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
 }
 
 type CustomObject interface {
 	CustomBatch
 	UpdateCustomObject(id int, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error)
+	UpdateCustomObjectByUniqueId(id, idProperty string, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error)
 	CreateCustomObject(body hubspotmodels.PostBody, objectType string) (hubspotmodels.Result, error)
 	GetCustomObject(id int, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error)
 	GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
+	GetCustomObjectByUniqueProperty(id string, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type Owners interface {
