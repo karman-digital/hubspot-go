@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 
 	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
@@ -128,4 +129,16 @@ func (c *BatchCustomObjectService) BatchGet(body hubspotmodels.BatchGetBody, obj
 		return batchResp, shared.ErrBatchGet
 	}
 	return batchResp, nil
+}
+
+func (c *BatchCustomObjectService) BatchDelete(body hubspotmodels.BatchDeleteBody, objectType string) error {
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("error marshalling post body: %s", err)
+	}
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/objects/%s/batch/archive", objectType), reqBody)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
 }

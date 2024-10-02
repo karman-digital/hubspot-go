@@ -44,3 +44,15 @@ func (b *BatchLineItemService) BatchGet(body hubspotmodels.BatchGetBody) (hubspo
 	}
 	return shared.HandleBatchResponse(resp, http.MethodGet)
 }
+
+func (b *BatchLineItemService) BatchDelete(body hubspotmodels.BatchDeleteBody) error {
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("error marshalling post body: %s", err)
+	}
+	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/line_items/batch/archive", reqBody)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
+}

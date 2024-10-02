@@ -44,3 +44,15 @@ func (c *BatchContactService) BatchGet(body hubspotmodels.BatchGetBody) (hubspot
 	}
 	return shared.HandleBatchResponse(resp, http.MethodGet)
 }
+
+func (c *BatchContactService) BatchDelete(body hubspotmodels.BatchDeleteBody) error {
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("error marshalling post body: %s", err)
+	}
+	resp, err := c.SendRequest(http.MethodPost, "/crm/v3/objects/contacts/batch/archive", reqBody)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
+}

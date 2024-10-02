@@ -80,6 +80,7 @@ type CommunicationPreferences interface {
 type Batch interface {
 	BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error)
 	BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error)
+	BatchDelete(body hubspotmodels.BatchDeleteBody) error
 	BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error)
 }
 
@@ -87,6 +88,7 @@ type CustomBatch interface {
 	BatchCreate(body hubspotmodels.BatchCreateBody, objectType string) (hubspotmodels.BatchResponse, error)
 	BatchGet(body hubspotmodels.BatchGetBody, objectType string) (hubspotmodels.BatchResponse, error)
 	BatchUpdate(body hubspotmodels.BatchUpdateBody, objectType string) (hubspotmodels.BatchResponse, error)
+	BatchDelete(body hubspotmodels.BatchDeleteBody, objectType string) error
 }
 
 type Notes interface {
