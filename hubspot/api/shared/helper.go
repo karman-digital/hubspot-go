@@ -180,3 +180,11 @@ func HandleFileImportResponse(resp *http.Response) (fileImportResp hubspotmodels
 	}
 	return fileImportResp, nil
 }
+
+func HandleDeleteResponse(resp *http.Response) (err error) {
+	_, err = handleCustomResponseCode(resp, http.StatusNoContent)
+	if err != nil {
+		return err
+	}
+	return nil
+}

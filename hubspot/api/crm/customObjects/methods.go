@@ -278,3 +278,11 @@ func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspo
 	}
 	return respStruct, nil
 }
+
+func (c *CustomObjectService) DeleteCustomObject(id int, objectType string) (err error) {
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/%s/%d", objectType, id), nil)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
+}

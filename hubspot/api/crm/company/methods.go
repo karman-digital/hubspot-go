@@ -63,3 +63,19 @@ func (c *CompanyService) GetCompanyByUniqueProperty(value string, opts ...hubspo
 	}
 	return shared.HandleResponse(resp)
 }
+
+func (c *CompanyService) DeleteCompany(id int) (err error) {
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/companies/%d", id), nil)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
+}
+
+func (c *CompanyService) GetCompanies(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
+	resp, err := c.SendRequest(http.MethodGet, "/crm/v3/objects/companies", nil, opts...)
+	if err != nil {
+		return hubspotmodels.ListResponse{}, fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleListResponse(resp)
+}

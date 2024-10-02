@@ -173,3 +173,11 @@ func (c *ContactService) GetContactByUniqueProperty(value string, opts ...hubspo
 	}
 	return shared.HandleResponse(resp)
 }
+
+func (c *ContactService) DeleteContact(id int) (err error) {
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/contacts/%d", id), nil)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	return shared.HandleDeleteResponse(resp)
+}

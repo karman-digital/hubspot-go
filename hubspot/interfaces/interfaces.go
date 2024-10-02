@@ -21,6 +21,7 @@ type Contact interface {
 	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	GetContactByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	DeleteContact(id int) (err error)
 }
 
 type Company interface {
@@ -30,6 +31,8 @@ type Company interface {
 	SearchCompanies(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	GetCompany(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	GetCompanyByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	GetCompanies(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
+	DeleteCompany(id int) (err error)
 }
 
 type Deal interface {
@@ -38,7 +41,7 @@ type Deal interface {
 	CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 	GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
-	DeleteDeal(id int) error
+	DeleteDeal(id int) (err error)
 	GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	GetDeals(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
 }
@@ -52,6 +55,7 @@ type CustomObject interface {
 	SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error)
 	GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error)
 	GetCustomObjectByUniqueProperty(id string, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+	DeleteCustomObject(id int, objectType string) (err error)
 }
 
 type Owners interface {
