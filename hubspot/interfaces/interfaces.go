@@ -99,6 +99,14 @@ type Tasks interface {
 	CreateTaskWithAssociations(taskBody hubspotmodels.TaskPostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error)
 }
 
+type Calls interface {
+	Batch
+}
+
+type Emails interface {
+	Batch
+}
+
 type BatchPreferences interface {
 	BatchUpdateCommunicationPreferences(body hubspotmodels.BatchCommunicationPreferencesPostBody) (hubspotmodels.BatchCommunicationPreferencesResponse, error)
 }
