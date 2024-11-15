@@ -106,7 +106,7 @@ func (c *Credentials) ValidateBearerToken() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if res.StatusCode != 200 || resBodyStruct.ExpiresIn < 300 {
+	if res.StatusCode != 200 || resBodyStruct.ExpiresIn < 150 {
 		return false, nil
 	}
 	return true, nil
@@ -114,7 +114,6 @@ func (c *Credentials) ValidateBearerToken() (bool, error) {
 
 func GetBearerTokenData(bearerToken string) (hubspotmodels.BearerTokenBody, error) {
 	resBodyStruct := hubspotmodels.BearerTokenBody{}
-
 	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", bearerToken))
 	if err != nil {
 		return resBodyStruct, err
