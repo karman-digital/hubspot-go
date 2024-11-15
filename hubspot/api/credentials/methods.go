@@ -92,11 +92,21 @@ func (c *Credentials) SetTokens(accessToken hubspotmodels.AccessToken, refreshTo
 }
 
 func (c *Credentials) ValidateBearerToken() (bool, error) {
+	resBodyStruct := hubspotmodels.BearerTokenBody{}
 	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.AccessToken().String()))
 	if err != nil {
 		return false, err
 	}
-	if res.StatusCode != 200 {
+	defer res.Body.Close()
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return false, err
+	}
+	err = json.Unmarshal(resBody, &resBodyStruct)
+	if err != nil {
+		return false, err
+	}
+	if res.StatusCode != 200 || resBodyStruct.ExpiresIn < 300 {
 		return false, nil
 	}
 	return true, nil
