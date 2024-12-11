@@ -27,13 +27,13 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 	if err != nil {
 		return hubspotmodels.FileUploadResult{}, err
 	}
-	statusLink := uploadResp.Links.Status
+	taskId := uploadResp.ID
 	var fileUploadResult hubspotmodels.FileUploadResult
 	var uploaded bool
 	checkCount := 0
 	maxChecks := 3
 	for !uploaded && checkCount < maxChecks {
-		resp, err = f.Client().Get(statusLink)
+		resp, err = f.SendRequest("GET", fmt.Sprintf("/files/v3/files/import-from-url/async/tasks/%s/status", taskId), nil)
 		if err != nil {
 			return hubspotmodels.FileUploadResult{}, err
 		}
