@@ -33,6 +33,7 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 	checkCount := 0
 	maxChecks := 3
 	for !uploaded && checkCount < maxChecks {
+		time.Sleep(1 * time.Minute)
 		resp, err = f.SendRequest("GET", fmt.Sprintf("/files/v3/files/import-from-url/async/tasks/%s/status", taskId), nil)
 		if err != nil {
 			return hubspotmodels.FileUploadResult{}, err
