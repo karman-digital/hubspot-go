@@ -124,5 +124,5 @@ type LineItems interface {
 }
 
 type Files interface {
-	ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileImportResponse, error)
+	ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileImportStatusResponse, error)
 }

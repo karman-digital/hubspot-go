@@ -188,3 +188,15 @@ func HandleDeleteResponse(resp *http.Response) (err error) {
 	}
 	return nil
 }
+
+func HandleFileImportStatusResponse(resp *http.Response) (fileImportStatusResp hubspotmodels.FileImportStatusResponse, err error) {
+	rawBody, err := handleCustomResponseCode(resp, http.StatusOK)
+	if err != nil {
+		return fileImportStatusResp, err
+	}
+	err = json.Unmarshal(rawBody, &fileImportStatusResp)
+	if err != nil {
+		return fileImportStatusResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return fileImportStatusResp, nil
+}
