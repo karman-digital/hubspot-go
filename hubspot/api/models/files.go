@@ -22,14 +22,14 @@ type FileImportBody struct {
 }
 
 type FileImportStatusResponse struct {
-	Status      string     `json:"status"`
-	Result      FileResult `json:"result"`
-	StartedAt   string     `json:"startedAt"`
-	CompletedAt string     `json:"completedAt"`
-	TaskID      string     `json:"taskId"`
+	Status      string           `json:"status"`
+	Result      FileUploadResult `json:"result"`
+	StartedAt   string           `json:"startedAt"`
+	CompletedAt string           `json:"completedAt"`
+	TaskID      string           `json:"taskId"`
 }
 
-type FileResult struct {
+type FileUploadResult struct {
 	ID                string `json:"id"`
 	CreatedAt         string `json:"createdAt"`
 	UpdatedAt         string `json:"updatedAt"`

@@ -10,41 +10,42 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (f *FilesService) ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileImportStatusResponse, error) {
+func (f *FilesService) ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileUploadResult, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return hubspotmodels.FileImportStatusResponse{}, err
+		return hubspotmodels.FileUploadResult{}, err
 	}
 	resp, err := f.SendRequest("POST", "/files/v3/files/import-from-url/async", reqBody)
 	if err != nil {
-		return hubspotmodels.FileImportStatusResponse{}, err
+		return hubspotmodels.FileUploadResult{}, err
 	}
 	return f.handleFileUploadResponse(resp)
 }
 
-func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmodels.FileImportStatusResponse, error) {
+func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmodels.FileUploadResult, error) {
 	uploadResp, err := shared.HandleFileImportResponse(resp)
 	if err != nil {
-		return hubspotmodels.FileImportStatusResponse{}, err
+		return hubspotmodels.FileUploadResult{}, err
 	}
 	statusLink := uploadResp.Links.Status
-	var importStatusResp hubspotmodels.FileImportStatusResponse
+	var fileUploadResult hubspotmodels.FileUploadResult
 	var uploaded bool
 	checkCount := 0
 	maxChecks := 3
 	for !uploaded && checkCount < maxChecks {
 		resp, err = f.Client().Get(statusLink)
 		if err != nil {
-			return hubspotmodels.FileImportStatusResponse{}, err
+			return hubspotmodels.FileUploadResult{}, err
 		}
-		importStatusResp, err = shared.HandleFileImportStatusResponse(resp)
+		importStatusResp, err := shared.HandleFileImportStatusResponse(resp)
 		if err != nil {
-			return hubspotmodels.FileImportStatusResponse{}, err
+			return hubspotmodels.FileUploadResult{}, err
 		}
 		if importStatusResp.Status == "COMPLETE" {
 			uploaded = true
+			fileUploadResult = importStatusResp.Result
 		} else if importStatusResp.Status == "FAILED" {
-			return hubspotmodels.FileImportStatusResponse{}, fmt.Errorf("file import failed")
+			return hubspotmodels.FileUploadResult{}, fmt.Errorf("file import failed")
 		}
 		if !uploaded {
 			checkCount++
@@ -54,7 +55,7 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 		}
 	}
 	if !uploaded {
-		return hubspotmodels.FileImportStatusResponse{}, fmt.Errorf("file import timed out after %d checks", maxChecks)
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("file import timed out after %d checks", maxChecks)
 	}
-	return importStatusResp, nil
+	return fileUploadResult, nil
 }
