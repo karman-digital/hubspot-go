@@ -76,6 +76,18 @@ func HandleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusC
 	}
 }
 
+func HandleUserResponse(resp *http.Response) (userResp hubspotmodels.UserBody, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return userResp, err
+	}
+	err = json.Unmarshal(rawBody, &userResp)
+	if err != nil {
+		return userResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return userResp, nil
+}
+
 func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
