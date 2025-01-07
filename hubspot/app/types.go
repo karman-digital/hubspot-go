@@ -7,6 +7,7 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
 	"github.com/karman-digital/hubspot/hubspot/api/filesystem"
+	"github.com/karman-digital/hubspot/hubspot/api/settings"
 	"github.com/karman-digital/hubspot/hubspot/interfaces"
 )
 
@@ -32,6 +33,7 @@ type ApiClient struct {
 	CRM crm.CRM
 	interfaces.CommunicationPreferences
 	FileSystem filesystem.Filesystem
+	Settings   settings.Settings
 }
 
 type Hubspot struct {
