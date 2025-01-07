@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
@@ -59,4 +61,35 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 		return hubspotmodels.FileUploadResult{}, fmt.Errorf("file import timed out after %d checks", maxChecks)
 	}
 	return fileUploadResult, nil
+}
+
+func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...hubspotmodels.SignedUrlOptions) (hubspotmodels.SignedUrlResponse, error) {
+	endpoint := fmt.Sprintf("/files/v3/files/%s/signed-url", fileId)
+	if len(signedUrlOptions) > 0 {
+		queryParams := url.Values{}
+		if signedUrlOptions[0].ExpirationSeconds > 0 {
+			queryParams.Add("expirationSeconds", strconv.FormatInt(signedUrlOptions[0].ExpirationSeconds, 10))
+		}
+		if signedUrlOptions[0].Size != "" {
+			queryParams.Add("size", signedUrlOptions[0].Size)
+		}
+		if signedUrlOptions[0].Upscale && signedUrlOptions[0].Size != "" {
+			queryParams.Add("upscale", "true")
+		}
+		endpoint += "?" + queryParams.Encode()
+	}
+	resp, err := f.SendRequest("GET", endpoint, nil)
+	if err != nil {
+		return hubspotmodels.SignedUrlResponse{}, err
+	}
+	rawBody, err := shared.HandleBasicResponseCode(resp)
+	if err != nil {
+		return hubspotmodels.SignedUrlResponse{}, err
+	}
+	var signedUrlResponse hubspotmodels.SignedUrlResponse
+	err = json.Unmarshal(rawBody, &signedUrlResponse)
+	if err != nil {
+		return hubspotmodels.SignedUrlResponse{}, err
+	}
+	return signedUrlResponse, nil
 }

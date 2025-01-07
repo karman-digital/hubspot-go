@@ -47,3 +47,18 @@ type FileUploadResult struct {
 	FileMD5           string `json:"fileMd5"`
 	SourceGroup       string `json:"sourceGroup"`
 }
+
+type SignedUrlResponse struct {
+	URL       string `json:"url"`
+	ExpiresAt string `json:"expiresAt"`
+	Name      string `json:"name"`
+	Extension string `json:"extension"`
+	Type      string `json:"type"`
+	Size      int64  `json:"size"`
+}
+
+type SignedUrlOptions struct {
+	ExpirationSeconds int64  `json:"expirationSeconds"`
+	Size              string `json:"size"`
+	Upscale           bool   `json:"upscale"`
+}

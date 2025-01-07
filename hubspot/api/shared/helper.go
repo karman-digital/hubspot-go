@@ -143,6 +143,10 @@ func HandleSearchResponse(resp *http.Response) (searchResp hubspotmodels.SearchR
 	return searchResp, nil
 }
 
+func HandleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
+	return handleBasicResponseCode(resp)
+}
+
 func handleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
 	rawBody, err = io.ReadAll(resp.Body)
 	if err != nil {
