@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -153,17 +154,25 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...h
 	if err != nil {
 		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error making request: %s", err)
 	}
-
-	rawBody, err := shared.HandleBasicResponseCode(resp)
+	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error reading body: %s", err)
 	}
-
+	if resp.StatusCode != 201 {
+		if resp.StatusCode == 404 {
+			return hubspotmodels.FileUploadResult{}, fmt.Errorf("resource not found")
+		}
+		var errorResp hubspotmodels.ErrorResponseBody
+		err := json.Unmarshal(rawBody, &errorResp)
+		if err != nil {
+			return hubspotmodels.FileUploadResult{}, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error returned by endpoint: %+v", errorResp)
+	}
 	var result hubspotmodels.FileUploadResult
 	err = json.Unmarshal(rawBody, &result)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error parsing body: %s", err)
 	}
-
 	return result, nil
 }
