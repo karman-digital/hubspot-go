@@ -127,6 +127,7 @@ type LineItems interface {
 type Files interface {
 	ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileUploadResult, error)
 	GetSignedUrl(fileId string, signedUrlOptions ...hubspotmodels.SignedUrlOptions) (hubspotmodels.SignedUrlResponse, error)
+	UploadFile(fileName string, fileContent []byte, opts ...hubspotmodels.UploadFileOptions) (hubspotmodels.FileUploadResult, error)
 }
 
 type Users interface {

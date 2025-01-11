@@ -62,3 +62,14 @@ type SignedUrlOptions struct {
 	Size              string `json:"size"`
 	Upscale           bool   `json:"upscale"`
 }
+
+type UploadFileOptions struct {
+	FolderId   string        `json:"folderId"`
+	FolderPath string        `json:"folderPath"`
+	Options    UploadOptions `json:"options"`
+}
+
+type UploadOptions struct {
+	Access string `json:"access"`
+	Ttl    string `json:"ttl"`
+}

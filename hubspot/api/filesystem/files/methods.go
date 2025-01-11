@@ -1,13 +1,16 @@
 package files
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 
+	"github.com/hashicorp/go-retryablehttp"
 	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
@@ -92,4 +95,74 @@ func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...hubspotmo
 		return hubspotmodels.SignedUrlResponse{}, err
 	}
 	return signedUrlResponse, nil
+}
+
+func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...hubspotmodels.UploadFileOptions) (hubspotmodels.FileUploadResult, error) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile("file", fileName)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, err
+	}
+	_, err = part.Write(fileContent)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, err
+	}
+	if len(opts) > 0 {
+		if opts[0].FolderId != "" {
+			err = writer.WriteField("folderId", opts[0].FolderId)
+			if err != nil {
+				return hubspotmodels.FileUploadResult{}, err
+			}
+		}
+		if opts[0].FolderPath != "" {
+			err = writer.WriteField("folderPath", opts[0].FolderPath)
+			if err != nil {
+				return hubspotmodels.FileUploadResult{}, err
+			}
+		}
+		options := map[string]string{}
+		if opts[0].Options.Access != "" {
+			options["access"] = opts[0].Options.Access
+		}
+		if opts[0].Options.Ttl != "" {
+			options["ttl"] = opts[0].Options.Ttl
+		}
+		optionsJson, err := json.Marshal(options)
+		if err != nil {
+			return hubspotmodels.FileUploadResult{}, err
+		}
+		err = writer.WriteField("options", string(optionsJson))
+		if err != nil {
+			return hubspotmodels.FileUploadResult{}, err
+		}
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, err
+	}
+	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/v3/files/upload", body)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "multipart/form-data")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", f.Credentials.AccessToken()))
+	resp, err := f.Credentials.Client().Do(req)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error making request: %s", err)
+	}
+
+	rawBody, err := shared.HandleBasicResponseCode(resp)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, err
+	}
+
+	var result hubspotmodels.FileUploadResult
+	err = json.Unmarshal(rawBody, &result)
+	if err != nil {
+		return hubspotmodels.FileUploadResult{}, err
+	}
+
+	return result, nil
 }
