@@ -108,6 +108,7 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...h
 	if err != nil {
 		return hubspotmodels.FileUploadResult{}, err
 	}
+	writer.WriteField("fileName", fileName)
 	if len(opts) > 0 {
 		if opts[0].FolderId != "" {
 			err = writer.WriteField("folderId", opts[0].FolderId)
@@ -142,11 +143,11 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...h
 	if err != nil {
 		return hubspotmodels.FileUploadResult{}, err
 	}
-	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/v3/files/upload", body)
+	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/v3/files", body)
 	if err != nil {
 		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
 	}
-	req.Header.Set("Content-Type", "multipart/form-data")
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", f.Credentials.AccessToken()))
 	resp, err := f.Credentials.Client().Do(req)
 	if err != nil {
