@@ -152,8 +152,8 @@ func handleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 200 {
-		if resp.StatusCode == 404 {
+	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		if resp.StatusCode == http.StatusNotFound {
 			return rawBody, ErrResourceNotFound
 		}
 		var errorResp hubspotmodels.ErrorResponseBody
