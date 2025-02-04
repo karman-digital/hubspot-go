@@ -92,6 +92,7 @@ type CustomBatch interface {
 }
 
 type Notes interface {
+	Batch
 	CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error)
 	GetNote(noteId string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }

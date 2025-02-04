@@ -26,7 +26,6 @@ func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePos
 		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleCreateResponse(resp)
-
 }
 
 func (n *NotesService) GetNote(noteId string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
