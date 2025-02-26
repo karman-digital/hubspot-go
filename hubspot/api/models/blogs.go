@@ -59,4 +59,5 @@ type BlogFilterOptions struct {
 	After         string            `url:"after,omitempty"`         // Cursor token for next page of results
 	Limit         int               `url:"limit,omitempty"`         // Maximum number of results to return (default: 20)
 	Filters       map[string]string `url:"filters,omitempty"`       // Filters to apply to the results
+	State         string            `url:"state,omitempty"`         // Return blog posts with this state (draft, published, archived)
 }

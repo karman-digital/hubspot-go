@@ -34,6 +34,9 @@ func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hub
 	if opts.After != "" {
 		queryParams.Add("after", opts.After)
 	}
+	if opts.State != "" {
+		queryParams.Add("state", opts.State)
+	}
 	req.URL.RawQuery = queryParams.Encode()
 	resp, err := b.Client().Do(req)
 	if err != nil {
@@ -43,6 +46,9 @@ func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hub
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error reading response body: %s", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error getting blog posts: %s", resp.Status)
 	}
 	var blogPostsResponse hubspotmodels.BlogPostsResponse
 	err = json.Unmarshal(body, &blogPostsResponse)
