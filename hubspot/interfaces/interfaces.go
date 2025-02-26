@@ -134,3 +134,7 @@ type Files interface {
 type Users interface {
 	Create(body hubspotmodels.UserBody) (hubspotmodels.UserBody, error)
 }
+
+type Blog interface {
+	GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hubspotmodels.BlogPostsResponse, error)
+}

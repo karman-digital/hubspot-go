@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/karman-digital/hubspot/hubspot/api/cms"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
 	"github.com/karman-digital/hubspot/hubspot/api/filesystem"
@@ -31,6 +32,7 @@ func (p PortalId) String() string {
 
 type ApiClient struct {
 	CRM crm.CRM
+	CMS cms.CMS
 	interfaces.CommunicationPreferences
 	FileSystem filesystem.Filesystem
 	Settings   settings.Settings

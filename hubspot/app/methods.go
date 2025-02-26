@@ -3,6 +3,7 @@ package hubspotapp
 import (
 	"fmt"
 
+	"github.com/karman-digital/hubspot/hubspot/api/cms"
 	"github.com/karman-digital/hubspot/hubspot/api/communicationpreferences"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
@@ -22,6 +23,7 @@ func (h *Hubspot) InitClient(credentials *credentials.Credentials) {
 func NewApiClient(credentials *credentials.Credentials) ApiClient {
 	return ApiClient{
 		CRM:                      crm.NewCrmService(credentials),
+		CMS:                      cms.NewCmsService(credentials),
 		CommunicationPreferences: communicationpreferences.NewCommunicationPreferencesService(credentials),
 		FileSystem:               filesystem.NewFilesystemService(credentials),
 		Settings:                 settings.NewSettingsService(credentials),
