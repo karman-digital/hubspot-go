@@ -103,10 +103,12 @@ type Tasks interface {
 
 type Calls interface {
 	Batch
+	GetCall(id string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type Emails interface {
 	Batch
+	GetEmail(id string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
 
 type BatchPreferences interface {
