@@ -38,8 +38,6 @@ func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hub
 		queryParams.Add("state", opts.State)
 	}
 	req.URL.RawQuery = queryParams.Encode()
-	fmt.Println(req.URL.String())
-	fmt.Println(req)
 	resp, err := b.Client().Do(req)
 	if err != nil {
 		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error making request: %s", err)
@@ -49,7 +47,6 @@ func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hub
 	if err != nil {
 		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error reading response body: %s", err)
 	}
-	fmt.Println(string(body))
 	if resp.StatusCode != http.StatusOK {
 		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error getting blog posts: %s", resp.Status)
 	}

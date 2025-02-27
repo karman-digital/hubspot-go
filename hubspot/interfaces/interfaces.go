@@ -138,5 +138,10 @@ type Users interface {
 }
 
 type Blog interface {
+	BlogTags
 	GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hubspotmodels.BlogPostsResponse, error)
+}
+
+type BlogTags interface {
+	GetBatchBlogTags(opts hubspotmodels.BlogTagsBatchInput) (hubspotmodels.BatchBlogTagResponse, error)
 }
