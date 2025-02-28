@@ -145,3 +145,7 @@ type Blog interface {
 type BlogTags interface {
 	GetBatchBlogTags(opts hubspotmodels.BlogTagsBatchInput) (hubspotmodels.BatchBlogTagResponse, error)
 }
+
+type HubDB interface {
+	GetTableRow(tableId, rowId string) (hubspotmodels.HubDBRowResponse, error)
+}
