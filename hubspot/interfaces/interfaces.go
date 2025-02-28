@@ -149,3 +149,7 @@ type BlogTags interface {
 type HubDB interface {
 	GetTableRow(tableId, rowId string) (hubspotmodels.HubDBRowResponse, error)
 }
+
+type Meetings interface {
+	GetMeeting(id string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
+}
