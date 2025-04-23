@@ -16,8 +16,8 @@ type Associations interface {
 
 type Contact interface {
 	Batch
-	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.ContactResponse, error)
-	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.ContactResponse, error)
+	UpdateContact(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error)
+	CreateContact(body hubspotmodels.PostBody) (hubspotmodels.Result, error)
 	SearchContacts(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error)
 	GetContact(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 	GetContactByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
