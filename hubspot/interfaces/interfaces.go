@@ -153,3 +153,8 @@ type HubDB interface {
 type Meetings interface {
 	GetMeeting(id string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error)
 }
+
+type GraphQL interface {
+	MakeRequest(query string, variables map[string]interface{}) (map[string]interface{}, error)
+	MakeRequestWithFullResponse(query string, variables map[string]interface{}) (*hubspotmodels.GraphQLResponse, error)
+}

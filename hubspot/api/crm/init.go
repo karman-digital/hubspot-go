@@ -12,6 +12,7 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/crm/owners"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/products"
 	"github.com/karman-digital/hubspot/hubspot/api/crm/properties"
+	"github.com/karman-digital/hubspot/hubspot/api/graphql"
 )
 
 func NewCrmService(creds *credentials.Credentials) CRM {
@@ -26,5 +27,6 @@ func NewCrmService(creds *credentials.Credentials) CRM {
 		Engagements:   engagements.NewEngagementService(creds),
 		Products:      products.NewProductService(creds),
 		LineItems:     lineItems.NewLineItemsService(creds),
+		GraphQL:       graphql.NewGraphQLService(creds),
 	}
 }
