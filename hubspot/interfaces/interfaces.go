@@ -156,5 +156,5 @@ type Meetings interface {
 
 type GraphQL interface {
 	MakeRequest(query string, variables map[string]interface{}) (map[string]interface{}, error)
-	MakeRequestWithFullResponse(query string, variables map[string]interface{}) (*hubspotmodels.GraphQLResponse, error)
+	MakeRequestWithFullResponse(query string, variables map[string]interface{}) (hubspotmodels.GraphQLResponse, error)
 }
