@@ -138,3 +138,35 @@ func (c *AssociationService) BatchGetAssociations(fromObject, toObject string, b
 	}
 	return batchResp, nil
 }
+
+func (c *AssociationService) BatchCreateAssociations(fromObject, toObject string, body hubspotmodels.BatchCreateAssociationsBody) (hubspotmodels.BatchResponse, error) {
+	var batchResp hubspotmodels.BatchResponse
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/create", fromObject, toObject)
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
+	}
+	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		return batchResp, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return batchResp, fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	associationRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return batchResp, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 201 {
+		return batchResp, fmt.Errorf("error returned by endpoint: %s", associationRawBody)
+	}
+	err = json.Unmarshal(associationRawBody, &batchResp)
+	if err != nil {
+		return batchResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return batchResp, nil
+}

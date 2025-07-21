@@ -102,3 +102,17 @@ type AssociationGetResponse struct {
 	Paging  Paging   `json:"paging"`
 	Results []ToItem `json:"results"`
 }
+
+type BatchCreateAssociationsBody struct {
+	Inputs []AssociationInput `json:"inputs"`
+}
+
+type AssociationInput struct {
+	Types []AssociationType `json:"types"`
+	From  AssociationObject `json:"from"`
+	To    AssociationObject `json:"to"`
+}
+
+type AssociationObject struct {
+	Id string `json:"id"`
+}
