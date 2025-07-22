@@ -171,7 +171,7 @@ func (c *AssociationService) BatchCreateAssociations(fromObject, toObject string
 	return batchResp, nil
 }
 
-func (c *AssociationService) CreateAssociation(fromObject, toObject, fromObjectType, toObjectType string, body hubspotmodels.AssociationType) (hubspotmodels.Result, error) {
+func (c *AssociationService) CreateAssociation(fromObject, toObject, fromObjectType, toObjectType string, body []hubspotmodels.AssociationType) (hubspotmodels.Result, error) {
 	var associationResp hubspotmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/objects/%s/%s/associations/%s/%s", fromObjectType, fromObject, toObjectType, toObject)
 	reqBody, err := json.Marshal(body)
