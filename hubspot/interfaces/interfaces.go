@@ -14,6 +14,7 @@ type Associations interface {
 	GetAssociations(fromObject, toObject string, id int) (hubspotmodels.AssociationGetResponse, error)
 	BatchCreateAssociations(fromObject, toObject string, body hubspotmodels.BatchCreateAssociationsBody) (hubspotmodels.BatchResponse, error)
 	CreateAssociation(fromObject, toObject, fromObjectType, toObjectType string, body []hubspotmodels.AssociationType) (hubspotmodels.Result, error)
+	BatchArchiveAssociationLabels(fromObject, toObject string, body hubspotmodels.BatchCreateAssociationsBody) error
 }
 
 type Contact interface {

@@ -202,3 +202,30 @@ func (c *AssociationService) CreateAssociation(fromObject, toObject, fromObjectT
 	}
 	return associationResp, nil
 }
+
+func (c *AssociationService) BatchArchiveAssociationLabels(fromObject, toObject string, body hubspotmodels.BatchCreateAssociationsBody) error {
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v4/associations/%s/%s/batch/labels/archive", fromObject, toObject)
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return fmt.Errorf("error marshalling post body: %s", err)
+	}
+	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		return fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
+	resp, err := c.Client().Do(req)
+	if err != nil {
+		return fmt.Errorf("error making request: %s", err)
+	}
+	defer resp.Body.Close()
+	associationRawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 204 {
+		return fmt.Errorf("error returned by endpoint: %s", associationRawBody)
+	}
+	return nil
+}
