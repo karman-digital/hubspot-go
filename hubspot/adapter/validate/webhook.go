@@ -15,7 +15,7 @@ import (
 
 func ValidateWebhookSignature(secret []byte, host string, urlPath string, timestamp string, method string, signature string, body []byte) error {
 	checkSum := ""
-	if method == "POST" {
+	if method == "POST" || method == "PUT" || method == "PATCH" {
 		if isJSON(body) {
 			JSONString, err := toCompactJSONString(body)
 			if err != nil {
