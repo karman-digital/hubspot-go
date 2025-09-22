@@ -6,10 +6,10 @@ import (
 	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 )
 
-func (c *Credentials) SendRequest(method, path string, body []byte, opts ...hubspotmodels.GetOptions) (*http.Response, error) {
+func (c *Credentials) SendRequest(method, path string, body []byte, opts ...sharedmodels.GetOptions) (*http.Response, error) {
 	req, err := retryablehttp.NewRequest(method, "https://api.hubapi.com"+path, body)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %s", err)
@@ -27,7 +27,7 @@ func (c *Credentials) SendRequest(method, path string, body []byte, opts ...hubs
 	return resp, nil
 }
 
-func generateQueryParams(opts hubspotmodels.GetOptions) url.Values {
+func generateQueryParams(opts sharedmodels.GetOptions) url.Values {
 	queryParams := url.Values{}
 	if len(opts.Properties) != 0 {
 		for _, property := range opts.Properties {

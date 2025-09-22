@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	hshelpers "github.com/karman-digital/hubspot/hubspot/adapter/helpers"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	webhookmodels "github.com/karman-digital/hubspot/hubspot/api/models/webhooks"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,13 +12,13 @@ func TestConvertBodyBytesToAccountDataPayload(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    hubspotmodels.AccountDataPayload
+		want    webhookmodels.AccountDataPayload
 		wantErr bool
 	}{
 		{
 			name:  "Valid input",
 			input: []byte(`{"actionType":"CREATE","portalId":"62515","userId":"12345","userEmail":"karman-digital","appId":"12345"}`),
-			want: hubspotmodels.AccountDataPayload{
+			want: webhookmodels.AccountDataPayload{
 				ActionType: "CREATE",
 				PortalId:   "62515",
 				UserId:     "12345",

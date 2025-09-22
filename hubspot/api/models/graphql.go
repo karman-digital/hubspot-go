@@ -1,7 +1,5 @@
 package hubspotmodels
 
-type GraphQLResponse struct {
-	Extensions map[string]interface{}   `json:"extensions"`
-	Data       map[string]interface{}   `json:"data"`
-	Errors     []map[string]interface{} `json:"errors"`
-}
+import graphqlmodels "github.com/karman-digital/hubspot/hubspot/api/models/graphql"
+
+type GraphQLResponse = graphqlmodels.GraphQLResponse

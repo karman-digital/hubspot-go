@@ -1,39 +1,13 @@
 package hubspotmodels
 
-type PropertyGroupBody struct {
-	Name  string `json:"name"`
-	Label string `json:"label"`
-}
+import propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
 
-type PropertyBody struct {
-	Name      string               `json:"name,omitempty"`
-	Label     string               `json:"label,omitempty"`
-	GroupName string               `json:"groupName,omitempty"`
-	Type      string               `json:"type,omitempty"`
-	FieldType string               `json:"fieldType,omitempty"`
-	Options   []EnumerationOptions `json:"options,omitempty"`
-}
+type PropertyGroupBody = propertiesmodels.PropertyGroupBody
 
-type EnumerationOptions struct {
-	Label        string `json:"label"`
-	Value        string `json:"value"`
-	Hidden       bool   `json:"hidden"`
-	Description  string `json:"description,omitempty"`
-	DisplayOrder int    `json:"displayOrder,omitempty"`
-}
+type PropertyBody = propertiesmodels.PropertyBody
 
-type ModificationMetadata struct {
-	ReadOnlyOptions    bool `json:"readOnlyOptions"`
-	ReadOnlyValue      bool `json:"readOnlyValue"`
-	ReadOnlyDefinition bool `json:"readOnlyDefinition"`
-	Archivable         bool `json:"archivable"`
-}
+type EnumerationOptions = propertiesmodels.EnumerationOptions
 
-type PropertyResponse struct {
-	PropertyBody
-	Hidden               bool                 `json:"hidden"`
-	DisplayOrder         int                  `json:"displayOrder"`
-	HasUniqueValue       bool                 `json:"hasUniqueValue"`
-	FormField            bool                 `json:"formField"`
-	ModificationMetadata ModificationMetadata `json:"modificationMetadata"`
-}
+type ModificationMetadata = propertiesmodels.ModificationMetadata
+
+type PropertyResponse = propertiesmodels.PropertyResponse

@@ -1,32 +1,22 @@
 package properties
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
+	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 	"io"
 	"net/http"
-
-	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
-	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *PropertiesService) CreatePropertyGroup(propertyGroup hubspotmodels.PropertyGroupBody, objectType string) error {
-	posturl := fmt.Sprintf("https://api.hubapi.com/crm/v3/properties/%s/groups", objectType)
-	body, err := json.Marshal(propertyGroup)
+func (c *PropertiesService) CreatePropertyGroup(propertyGroup propertiesmodels.PropertyGroupBody, objectType string) error {
+	reqBody, err := json.Marshal(propertyGroup)
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	req, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer(body))
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s/groups", objectType), reqBody)
 	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return fmt.Errorf("error making post request: %v", err)
+		return err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
@@ -42,21 +32,14 @@ func (c *PropertiesService) CreatePropertyGroup(propertyGroup hubspotmodels.Prop
 	return nil
 }
 
-func (c *PropertiesService) CreateProperty(objectType string, propertyData hubspotmodels.PropertyBody) error {
-	posturl := fmt.Sprintf("https://api.hubapi.com/crm/v3/properties/%s", objectType)
-	body, err := json.Marshal(propertyData)
+func (c *PropertiesService) CreateProperty(objectType string, propertyData propertiesmodels.PropertyBody) error {
+	reqBody, err := json.Marshal(propertyData)
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	req, err := retryablehttp.NewRequest("POST", posturl, bytes.NewBuffer([]byte(body)))
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s", objectType), reqBody)
 	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return fmt.Errorf("error making post request: %s", err)
+		return err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
@@ -72,57 +55,47 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData hubsp
 	return nil
 }
 
-func (c *PropertiesService) GetProperty(ObjectType string, PropertyName string) (hubspotmodels.PropertyResponse, error) {
-	geturl := fmt.Sprintf("https://api.hubapi.com/crm/v3/properties/%s/%s", ObjectType, PropertyName)
-	req, err := retryablehttp.NewRequest(http.MethodGet, geturl, nil)
+func (c *PropertiesService) GetProperty(objectType string, propertyName string) (propertiesmodels.PropertyResponse, error) {
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), nil)
 	if err != nil {
-		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error making post request: %s", err)
+		return propertiesmodels.PropertyResponse{}, err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return hubspotmodels.PropertyResponse{}, fmt.Errorf("error reading body: %v", err)
+			return propertiesmodels.PropertyResponse{}, fmt.Errorf("error reading body: %v", err)
 		}
-		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error returned by endpoint. status code: %s, error: %v", resp.Status, string(body))
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error returned by endpoint. status code: %s, error: %v", resp.Status, string(body))
 	}
-	var propertyResponse hubspotmodels.PropertyResponse
+	var propertyResponse propertiesmodels.PropertyResponse
 	err = json.NewDecoder(resp.Body).Decode(&propertyResponse)
 	if err != nil {
-		return hubspotmodels.PropertyResponse{}, fmt.Errorf("error decoding response: %s", err)
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error decoding response: %s", err)
 	}
 	return propertyResponse, nil
 }
 
-func (c *PropertiesService) UpdateProperty(ObjectType string, PropertyName string, propertyData hubspotmodels.PropertyBody) error {
-	puturl := fmt.Sprintf("https://api.hubapi.com/crm/v3/properties/%s/%s", ObjectType, PropertyName)
+func (c *PropertiesService) UpdateProperty(objectType string, propertyName string, propertyData propertiesmodels.PropertyBody) (propertiesmodels.PropertyResponse, error) {
 	body, err := json.Marshal(propertyData)
 	if err != nil {
-		return fmt.Errorf("error marshalling body: %s", err)
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error marshalling body: %s", err)
 	}
-	req, err := retryablehttp.NewRequest(http.MethodPut, puturl, bytes.NewBuffer([]byte(body)))
+	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
 	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return fmt.Errorf("error making post request: %s", err)
+		return propertiesmodels.PropertyResponse{}, err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return fmt.Errorf("error reading body: %v", err)
+			return propertiesmodels.PropertyResponse{}, fmt.Errorf("error reading body: %v", err)
 		}
-		return fmt.Errorf("error returned by endpoint. status code: %s, error: %v", resp.Status, string(body))
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error returned by endpoint. status code: %s, error: %v", resp.Status, string(body))
 	}
-	return nil
+	var propertyResponse propertiesmodels.PropertyResponse
+	if err := json.NewDecoder(resp.Body).Decode(&propertyResponse); err != nil {
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error decoding response: %s", err)
+	}
+	return propertyResponse, nil
 }

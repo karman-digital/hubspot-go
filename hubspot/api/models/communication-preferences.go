@@ -1,78 +1,28 @@
 package hubspotmodels
 
-import "time"
+import (
+	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
+)
 
-type CommunicationPreferencesResponse struct {
-	SubscriptionDefinitions []SubscriptionDefinition `json:"subscriptionDefinitions"`
-}
+type CommunicationPreferencesResponse = communicationmodels.CommunicationPreferencesResponse
 
-type CommunicationPreferenceStatusResponse struct {
-	Recipient            string               `json:"recipient"`
-	SubscriptionStatuses []SubscriptionStatus `json:"subscriptionStatuses"`
-}
+type CommunicationPreferenceStatusResponse = communicationmodels.CommunicationPreferenceStatusResponse
 
-type SubscriptionDefinition struct {
-	ID                  string    `json:"id"`
-	Name                string    `json:"name"`
-	Description         string    `json:"description"`
-	Purpose             string    `json:"purpose"`
-	CommunicationMethod string    `json:"communicationMethod"`
-	IsActive            bool      `json:"isActive"`
-	IsDefault           bool      `json:"isDefault"`
-	IsInternal          bool      `json:"isInternal"`
-	CreatedAt           time.Time `json:"createdAt"`
-	UpdatedAt           time.Time `json:"updatedAt"`
-}
+type SubscriptionDefinition = communicationmodels.SubscriptionDefinition
 
-type CommunicationPreferencesPostBody struct {
-	EmailAddress   string `json:"emailAddress"`
-	SubscriptionId string `json:"subscriptionId"`
-	CommunicationLegalBasis
-}
+type CommunicationPreferencesPostBody = communicationmodels.CommunicationPreferencesPostBody
 
-type CommunicationLegalBasis struct {
-	LegalBasis            string `json:"legalBasis,omitempty"`
-	LegalBasisExplanation string `json:"legalBasisExplanation,omitempty"`
-}
+type CommunicationLegalBasis = communicationmodels.CommunicationLegalBasis
 
-type SubscriptionStatus struct {
-	ID                    string `json:"id"`
-	Name                  string `json:"name"`
-	Description           string `json:"description"`
-	Status                string `json:"status"`
-	SourceOfStatus        string `json:"sourceOfStatus"`
-	PreferenceGroupName   string `json:"preferenceGroupName"`
-	LegalBasis            string `json:"legalBasis"`
-	LegalBasisExplanation string `json:"legalBasisExplanation"`
-}
+type SubscriptionStatus = communicationmodels.SubscriptionStatus
 
-type BatchCommunicationPreferencesPostBody struct {
-	Inputs []CommunicationPreferencesBatchInput `json:"inputs"`
-}
+type BatchCommunicationPreferencesPostBody = communicationmodels.BatchCommunicationPreferencesPostBody
 
-type CommunicationPreferencesBatchInput struct {
-	StatusState           string `json:"statusState"`
-	Channel               string `json:"channel"`
-	SubscriberIdString    string `json:"subscriberIdString"`
-	LegalBasis            string `json:"legalBasis,omitempty"`
-	SubscriptionId        int    `json:"subscriptionId"`
-	LegalBasisExplanation string `json:"legalBasisExplanation,omitempty"`
-}
+type CommunicationPreferencesBatchInput = communicationmodels.CommunicationPreferencesBatchInput
 
-type BatchCommunicationPreferencesResponse struct {
-	BatchResponseBase
-	Results []V4CommunicationPreferenceResult `json:"results"`
-}
+type BatchCommunicationPreferencesResponse = communicationmodels.BatchCommunicationPreferencesResponse
 
-type V4CommunicationPreferenceResult struct {
-	Channel                string    `json:"channel"`
-	SubscriberIdString     string    `json:"subscriberIdString"`
-	LegalBasis             string    `json:"legalBasis"`
-	SetStatisSuccessReason string    `json:"setStatisSuccessReason"`
-	Source                 string    `json:"source"`
-	SubscriptionId         int       `json:"subscriptionId"`
-	LegalBasisExplanation  string    `json:"legalBasisExplanation"`
-	BusinessUnitId         int       `json:"businessUnitId"`
-	Status                 string    `json:"status"`
-	TimeStamp              time.Time `json:"timeStamp"`
-}
+type V4CommunicationPreferenceResult = communicationmodels.V4CommunicationPreferenceResult
+
+type BatchResponseBase = sharedmodels.BatchResponseBase

@@ -1,9 +1,9 @@
 package hshelpers
 
-import hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+import associationsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/associations"
 
-func CreateBatchCreateDefaultAssociationsBody(associations []hubspotmodels.AssociationPair) hubspotmodels.BatchCreateDefaultAssociationsBody {
-	return hubspotmodels.BatchCreateDefaultAssociationsBody{
+func CreateBatchCreateDefaultAssociationsBody(associations []associationsmodels.AssociationPair) associationsmodels.BatchCreateDefaultAssociationsBody {
+	return associationsmodels.BatchCreateDefaultAssociationsBody{
 		Inputs: associations,
 	}
 }

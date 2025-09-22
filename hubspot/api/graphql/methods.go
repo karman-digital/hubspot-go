@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	graphqlmodels "github.com/karman-digital/hubspot/hubspot/api/models/graphql"
 )
 
 func (g *GraphQLService) MakeRequest(query string, variables map[string]interface{}) (map[string]interface{}, error) {
@@ -18,7 +18,7 @@ func (g *GraphQLService) MakeRequest(query string, variables map[string]interfac
 	return response.Data, nil
 }
 
-func (g *GraphQLService) MakeRequestWithFullResponse(query string, variables map[string]interface{}) (hubspotmodels.GraphQLResponse, error) {
+func (g *GraphQLService) MakeRequestWithFullResponse(query string, variables map[string]interface{}) (graphqlmodels.GraphQLResponse, error) {
 	reqBody := map[string]interface{}{
 		"query": query,
 	}
@@ -28,32 +28,32 @@ func (g *GraphQLService) MakeRequestWithFullResponse(query string, variables map
 
 	body, err := json.Marshal(reqBody)
 	if err != nil {
-		return hubspotmodels.GraphQLResponse{}, fmt.Errorf("error marshalling request body: %s", err)
+		return graphqlmodels.GraphQLResponse{}, fmt.Errorf("error marshalling request body: %s", err)
 	}
 
 	resp, err := g.SendRequest(http.MethodPost, "/collector/graphql", body)
 	if err != nil {
-		return hubspotmodels.GraphQLResponse{}, fmt.Errorf("error making GraphQL request: %s", err)
+		return graphqlmodels.GraphQLResponse{}, fmt.Errorf("error making GraphQL request: %s", err)
 	}
 
 	return handleGraphQLResponse(resp)
 }
 
-func handleGraphQLResponse(resp *http.Response) (hubspotmodels.GraphQLResponse, error) {
+func handleGraphQLResponse(resp *http.Response) (graphqlmodels.GraphQLResponse, error) {
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return hubspotmodels.GraphQLResponse{}, fmt.Errorf("error reading response body: %s", err)
+		return graphqlmodels.GraphQLResponse{}, fmt.Errorf("error reading response body: %s", err)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return hubspotmodels.GraphQLResponse{}, fmt.Errorf("GraphQL request failed with status %d: %s", resp.StatusCode, string(body))
+		return graphqlmodels.GraphQLResponse{}, fmt.Errorf("GraphQL request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
-	var result hubspotmodels.GraphQLResponse
+	var result graphqlmodels.GraphQLResponse
 	if err := json.Unmarshal(body, &result); err != nil {
-		return hubspotmodels.GraphQLResponse{}, fmt.Errorf("error unmarshalling response: %s", err)
+		return graphqlmodels.GraphQLResponse{}, fmt.Errorf("error unmarshalling response: %s", err)
 	}
 
 	if len(result.Errors) > 0 && result.Data == nil {

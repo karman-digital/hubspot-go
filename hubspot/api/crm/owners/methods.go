@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	ownersmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/owners"
 )
 
-func (c *OwnerService) GetAllOwners() ([]hubspotmodels.Owner, error) {
-	var allOwners []hubspotmodels.Owner
+func (c *OwnerService) GetAllOwners() ([]ownersmodels.Owner, error) {
+	var allOwners []ownersmodels.Owner
 	after := ""
 	for {
 		ownerResponse, err := c.GetOwners(after)
@@ -30,8 +30,8 @@ func (c *OwnerService) GetAllOwners() ([]hubspotmodels.Owner, error) {
 	return allOwners, nil
 }
 
-func (c *OwnerService) GetOwners(after ...string) (hubspotmodels.OwnerResponse, error) {
-	ownerResponse := hubspotmodels.OwnerResponse{}
+func (c *OwnerService) GetOwners(after ...string) (ownersmodels.OwnerResponse, error) {
+	ownerResponse := ownersmodels.OwnerResponse{}
 	reqUrl := "https://api.hubapi.com/crm/v3/owners"
 	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
 	if err != nil {
@@ -67,8 +67,8 @@ func (c *OwnerService) GetOwners(after ...string) (hubspotmodels.OwnerResponse, 
 	return ownerResponse, nil
 }
 
-func (c *OwnerService) GetOwner(id int) (hubspotmodels.Owner, error) {
-	owner := hubspotmodels.Owner{}
+func (c *OwnerService) GetOwner(id int) (ownersmodels.Owner, error) {
+	owner := ownersmodels.Owner{}
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/owners/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
 	if err != nil {

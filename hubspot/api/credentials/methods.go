@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 )
 
-func GenerateTokenPair(code string, clientId string, clientSecret string, redirectURI string) (hubspotmodels.TokenBody, error) {
-	resBodyStruct := hubspotmodels.TokenBody{}
+func GenerateTokenPair(code string, clientId string, clientSecret string, redirectURI string) (authmodels.TokenBody, error) {
+	resBodyStruct := authmodels.TokenBody{}
 	data := url.Values{}
 	data.Set("grant_type", "authorization_code")
 	data.Set("code", code)
@@ -49,7 +49,7 @@ func GenerateTokenPair(code string, clientId string, clientSecret string, redire
 }
 
 func (c *Credentials) RefreshTokenPair() error {
-	tokenBody := hubspotmodels.TokenBody{}
+	tokenBody := authmodels.TokenBody{}
 	data := url.Values{
 		"grant_type":    []string{"refresh_token"},
 		"redirect_uri":  []string{c.RedirectUri().String()},
@@ -81,7 +81,7 @@ func (c *Credentials) RefreshTokenPair() error {
 	return c.SetTokens(tokenBody.AccessToken, tokenBody.RefreshToken)
 }
 
-func (c *Credentials) SetTokens(accessToken hubspotmodels.AccessToken, refreshToken hubspotmodels.RefreshToken) error {
+func (c *Credentials) SetTokens(accessToken authmodels.AccessToken, refreshToken authmodels.RefreshToken) error {
 	if err := c.SetAccessToken(accessToken.String()); err != nil {
 		return fmt.Errorf("error setting access token: %w", err)
 	}
@@ -92,7 +92,7 @@ func (c *Credentials) SetTokens(accessToken hubspotmodels.AccessToken, refreshTo
 }
 
 func (c *Credentials) ValidateBearerToken() (bool, error) {
-	resBodyStruct := hubspotmodels.BearerTokenBody{}
+	resBodyStruct := authmodels.BearerTokenBody{}
 	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.AccessToken().String()))
 	if err != nil {
 		return false, err
@@ -112,8 +112,8 @@ func (c *Credentials) ValidateBearerToken() (bool, error) {
 	return true, nil
 }
 
-func GetBearerTokenData(bearerToken string) (hubspotmodels.BearerTokenBody, error) {
-	resBodyStruct := hubspotmodels.BearerTokenBody{}
+func GetBearerTokenData(bearerToken string) (authmodels.BearerTokenBody, error) {
+	resBodyStruct := authmodels.BearerTokenBody{}
 	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", bearerToken))
 	if err != nil {
 		return resBodyStruct, err

@@ -1,48 +1,21 @@
 package hubspotmodels
 
-type AccountDataResponse struct {
-	Response AccountsResponse `json:"response"`
-}
+import settingsmodels "github.com/karman-digital/hubspot/hubspot/api/models/settings"
 
-type AccountsResponse struct {
-	Accounts []Account `json:"accounts"`
-}
+type AccountDataResponse = settingsmodels.AccountDataResponse
 
-type Account struct {
-	AccountId   string `json:"accountId"`
-	AccountName string `json:"accountName"`
-}
+type AccountsResponse = settingsmodels.AccountsResponse
 
-type SettingsDropdownResponse struct {
-	Response SettingsDropdownOptions `json:"response"`
-}
+type Account = settingsmodels.Account
 
-type SettingsDropdownOptions struct {
-	Options        []SettingsDropdown `json:"options"`
-	SelectedOption string             `json:"selectedOption,omitempty"`
-}
+type SettingsDropdownResponse = settingsmodels.SettingsDropdownResponse
 
-type SettingsDropdown struct {
-	Text  string `json:"text"`
-	Value string `json:"value"`
-}
+type SettingsDropdownOptions = settingsmodels.SettingsDropdownOptions
 
-type SettingsActionPayload struct {
-	ActionType     string `json:"actionType"`
-	PortalId       string `json:"portalId"`
-	UserId         string `json:"userId"`
-	UserEmail      string `json:"userEmail"`
-	AppId          string `json:"appId"`
-	AccountId      string `json:"accountId"`
-	SelectedOption string `json:"selectedOption"`
-}
+type SettingsDropdown = settingsmodels.SettingsDropdown
 
-type SettingsActionDropdownResponseBody struct {
-	Response SettingsActionDropdownResponse `json:"response"`
-}
+type SettingsActionPayload = settingsmodels.SettingsActionPayload
 
-type SettingsActionDropdownResponse struct {
-	ActionType     string `json:"actionType"`
-	SelectedOption string `json:"selectedOption"`
-	Message        string `json:"message"`
-}
+type SettingsActionDropdownResponseBody = settingsmodels.SettingsActionDropdownResponseBody
+
+type SettingsActionDropdownResponse = settingsmodels.SettingsActionDropdownResponse

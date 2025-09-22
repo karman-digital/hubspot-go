@@ -8,12 +8,13 @@ import (
 	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *CustomObjectService) CreateCustomObject(body hubspotmodels.PostBody, objectType string) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *CustomObjectService) CreateCustomObject(body crmmodels.PostBody, objectType string) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -44,8 +45,8 @@ func (c *CustomObjectService) CreateCustomObject(body hubspotmodels.PostBody, ob
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) UpdateCustomObject(id int, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *CustomObjectService) UpdateCustomObject(id int, patchBody crmmodels.PatchBody, objectType string) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%d", objectType, id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
@@ -76,20 +77,20 @@ func (c *CustomObjectService) UpdateCustomObject(id int, patchBody hubspotmodels
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) UpdateCustomObjectByUniqueId(id, idProperty string, patchBody hubspotmodels.PatchBody, objectType string) (hubspotmodels.Result, error) {
+func (c *CustomObjectService) UpdateCustomObjectByUniqueId(id, idProperty string, patchBody crmmodels.PatchBody, objectType string) (crmmodels.Result, error) {
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
-		return hubspotmodels.Result{}, fmt.Errorf("error marshalling patch body: %s", err)
+		return crmmodels.Result{}, fmt.Errorf("error marshalling patch body: %s", err)
 	}
 	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/objects/%s/%s?idProperty=%s", objectType, id, idProperty), reqBody)
 	if err != nil {
-		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleResponse(resp)
 }
 
-func (c *CustomObjectService) SearchCustomObjects(body hubspotmodels.SearchBody, objectType string) (hubspotmodels.SearchResponse, error) {
-	var respStruct hubspotmodels.SearchResponse
+func (c *CustomObjectService) SearchCustomObjects(body crmmodels.SearchBody, objectType string) (crmmodels.SearchResponse, error) {
+	var respStruct crmmodels.SearchResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/search", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -120,8 +121,8 @@ func (c *CustomObjectService) SearchCustomObjects(body hubspotmodels.SearchBody,
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%d", objectType, id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
@@ -170,8 +171,8 @@ func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ..
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectType string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%s", objectType, id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
@@ -226,8 +227,8 @@ func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectT
 	return respStruct, nil
 }
 
-func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
-	var respStruct hubspotmodels.ListResponse
+func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...sharedmodels.GetOptions) (crmmodels.ListResponse, error) {
+	var respStruct crmmodels.ListResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {

@@ -1,37 +1,11 @@
 package hubspotmodels
 
-type SearchBody struct {
-	Query        string        `json:"query,omitempty"`
-	Limit        int           `json:"limit,omitempty"`
-	After        string        `json:"after,omitempty"`
-	Sorts        []string      `json:"sorts,omitempty"`
-	Properties   []string      `json:"properties,omitempty"`
-	FilterGroups []FilterGroup `json:"filterGroups,omitempty"`
-}
+import crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 
-type FilterGroup struct {
-	Filters []Filter `json:"filters,omitempty"`
-}
+type SearchBody = crmmodels.SearchBody
 
-type Filter struct {
-	HighValue    string   `json:"highValue,omitempty"`
-	PropertyName string   `json:"propertyName,omitempty"`
-	Values       []string `json:"values,omitempty"`
-	Value        string   `json:"value,omitempty"`
-	Operator     string   `json:"operator,omitempty"`
-}
+type FilterGroup = crmmodels.FilterGroup
 
-type SearchResponse struct {
-	Total   int      `json:"total,omitempty"`
-	Paging  Paging   `json:"paging,omitempty"`
-	Results []Result `json:"results,omitempty"`
-}
+type Filter = crmmodels.Filter
 
-type Paging struct {
-	Next NextPage `json:"next,omitempty"`
-}
-
-type NextPage struct {
-	After string `json:"after,omitempty"`
-	Link  string `json:"link,omitempty"`
-}
+type SearchResponse = crmmodels.SearchResponse

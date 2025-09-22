@@ -1,14 +1,7 @@
 package hubspotmodels
 
-type HubDBRowValues map[string]interface{}
+import hubdbmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/hubdb"
 
-type HubDBRowResponse struct {
-	Path         string         `json:"path"`
-	CreatedAt    string         `json:"createdAt"`
-	ChildTableID string         `json:"childTableId"`
-	PublishedAt  string         `json:"publishedAt"`
-	Values       HubDBRowValues `json:"values"`
-	Name         string         `json:"name"`
-	ID           string         `json:"id"`
-	UpdatedAt    string         `json:"updatedAt"`
-}
+type HubDBRowValues = hubdbmodels.HubDBRowValues
+
+type HubDBRowResponse = hubdbmodels.HubDBRowResponse

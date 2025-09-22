@@ -1,9 +1,7 @@
 package hubspotmodels
 
-type BatchDeleteBody struct {
-	Inputs []BatchInput `json:"inputs"`
-}
+import crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 
-type BatchInput struct {
-	Id int `json:"id"`
-}
+type BatchDeleteBody = crmmodels.BatchDeleteBody
+
+type BatchInput = crmmodels.BatchInput

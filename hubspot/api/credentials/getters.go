@@ -2,22 +2,22 @@ package credentials
 
 import (
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 )
 
-func (c Credentials) AccessToken() *hubspotmodels.AccessToken {
+func (c Credentials) AccessToken() *authmodels.AccessToken {
 	return &c.accessToken
 }
 
-func (c Credentials) RefreshToken() *hubspotmodels.RefreshToken {
+func (c Credentials) RefreshToken() *authmodels.RefreshToken {
 	return &c.refreshToken
 }
 
-func (c Credentials) ClientId() *hubspotmodels.ClientId {
+func (c Credentials) ClientId() *authmodels.ClientId {
 	return &c.clientId
 }
 
-func (c Credentials) ClientSecret() *hubspotmodels.ClientSecret {
+func (c Credentials) ClientSecret() *authmodels.ClientSecret {
 	return &c.clientSecret
 }
 
@@ -29,6 +29,6 @@ func (c Credentials) Client() *retryablehttp.Client {
 	return c.client
 }
 
-func (c Credentials) RedirectUri() *hubspotmodels.RedirectUri {
+func (c Credentials) RedirectUri() *authmodels.RedirectUri {
 	return &c.redirectUri
 }

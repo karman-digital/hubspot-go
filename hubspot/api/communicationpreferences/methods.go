@@ -7,12 +7,13 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *CommunicationPreferencesService) GetCommunicationPreferences() (hubspotmodels.CommunicationPreferencesResponse, error) {
-	var communicationPreferencesResp hubspotmodels.CommunicationPreferencesResponse
+func (c *CommunicationPreferencesService) GetCommunicationPreferences() (communicationmodels.CommunicationPreferencesResponse, error) {
+	var communicationPreferencesResp communicationmodels.CommunicationPreferencesResponse
 	reqUrl := "https://api.hubapi.com/communication-preferences/v3/definitions"
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
@@ -39,9 +40,9 @@ func (c *CommunicationPreferencesService) GetCommunicationPreferences() (hubspot
 	return communicationPreferencesResp, nil
 }
 
-func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error {
+func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
 	reqUrl := "https://api.hubapi.com/communication-preferences/v3/unsubscribe"
-	reqBody := hubspotmodels.CommunicationPreferencesPostBody{
+	reqBody := communicationmodels.CommunicationPreferencesPostBody{
 		EmailAddress:   contactEmail,
 		SubscriptionId: fmt.Sprintf("%d", subscriptionId),
 	}
@@ -69,7 +70,7 @@ func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference
 	}
 	if resp.StatusCode != http.StatusOK {
 		if resp.StatusCode == http.StatusBadRequest {
-			var errBody hubspotmodels.ErrorResponseBody
+			var errBody sharedmodels.ErrorResponseBody
 			err = json.Unmarshal(unsubscribeRawBody, &errBody)
 			if err != nil {
 				return fmt.Errorf("error parsing error body: %s", err)
@@ -81,9 +82,9 @@ func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference
 	return nil
 }
 
-func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...hubspotmodels.CommunicationLegalBasis) error {
+func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
 	reqUrl := "https://api.hubapi.com/communication-preferences/v3/subscribe"
-	reqBody := hubspotmodels.CommunicationPreferencesPostBody{
+	reqBody := communicationmodels.CommunicationPreferencesPostBody{
 		EmailAddress:   contactEmail,
 		SubscriptionId: fmt.Sprintf("%d", subscriptionId),
 	}
@@ -111,7 +112,7 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 	}
 	if resp.StatusCode != http.StatusOK {
 		if resp.StatusCode == http.StatusBadRequest {
-			var errBody hubspotmodels.ErrorResponseBody
+			var errBody sharedmodels.ErrorResponseBody
 			err = json.Unmarshal(unsubscribeRawBody, &errBody)
 			if err != nil {
 				return fmt.Errorf("error parsing error body: %s", err)
@@ -127,8 +128,8 @@ func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(con
 	return nil
 }
 
-func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (hubspotmodels.CommunicationPreferenceStatusResponse, error) {
-	var communicationPreferenceStatus hubspotmodels.CommunicationPreferenceStatusResponse
+func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (communicationmodels.CommunicationPreferenceStatusResponse, error) {
+	var communicationPreferenceStatus communicationmodels.CommunicationPreferenceStatusResponse
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status/email/%s", contactEmail)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {

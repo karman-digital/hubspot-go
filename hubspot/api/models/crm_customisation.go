@@ -1,27 +1,11 @@
 package hubspotmodels
 
-type CRMCardResponse struct {
-	Response string `json:"response"`
-	Message  string `json:"message"`
-}
+import customisationmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/customisation"
 
-type CrmCardAction struct {
-	Type                       string   `json:"type"`
-	HttpMethod                 string   `json:"httpMethod"`
-	Width                      int      `json:"width"`
-	Height                     int      `json:"height"`
-	URI                        string   `json:"uri"`
-	Label                      string   `json:"label"`
-	AssociatedObjectProperties []string `json:"associatedObjectProperties,omitempty"`
-}
+type CRMCardResponse = customisationmodels.CRMCardResponse
 
-type CrmCard struct {
-	PrimaryAction *CrmCardAction  `json:"primaryAction,omitempty"`
-	Results       []CrmCardResult `json:"results,omitempty"`
-}
+type CrmCardAction = customisationmodels.CrmCardAction
 
-type CrmCardResult struct {
-	ObjectId int    `json:"objectId"`
-	Title    string `json:"title"`
-	Link     string `json:"link"`
-}
+type CrmCard = customisationmodels.CrmCard
+
+type CrmCardResult = customisationmodels.CrmCardResult

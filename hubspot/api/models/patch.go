@@ -1,7 +1,7 @@
 package hubspotmodels
 
-type PatchBody struct {
-	Properties Properties `json:"properties"`
-}
+import crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 
-type Properties map[string]any
+type PatchBody = crmmodels.PatchBody
+
+type Properties = crmmodels.Properties

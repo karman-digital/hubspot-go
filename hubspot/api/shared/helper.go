@@ -6,16 +6,20 @@ import (
 	"io"
 	"net/http"
 
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
+	usermodels "github.com/karman-digital/hubspot/hubspot/api/models/users"
 )
 
-func HandleBatchResponse(resp *http.Response, method string) (batchResp hubspotmodels.BatchResponse, err error) {
+func HandleBatchResponse(resp *http.Response, method string) (batchResp crmmodels.BatchResponse, err error) {
 	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 && resp.StatusCode != 200 && resp.StatusCode != 207 {
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(rawBody, &errorResp)
 		if err != nil {
 			return batchResp, fmt.Errorf("error parsing error body: %s", err)
@@ -35,13 +39,13 @@ func HandleBatchResponse(resp *http.Response, method string) (batchResp hubspotm
 	return batchResp, nil
 }
 
-func HandleBatchCommunicationPreferencesResponse(resp *http.Response) (batchResp hubspotmodels.BatchCommunicationPreferencesResponse, err error) {
+func HandleBatchCommunicationPreferencesResponse(resp *http.Response) (batchResp communicationmodels.BatchCommunicationPreferencesResponse, err error) {
 	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 && resp.StatusCode != 200 && resp.StatusCode != 207 {
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(rawBody, &errorResp)
 		if err != nil {
 			return batchResp, fmt.Errorf("error parsing error body: %s", err)
@@ -58,7 +62,7 @@ func HandleBatchCommunicationPreferencesResponse(resp *http.Response) (batchResp
 	return batchResp, nil
 }
 
-func HandleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusCode int) error {
+func HandleBatchResponseCodes(errorResp sharedmodels.ErrorResponseBody, statusCode int) error {
 	switch statusCode {
 	case 200:
 		return nil
@@ -76,7 +80,7 @@ func HandleBatchResponseCodes(errorResp hubspotmodels.ErrorResponseBody, statusC
 	}
 }
 
-func HandleUserResponse(resp *http.Response) (userResp hubspotmodels.UserBody, err error) {
+func HandleUserResponse(resp *http.Response) (userResp usermodels.UserBody, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
 		return userResp, err
@@ -88,7 +92,7 @@ func HandleUserResponse(resp *http.Response) (userResp hubspotmodels.UserBody, e
 	return userResp, nil
 }
 
-func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
+func HandleResponse(resp *http.Response) (objResp crmmodels.Result, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
 		return objResp, err
@@ -100,14 +104,14 @@ func HandleResponse(resp *http.Response) (objResp hubspotmodels.Result, err erro
 	return objResp, nil
 }
 
-func HandleError(resp *http.Response, returnedErr error) (objResp hubspotmodels.Result, err error) {
+func HandleError(resp *http.Response, returnedErr error) (objResp crmmodels.Result, err error) {
 	if _, err = handleBasicResponseCode(resp); err != nil {
 		return objResp, err
 	}
 	return objResp, nil
 }
 
-func HandleListResponse(resp *http.Response) (listResp hubspotmodels.ListResponse, err error) {
+func HandleListResponse(resp *http.Response) (listResp crmmodels.ListResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
 		return listResp, err
@@ -119,7 +123,7 @@ func HandleListResponse(resp *http.Response) (listResp hubspotmodels.ListRespons
 	return listResp, nil
 }
 
-func HandleCreateResponse(resp *http.Response) (objResp hubspotmodels.Result, err error) {
+func HandleCreateResponse(resp *http.Response) (objResp crmmodels.Result, err error) {
 	rawBody, err := handleCustomResponseCode(resp, http.StatusCreated)
 	if err != nil {
 		return objResp, err
@@ -131,7 +135,7 @@ func HandleCreateResponse(resp *http.Response) (objResp hubspotmodels.Result, er
 	return objResp, nil
 }
 
-func HandleSearchResponse(resp *http.Response) (searchResp hubspotmodels.SearchResponse, err error) {
+func HandleSearchResponse(resp *http.Response) (searchResp crmmodels.SearchResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
 		return searchResp, err
@@ -156,7 +160,7 @@ func handleBasicResponseCode(resp *http.Response) (rawBody []byte, err error) {
 		if resp.StatusCode == http.StatusNotFound {
 			return rawBody, ErrResourceNotFound
 		}
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(rawBody, &errorResp)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing error body: %s", err)
@@ -175,7 +179,7 @@ func handleCustomResponseCode(resp *http.Response, code int) (rawBody []byte, er
 		if resp.StatusCode == 404 {
 			return rawBody, ErrResourceNotFound
 		}
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(rawBody, &errorResp)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing error body: %s", err)
@@ -185,7 +189,7 @@ func handleCustomResponseCode(resp *http.Response, code int) (rawBody []byte, er
 	return rawBody, nil
 }
 
-func HandleFileImportResponse(resp *http.Response) (fileImportResp hubspotmodels.FileImportResponse, err error) {
+func HandleFileImportResponse(resp *http.Response) (fileImportResp filesmodels.FileImportResponse, err error) {
 	rawBody, err := handleCustomResponseCode(resp, http.StatusAccepted)
 	if err != nil {
 		return fileImportResp, err
@@ -205,7 +209,7 @@ func HandleDeleteResponse(resp *http.Response) (err error) {
 	return nil
 }
 
-func HandleFileImportStatusResponse(resp *http.Response) (fileImportStatusResp hubspotmodels.FileImportStatusResponse, err error) {
+func HandleFileImportStatusResponse(resp *http.Response) (fileImportStatusResp filesmodels.FileImportStatusResponse, err error) {
 	rawBody, err := handleCustomResponseCode(resp, http.StatusOK)
 	if err != nil {
 		return fileImportStatusResp, err

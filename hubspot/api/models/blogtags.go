@@ -1,22 +1,9 @@
 package hubspotmodels
 
-type BatchBlogTagResponse struct {
-	Status      string    `json:"status"`
-	Results     []BlogTag `json:"results"`
-	StartedAt   string    `json:"startedAt"`
-	CompletedAt string    `json:"completedAt"`
-}
+import blogtagmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/blogtags"
 
-type BlogTag struct {
-	Created   string `json:"created"`
-	DeletedAt string `json:"deletedAt"`
-	ID        string `json:"id"`
-	Language  string `json:"language"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	Updated   string `json:"updated"`
-}
+type BatchBlogTagResponse = blogtagmodels.BatchBlogTagResponse
 
-type BlogTagsBatchInput struct {
-	Inputs []string `json:"inputs"`
-}
+type BlogTag = blogtagmodels.BlogTag
+
+type BlogTagsBatchInput = blogtagmodels.BlogTagsBatchInput

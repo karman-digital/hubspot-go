@@ -8,12 +8,13 @@ import (
 	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *DealService) CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *DealService) CreateDeal(body crmmodels.PostBody) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -44,8 +45,8 @@ func (c *DealService) CreateDeal(body hubspotmodels.PostBody) (hubspotmodels.Res
 	return respStruct, nil
 }
 
-func (c *DealService) UpdateDeal(id int, patchBody hubspotmodels.PatchBody) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *DealService) UpdateDeal(id int, patchBody crmmodels.PatchBody) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/deals/%d", id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
@@ -76,8 +77,8 @@ func (c *DealService) UpdateDeal(id int, patchBody hubspotmodels.PatchBody) (hub
 	return respStruct, nil
 }
 
-func (c *DealService) SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.SearchResponse, error) {
-	var respStruct hubspotmodels.SearchResponse
+func (c *DealService) SearchDeals(body crmmodels.SearchBody) (crmmodels.SearchResponse, error) {
+	var respStruct crmmodels.SearchResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/search"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -108,8 +109,8 @@ func (c *DealService) SearchDeals(body hubspotmodels.SearchBody) (hubspotmodels.
 	return respStruct, nil
 }
 
-func (c *DealService) GetDeal(id int, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
-	var respStruct hubspotmodels.Result
+func (c *DealService) GetDeal(id int, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
+	var respStruct crmmodels.Result
 	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/deals/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
@@ -166,9 +167,9 @@ func (c *DealService) DeleteDeal(id int) (err error) {
 	return shared.HandleDeleteResponse(resp)
 }
 
-func (c *DealService) GetDealByUniqueProperty(value string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
+func (c *DealService) GetDealByUniqueProperty(value string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
 	if opts[0].IdProperty == "" {
-		return hubspotmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
+		return crmmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
 	}
 	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/deals/%s", value), nil, opts...)
 	if err != nil {
@@ -177,10 +178,10 @@ func (c *DealService) GetDealByUniqueProperty(value string, opts ...hubspotmodel
 	return shared.HandleResponse(resp)
 }
 
-func (c *DealService) GetDeals(opts ...hubspotmodels.GetOptions) (hubspotmodels.ListResponse, error) {
+func (c *DealService) GetDeals(opts ...sharedmodels.GetOptions) (crmmodels.ListResponse, error) {
 	resp, err := c.SendRequest(http.MethodGet, "/crm/v3/objects/deals", nil, opts...)
 	if err != nil {
-		return hubspotmodels.ListResponse{}, fmt.Errorf("error making request: %s", err)
+		return crmmodels.ListResponse{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleListResponse(resp)
 }

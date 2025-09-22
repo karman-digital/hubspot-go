@@ -12,29 +12,30 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (f *FilesService) ImportFileViaUrl(body hubspotmodels.FileImportBody) (hubspotmodels.FileUploadResult, error) {
+func (f *FilesService) ImportFileViaUrl(body filesmodels.FileImportBody) (filesmodels.FileUploadResult, error) {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	resp, err := f.SendRequest("POST", "/files/v3/files/import-from-url/async", reqBody)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	return f.handleFileUploadResponse(resp)
 }
 
-func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmodels.FileUploadResult, error) {
+func (f *FilesService) handleFileUploadResponse(resp *http.Response) (filesmodels.FileUploadResult, error) {
 	uploadResp, err := shared.HandleFileImportResponse(resp)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	taskId := uploadResp.ID
-	var fileUploadResult hubspotmodels.FileUploadResult
+	var fileUploadResult filesmodels.FileUploadResult
 	var uploaded bool
 	checkCount := 0
 	maxChecks := 6
@@ -44,17 +45,17 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 		}
 		resp, err = f.SendRequest("GET", fmt.Sprintf("/files/v3/files/import-from-url/async/tasks/%s/status", taskId), nil)
 		if err != nil {
-			return hubspotmodels.FileUploadResult{}, err
+			return filesmodels.FileUploadResult{}, err
 		}
 		importStatusResp, err := shared.HandleFileImportStatusResponse(resp)
 		if err != nil {
-			return hubspotmodels.FileUploadResult{}, err
+			return filesmodels.FileUploadResult{}, err
 		}
 		if importStatusResp.Status == "COMPLETE" {
 			uploaded = true
 			fileUploadResult = importStatusResp.Result
 		} else if importStatusResp.Status == "FAILED" {
-			return hubspotmodels.FileUploadResult{}, fmt.Errorf("file import failed")
+			return filesmodels.FileUploadResult{}, fmt.Errorf("file import failed")
 		}
 		if !uploaded {
 			checkCount++
@@ -64,12 +65,12 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (hubspotmod
 		}
 	}
 	if !uploaded {
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("file import timed out after %d checks", maxChecks)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("file import timed out after %d checks", maxChecks)
 	}
 	return fileUploadResult, nil
 }
 
-func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...hubspotmodels.SignedUrlOptions) (hubspotmodels.SignedUrlResponse, error) {
+func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...filesmodels.SignedUrlOptions) (filesmodels.SignedUrlResponse, error) {
 	endpoint := fmt.Sprintf("/files/v3/files/%s/signed-url", fileId)
 	if len(signedUrlOptions) > 0 {
 		queryParams := url.Values{}
@@ -86,43 +87,43 @@ func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...hubspotmo
 	}
 	resp, err := f.SendRequest("GET", endpoint, nil)
 	if err != nil {
-		return hubspotmodels.SignedUrlResponse{}, err
+		return filesmodels.SignedUrlResponse{}, err
 	}
 	rawBody, err := shared.HandleBasicResponseCode(resp)
 	if err != nil {
-		return hubspotmodels.SignedUrlResponse{}, err
+		return filesmodels.SignedUrlResponse{}, err
 	}
-	var signedUrlResponse hubspotmodels.SignedUrlResponse
+	var signedUrlResponse filesmodels.SignedUrlResponse
 	err = json.Unmarshal(rawBody, &signedUrlResponse)
 	if err != nil {
-		return hubspotmodels.SignedUrlResponse{}, err
+		return filesmodels.SignedUrlResponse{}, err
 	}
 	return signedUrlResponse, nil
 }
 
-func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...hubspotmodels.UploadFileOptions) (hubspotmodels.FileUploadResult, error) {
+func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...filesmodels.UploadFileOptions) (filesmodels.FileUploadResult, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile("file", fileName)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	_, err = part.Write(fileContent)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	writer.WriteField("fileName", fileName)
 	if len(opts) > 0 {
 		if opts[0].FolderId != "" {
 			err = writer.WriteField("folderId", opts[0].FolderId)
 			if err != nil {
-				return hubspotmodels.FileUploadResult{}, err
+				return filesmodels.FileUploadResult{}, err
 			}
 		}
 		if opts[0].FolderPath != "" {
 			err = writer.WriteField("folderPath", opts[0].FolderPath)
 			if err != nil {
-				return hubspotmodels.FileUploadResult{}, err
+				return filesmodels.FileUploadResult{}, err
 			}
 		}
 		options := map[string]string{}
@@ -134,47 +135,47 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...h
 		}
 		optionsJson, err := json.Marshal(options)
 		if err != nil {
-			return hubspotmodels.FileUploadResult{}, err
+			return filesmodels.FileUploadResult{}, err
 		}
 		err = writer.WriteField("options", string(optionsJson))
 		if err != nil {
-			return hubspotmodels.FileUploadResult{}, err
+			return filesmodels.FileUploadResult{}, err
 		}
 	}
 
 	err = writer.Close()
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, err
+		return filesmodels.FileUploadResult{}, err
 	}
 	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/v3/files", body)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
 	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", f.Credentials.AccessToken()))
 	resp, err := f.Credentials.Client().Do(req)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error making request: %s", err)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error making request: %s", err)
 	}
 	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error reading body: %s", err)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 {
 		if resp.StatusCode == 404 {
-			return hubspotmodels.FileUploadResult{}, fmt.Errorf("resource not found")
+			return filesmodels.FileUploadResult{}, fmt.Errorf("resource not found")
 		}
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(rawBody, &errorResp)
 		if err != nil {
-			return hubspotmodels.FileUploadResult{}, fmt.Errorf("error parsing error body: %s", err)
+			return filesmodels.FileUploadResult{}, fmt.Errorf("error parsing error body: %s", err)
 		}
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error returned by endpoint: %+v", errorResp)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error returned by endpoint: %+v", errorResp)
 	}
-	var result hubspotmodels.FileUploadResult
+	var result filesmodels.FileUploadResult
 	err = json.Unmarshal(rawBody, &result)
 	if err != nil {
-		return hubspotmodels.FileUploadResult{}, fmt.Errorf("error parsing body: %s", err)
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error parsing body: %s", err)
 	}
 	return result, nil
 }

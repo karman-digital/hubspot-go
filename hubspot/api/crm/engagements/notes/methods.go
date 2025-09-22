@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"net/http"
 
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	associationsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/associations"
+	notemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/notes"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePostBody, associations ...hubspotmodels.ObjectCreationAssociation) (hubspotmodels.Result, error) {
-	var notesResp hubspotmodels.Result
+func (n *NotesService) CreateNoteWithAssociations(noteBody notemodels.NotePostBody, associations ...associationsmodels.ObjectCreationAssociation) (crmmodels.Result, error) {
+	var notesResp crmmodels.Result
 	for _, association := range associations {
 		if noteBody.Associations == nil {
-			noteBody.Associations = []hubspotmodels.ObjectCreationAssociation{}
+			noteBody.Associations = []associationsmodels.ObjectCreationAssociation{}
 		}
 		noteBody.Associations = append(noteBody.Associations, association)
 	}
@@ -23,15 +26,15 @@ func (n *NotesService) CreateNoteWithAssociations(noteBody hubspotmodels.NotePos
 	}
 	resp, err := n.SendRequest(http.MethodPost, "/crm/v3/objects/notes", reqBody)
 	if err != nil {
-		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleCreateResponse(resp)
 }
 
-func (n *NotesService) GetNote(noteId string, opts ...hubspotmodels.GetOptions) (hubspotmodels.Result, error) {
+func (n *NotesService) GetNote(noteId string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
 	resp, err := n.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/notes/%s", noteId), nil, opts...)
 	if err != nil {
-		return hubspotmodels.Result{}, fmt.Errorf("error making request: %s", err)
+		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleResponse(resp)
 }

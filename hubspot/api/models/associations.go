@@ -1,118 +1,52 @@
 package hubspotmodels
 
-type AssociationPair struct {
-	From AssociationId `json:"from"`
-	To   AssociationId `json:"to"`
-}
+import (
+	associationsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/associations"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
+)
 
-type AssociationId struct {
-	Id string `json:"id"`
-}
+type AssociationPair = associationsmodels.AssociationPair
 
-type BatchCreateDefaultAssociationsBody struct {
-	Inputs []AssociationPair `json:"inputs"`
-}
+type AssociationId = associationsmodels.AssociationId
 
-type BatchCreateAssociationBody struct {
-	Inputs []BatchCreateAssociationInput `json:"inputs"`
-}
+type BatchCreateDefaultAssociationsBody = associationsmodels.BatchCreateDefaultAssociationsBody
 
-type BatchCreateAssociationInput struct {
-	Types []AssociationType `json:"types"`
-	AssociationPair
-}
+type BatchCreateAssociationBody = associationsmodels.BatchCreateAssociationBody
 
-type AssociationType struct {
-	AssociationCategory string `json:"associationCategory"`
-	AssociationTypeId   int    `json:"associationTypeId"`
-}
+type BatchCreateAssociationInput = associationsmodels.BatchCreateAssociationInput
 
-type ObjectCreationAssociation struct {
-	Types []AssociationType `json:"types"`
-	To    AssociationId     `json:"to"`
-}
+type AssociationType = associationsmodels.AssociationType
 
-type BatchAssociationGetResponse struct {
-	CompletedAt string                   `json:"completedAt"`
-	RequestedAt string                   `json:"requestedAt"`
-	StartedAt   string                   `json:"startedAt"`
-	NumErrors   int                      `json:"numErrors"`
-	Links       map[string]string        `json:"links"`
-	Results     []BatchAssociationResult `json:"results"`
-	Errors      []ErrorDetail            `json:"errors,omitempty"`
-	Status      string                   `json:"status"`
-}
+type ObjectCreationAssociation = associationsmodels.ObjectCreationAssociation
 
-type BatchAssociationResult struct {
-	From   From     `json:"from"`
-	Paging Paging   `json:"paging"`
-	To     []ToItem `json:"to"`
-}
+type Association = associationsmodels.Association
 
-type From struct {
-	ID string `json:"id"`
-}
+type AssociationResultPair = associationsmodels.AssociationResultPair
 
-type Navigation struct {
-	Link   string `json:"link"`
-	After  string `json:"after,omitempty"`
-	Before string `json:"before,omitempty"`
-}
+type BatchAssociationGetResponse = associationsmodels.BatchAssociationGetResponse
 
-type ToItem struct {
-	AssociationTypes []BatchAssociationType `json:"associationTypes"`
-	ToObjectId       int                    `json:"toObjectId"`
-}
+type BatchAssociationResult = associationsmodels.BatchAssociationResult
 
-type BatchAssociationType struct {
-	TypeId   int    `json:"typeId"`
-	Label    string `json:"label"`
-	Category string `json:"category"`
-}
+type From = associationsmodels.From
 
-type BatchGetAssociationsBody struct {
-	Inputs []BatchGetAssociationsInput `json:"inputs"`
-}
+type ToItem = associationsmodels.ToItem
 
-type BatchGetAssociationsInput struct {
-	Id    string `json:"id"`
-	After string `json:"after,omitempty"`
-}
+type BatchAssociationType = associationsmodels.BatchAssociationType
 
-type ErrorDetail struct {
-	SubCategory any                 `json:"subCategory"`
-	Context     map[string][]string `json:"context"`
-	Links       map[string]string   `json:"links"`
-	ID          string              `json:"id"`
-	Category    string              `json:"category"`
-	Message     string              `json:"message"`
-	Errors      []NestedError       `json:"errors"`
-	Status      string              `json:"status"`
-}
+type BatchGetAssociationsBody = associationsmodels.BatchGetAssociationsBody
 
-type NestedError struct {
-	SubCategory string              `json:"subCategory"`
-	Code        string              `json:"code"`
-	In          string              `json:"in"`
-	Context     map[string][]string `json:"context"`
-	Message     string              `json:"message"`
-}
+type BatchGetAssociationsInput = associationsmodels.BatchGetAssociationsInput
 
-type AssociationGetResponse struct {
-	Paging  Paging   `json:"paging"`
-	Results []ToItem `json:"results"`
-}
+type AssociationGetResponse = associationsmodels.AssociationGetResponse
 
-type BatchCreateAssociationsBody struct {
-	Inputs []AssociationInput `json:"inputs"`
-}
+type BatchCreateAssociationsBody = associationsmodels.BatchCreateAssociationsBody
 
-type AssociationInput struct {
-	Types []AssociationType `json:"types"`
-	From  AssociationObject `json:"from"`
-	To    AssociationObject `json:"to"`
-}
+type AssociationInput = associationsmodels.AssociationInput
 
-type AssociationObject struct {
-	Id string `json:"id"`
-}
+type AssociationObject = associationsmodels.AssociationObject
+
+type Navigation = sharedmodels.Navigation
+
+type ErrorDetail = sharedmodels.ErrorDetail
+
+type NestedError = sharedmodels.NestedError

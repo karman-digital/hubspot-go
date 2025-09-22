@@ -8,17 +8,10 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	blogmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/blogs"
 )
 
-func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hubspotmodels.BlogPostsResponse, error) {
-	req, err := retryablehttp.NewRequest(http.MethodGet, "https://api.hubapi.com/cms/v3/blogs/posts", nil)
-	if err != nil {
-		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", b.AccessToken()))
+func (b *BlogService) GetAllBlogPosts(opts blogmodels.BlogFilterOptions) (blogmodels.BlogPostsResponse, error) {
 	queryParams := url.Values{}
 	if opts.Filters != nil {
 		for key, value := range opts.Filters {
@@ -37,23 +30,26 @@ func (b *BlogService) GetAllBlogPosts(opts hubspotmodels.BlogFilterOptions) (hub
 	if opts.State != "" {
 		queryParams.Add("state", opts.State)
 	}
-	req.URL.RawQuery = queryParams.Encode()
-	resp, err := b.Client().Do(req)
+	path := "/cms/v3/blogs/posts"
+	if encoded := queryParams.Encode(); encoded != "" {
+		path = fmt.Sprintf("%s?%s", path, encoded)
+	}
+	resp, err := b.SendRequest(http.MethodGet, path, nil)
 	if err != nil {
-		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error making request: %s", err)
+		return blogmodels.BlogPostsResponse{}, fmt.Errorf("error making request: %s", err)
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error reading response body: %s", err)
+		return blogmodels.BlogPostsResponse{}, fmt.Errorf("error reading response body: %s", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error getting blog posts: %s", resp.Status)
+		return blogmodels.BlogPostsResponse{}, fmt.Errorf("error getting blog posts: %s", resp.Status)
 	}
-	var blogPostsResponse hubspotmodels.BlogPostsResponse
+	var blogPostsResponse blogmodels.BlogPostsResponse
 	err = json.Unmarshal(body, &blogPostsResponse)
 	if err != nil {
-		return hubspotmodels.BlogPostsResponse{}, fmt.Errorf("error unmarshalling response body: %s", err)
+		return blogmodels.BlogPostsResponse{}, fmt.Errorf("error unmarshalling response body: %s", err)
 	}
 	return blogPostsResponse, nil
 }

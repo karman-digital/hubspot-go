@@ -1,9 +1,9 @@
 package hshelpers
 
-import hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+import sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 
-func CreateContactGetOptions(properties []string, propertiesWithHistory []string, associations []string, archived bool) hubspotmodels.GetOptions {
-	return hubspotmodels.GetOptions{
+func CreateContactGetOptions(properties []string, propertiesWithHistory []string, associations []string, archived bool) sharedmodels.GetOptions {
+	return sharedmodels.GetOptions{
 		Properties:            properties,
 		PropertiesWithHistory: propertiesWithHistory,
 		Associations:          associations,
@@ -11,8 +11,8 @@ func CreateContactGetOptions(properties []string, propertiesWithHistory []string
 	}
 }
 
-func CreateGetOptions(properties []string, propertiesWithHistory []string, associations []string, archived bool) hubspotmodels.GetOptions {
-	return hubspotmodels.GetOptions{
+func CreateGetOptions(properties []string, propertiesWithHistory []string, associations []string, archived bool) sharedmodels.GetOptions {
+	return sharedmodels.GetOptions{
 		Properties:            properties,
 		PropertiesWithHistory: propertiesWithHistory,
 		Associations:          associations,

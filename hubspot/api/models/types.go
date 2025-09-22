@@ -1,60 +1,13 @@
 package hubspotmodels
 
-import "errors"
+import authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 
-type AccessToken string
-type RefreshToken string
+type AccessToken = authmodels.AccessToken
 
-func (r *RefreshToken) Set(s string) error {
-	if s == "" {
-		return errors.New("refresh token cannot be empty")
-	}
-	*r = RefreshToken(s)
-	return nil
-}
+type RefreshToken = authmodels.RefreshToken
 
-func (r RefreshToken) String() string {
-	return string(r)
-}
+type ClientSecret = authmodels.ClientSecret
 
-func (a *AccessToken) Set(s string) error {
-	if s == "" {
-		return errors.New("access token cannot be empty")
-	}
-	*a = AccessToken(s)
-	return nil
-}
+type ClientId = authmodels.ClientId
 
-func (a AccessToken) String() string {
-	return string(a)
-}
-
-type ClientSecret string
-
-func (c ClientSecret) String() string {
-	return string(c)
-}
-
-func (c *ClientSecret) Set(s string) {
-	*c = ClientSecret(s)
-}
-
-type ClientId string
-
-func (c ClientId) String() string {
-	return string(c)
-}
-
-func (c *ClientId) Set(s string) {
-	*c = ClientId(s)
-}
-
-type RedirectUri string
-
-func (r RedirectUri) String() string {
-	return string(r)
-}
-
-func (r *RedirectUri) Set(s string) {
-	*r = RedirectUri(s)
-}
+type RedirectUri = authmodels.RedirectUri

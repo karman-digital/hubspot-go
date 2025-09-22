@@ -3,11 +3,11 @@ package hshelpers
 import (
 	"encoding/json"
 
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	webhookmodels "github.com/karman-digital/hubspot/hubspot/api/models/webhooks"
 )
 
-func ConvertBodyBytesToAccountDataPayload(bodyBytes []byte) (hubspotmodels.AccountDataPayload, error) {
-	payload := hubspotmodels.AccountDataPayload{}
+func ConvertBodyBytesToAccountDataPayload(bodyBytes []byte) (webhookmodels.AccountDataPayload, error) {
+	payload := webhookmodels.AccountDataPayload{}
 	if err := json.Unmarshal(bodyBytes, &payload); err != nil {
 		return payload, err
 	}

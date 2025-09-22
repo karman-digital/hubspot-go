@@ -7,12 +7,13 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/go-retryablehttp"
-	hubspotmodels "github.com/karman-digital/hubspot/hubspot/api/models"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
-func (c *BatchDealService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+func (c *BatchDealService) BatchUpdate(body crmmodels.BatchUpdateBody) (crmmodels.BatchResponse, error) {
+	var dealResp crmmodels.BatchResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/update"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -34,7 +35,7 @@ func (c *BatchDealService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubs
 		return dealResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 200 && resp.StatusCode != 207 {
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
 			return dealResp, fmt.Errorf("error parsing error body: %s", err)
@@ -51,8 +52,8 @@ func (c *BatchDealService) BatchUpdate(body hubspotmodels.BatchUpdateBody) (hubs
 	return dealResp, nil
 }
 
-func (c *BatchDealService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+func (c *BatchDealService) BatchCreate(body crmmodels.BatchCreateBody) (crmmodels.BatchResponse, error) {
+	var dealResp crmmodels.BatchResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/create"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -74,7 +75,7 @@ func (c *BatchDealService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubs
 		return dealResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 && resp.StatusCode != 207 {
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
 			return dealResp, fmt.Errorf("error parsing error body: %s", err)
@@ -91,8 +92,8 @@ func (c *BatchDealService) BatchCreate(body hubspotmodels.BatchCreateBody) (hubs
 	return dealResp, nil
 }
 
-func (c *BatchDealService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmodels.BatchResponse, error) {
-	var dealResp hubspotmodels.BatchResponse
+func (c *BatchDealService) BatchGet(body crmmodels.BatchGetBody) (crmmodels.BatchResponse, error) {
+	var dealResp crmmodels.BatchResponse
 	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/read"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
@@ -114,7 +115,7 @@ func (c *BatchDealService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmod
 		return dealResp, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 200 && resp.StatusCode != 207 {
-		var errorResp hubspotmodels.ErrorResponseBody
+		var errorResp sharedmodels.ErrorResponseBody
 		err := json.Unmarshal(contactRawBody, &errorResp)
 		if err != nil {
 			return dealResp, fmt.Errorf("error parsing error body: %s", err)
@@ -131,7 +132,7 @@ func (c *BatchDealService) BatchGet(body hubspotmodels.BatchGetBody) (hubspotmod
 	return dealResp, nil
 }
 
-func (c *BatchDealService) BatchDelete(body hubspotmodels.BatchDeleteBody) error {
+func (c *BatchDealService) BatchDelete(body crmmodels.BatchDeleteBody) error {
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return fmt.Errorf("error marshalling post body: %s", err)

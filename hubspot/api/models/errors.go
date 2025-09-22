@@ -1,33 +1,9 @@
 package hubspotmodels
 
-type ErrorResponseBody struct {
-	Status        string `json:"status"`
-	Message       string `json:"message"`
-	Category      string `json:"category"`
-	CorrelationId string `json:"correlationId"`
-}
+import sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 
-type NestedMessage struct {
-	IsValid bool   `json:"isValid"`
-	Message string `json:"message"`
-	Error   string `json:"error"`
-	Name    string `json:"name"`
-}
+type ErrorResponseBody = sharedmodels.ErrorResponseBody
 
-type ParsedMessage struct {
-	PropertyValues []NestedMessage `json:"Property values were not valid"`
-}
+type NestedMessage = sharedmodels.NestedMessage
 
-func (e ErrorResponseBody) Error() string {
-	return e.Message
-}
-
-func (p ParsedMessage) EmailInvalidError() bool {
-	emailValidation := false
-	for _, msg := range p.PropertyValues {
-		if msg.Error == "INVALID_EMAIL" {
-			emailValidation = true
-		}
-	}
-	return emailValidation
-}
+type ParsedMessage = sharedmodels.ParsedMessage

@@ -1,24 +1,7 @@
 package hubspotmodels
 
-type TokenBody struct {
-	AccessToken  AccessToken  `json:"access_token"`
-	ExpiresIn    int          `json:"expires_in"`
-	RefreshToken RefreshToken `json:"refresh_token"`
-	TokenType    string       `json:"token_type"`
-	IDToken      string       `json:"id_token"`
-}
+import authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 
-type BearerTokenBody struct {
-	Token                     string   `json:"token"`
-	User                      string   `json:"user"`
-	HubDomain                 string   `json:"hub_domain"`
-	Scopes                    []string `json:"scopes"`
-	ScopeToScopeGroupPks      []string `json:"scope_to_scope_group_pks"`
-	TrialScopes               []string `json:"trial_scopes"`
-	TrialScopeToScopeGroupPks []string `json:"trial_scope_to_scope_group_pks"`
-	HubID                     int      `json:"hub_id"`
-	AppID                     int      `json:"app_id"`
-	ExpiresIn                 int      `json:"expires_in"`
-	UserID                    int      `json:"user_id"`
-	TokenType                 string   `json:"token_type"`
-}
+type TokenBody = authmodels.TokenBody
+
+type BearerTokenBody = authmodels.BearerTokenBody
