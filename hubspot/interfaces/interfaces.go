@@ -7,6 +7,7 @@ import (
 	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	associationsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/associations"
+	listsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/lists"
 	notemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/notes"
 	ownersmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/owners"
 	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
@@ -177,4 +178,9 @@ type Meetings interface {
 type GraphQL interface {
 	MakeRequest(query string, variables map[string]interface{}) (map[string]interface{}, error)
 	MakeRequestWithFullResponse(query string, variables map[string]interface{}) (graphqlmodels.GraphQLResponse, error)
+}
+
+type Lists interface {
+	SearchLists(body listsmodels.SearchListsBody) (listsmodels.SearchListsResponse, error)
+	GetListMemberships(listId string, opts ...sharedmodels.GetOptions) (listsmodels.ListMembershipsResponse, error)
 }

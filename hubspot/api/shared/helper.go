@@ -8,6 +8,7 @@ import (
 
 	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
+	listsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/lists"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	usermodels "github.com/karman-digital/hubspot/hubspot/api/models/users"
@@ -219,4 +220,28 @@ func HandleFileImportStatusResponse(resp *http.Response) (fileImportStatusResp f
 		return fileImportStatusResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	return fileImportStatusResp, nil
+}
+
+func HandleListsSearchResponse(resp *http.Response) (searchResp listsmodels.SearchListsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return searchResp, err
+	}
+	err = json.Unmarshal(rawBody, &searchResp)
+	if err != nil {
+		return searchResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return searchResp, nil
+}
+
+func HandleListMembershipsResponse(resp *http.Response) (membershipsResp listsmodels.ListMembershipsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return membershipsResp, err
+	}
+	err = json.Unmarshal(rawBody, &membershipsResp)
+	if err != nil {
+		return membershipsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return membershipsResp, nil
 }

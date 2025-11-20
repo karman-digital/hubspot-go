@@ -17,4 +17,5 @@ type CRM struct {
 	Products      interfaces.Products
 	LineItems     interfaces.LineItems
 	GraphQL       interfaces.GraphQL
+	Lists         interfaces.Lists
 }
