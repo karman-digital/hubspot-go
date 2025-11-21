@@ -245,3 +245,15 @@ func HandleListMembershipsResponse(resp *http.Response) (membershipsResp listsmo
 	}
 	return membershipsResp, nil
 }
+
+func HandleListsByIdResponse(resp *http.Response) (listsResp listsmodels.ListsByIdResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return listsResp, err
+	}
+	err = json.Unmarshal(rawBody, &listsResp)
+	if err != nil {
+		return listsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return listsResp, nil
+}

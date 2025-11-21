@@ -16,6 +16,10 @@ func (l Lists) SearchLists(body listsmodels.SearchListsBody) (listsmodels.Search
 	return l.ListData.SearchLists(body)
 }
 
+func (l Lists) GetLists(listIds []string, includeFilters bool) (listsmodels.ListsByIdResponse, error) {
+	return l.ListData.GetLists(listIds, includeFilters)
+}
+
 func (l Lists) GetListMemberships(listId string, opts ...sharedmodels.GetOptions) (listsmodels.ListMembershipsResponse, error) {
 	return l.Memberships.GetListMemberships(listId, opts...)
 }

@@ -53,3 +53,7 @@ type ListMembershipsResponse struct {
 	Paging  sharedmodels.Paging `json:"paging,omitempty"`
 }
 
+type ListsByIdResponse struct {
+	Lists []List `json:"lists"`
+}
+

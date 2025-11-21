@@ -182,5 +182,6 @@ type GraphQL interface {
 
 type Lists interface {
 	SearchLists(body listsmodels.SearchListsBody) (listsmodels.SearchListsResponse, error)
+	GetLists(listIds []string, includeFilters bool) (listsmodels.ListsByIdResponse, error)
 	GetListMemberships(listId string, opts ...sharedmodels.GetOptions) (listsmodels.ListMembershipsResponse, error)
 }
