@@ -7,11 +7,11 @@ import (
 )
 
 type SearchListsBody struct {
-	Query              string   `json:"query,omitempty"`
-	ProcessingTypes    []string `json:"processingTypes,omitempty"`
+	Query                string   `json:"query,omitempty"`
+	ProcessingTypes      []string `json:"processingTypes,omitempty"`
 	AdditionalProperties []string `json:"additionalProperties,omitempty"`
-	Limit              int      `json:"limit,omitempty"`
-	After              string   `json:"after,omitempty"`
+	Count                int      `json:"count,omitempty"`
+	Offset               int      `json:"offset,omitempty"`
 }
 
 type List struct {
@@ -19,8 +19,13 @@ type List struct {
 	Name                string                 `json:"name"`
 	ObjectTypeId        string                 `json:"objectTypeId"`
 	ProcessingType      string                 `json:"processingType"`
+	ProcessingStatus    string                 `json:"processingStatus,omitempty"`
 	CreatedAt           time.Time              `json:"createdAt"`
+	CreatedById         string                 `json:"createdById,omitempty"`
 	UpdatedAt           time.Time              `json:"updatedAt"`
+	UpdatedById         string                 `json:"updatedById,omitempty"`
+	FiltersUpdatedAt    time.Time              `json:"filtersUpdatedAt,omitempty"`
+	ListVersion         int                    `json:"listVersion,omitempty"`
 	Size                int                    `json:"size,omitempty"`
 	AdditionalProperties map[string]interface{} `json:"additionalProperties,omitempty"`
 	FilterBranch        *FilterBranch          `json:"filterBranch,omitempty"`
@@ -40,8 +45,10 @@ type Filter struct {
 }
 
 type SearchListsResponse struct {
-	Results []List              `json:"results"`
-	Paging  sharedmodels.Paging `json:"paging,omitempty"`
+	Lists   []List `json:"lists"`
+	HasMore bool   `json:"hasMore"`
+	Offset  int    `json:"offset"`
+	Total   int    `json:"total"`
 }
 
 type ListMembership struct {
