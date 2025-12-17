@@ -8,6 +8,7 @@ import (
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
 	"github.com/karman-digital/hubspot/hubspot/api/crm"
 	"github.com/karman-digital/hubspot/hubspot/api/filesystem"
+	"github.com/karman-digital/hubspot/hubspot/api/marketing"
 	"github.com/karman-digital/hubspot/hubspot/api/settings"
 )
 
@@ -27,6 +28,7 @@ func NewApiClient(credentials *credentials.Credentials) ApiClient {
 		CommunicationPreferences: communicationpreferences.NewCommunicationPreferencesService(credentials),
 		FileSystem:               filesystem.NewFilesystemService(credentials),
 		Settings:                 settings.NewSettingsService(credentials),
+		Marketing:                marketing.NewMarketingService(credentials),
 	}
 }
 

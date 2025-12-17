@@ -10,6 +10,11 @@ import (
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	listsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/lists"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
+	campaignassetsmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/campaigns/assets"
+	campaignmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/campaigns"
+	emailanalyticscampaignmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emailanalytics/campaigns"
+	emailanalyticseventsmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emailanalytics/events"
+	emailmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emails"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	usermodels "github.com/karman-digital/hubspot/hubspot/api/models/users"
 )
@@ -256,4 +261,76 @@ func HandleListsByIdResponse(resp *http.Response) (listsResp listsmodels.ListsBy
 		return listsResp, fmt.Errorf("error parsing body: %s", err)
 	}
 	return listsResp, nil
+}
+
+func HandleCampaignsResponse(resp *http.Response) (campaignsResp campaignmodels.CampaignsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return campaignsResp, err
+	}
+	err = json.Unmarshal(rawBody, &campaignsResp)
+	if err != nil {
+		return campaignsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return campaignsResp, nil
+}
+
+func HandleCampaignAssetsResponse(resp *http.Response) (assetsResp campaignassetsmodels.CampaignAssetsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return assetsResp, err
+	}
+	err = json.Unmarshal(rawBody, &assetsResp)
+	if err != nil {
+		return assetsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return assetsResp, nil
+}
+
+func HandleMarketingEmailResponse(resp *http.Response) (emailResp emailmodels.MarketingEmail, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return emailResp, err
+	}
+	err = json.Unmarshal(rawBody, &emailResp)
+	if err != nil {
+		return emailResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return emailResp, nil
+}
+
+func HandleEmailCampaignsResponse(resp *http.Response) (campaignsResp emailanalyticscampaignmodels.EmailCampaignsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return campaignsResp, err
+	}
+	err = json.Unmarshal(rawBody, &campaignsResp)
+	if err != nil {
+		return campaignsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return campaignsResp, nil
+}
+
+func HandleEmailCampaignDetailResponse(resp *http.Response) (campaignDetailResp emailanalyticscampaignmodels.EmailCampaignDetail, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return campaignDetailResp, err
+	}
+	err = json.Unmarshal(rawBody, &campaignDetailResp)
+	if err != nil {
+		return campaignDetailResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return campaignDetailResp, nil
+}
+
+func HandleEmailEventsResponse(resp *http.Response) (eventsResp emailanalyticseventsmodels.EmailEventsResponse, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return eventsResp, err
+	}
+	err = json.Unmarshal(rawBody, &eventsResp)
+	if err != nil {
+		return eventsResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return eventsResp, nil
 }
