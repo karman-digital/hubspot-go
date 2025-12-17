@@ -5,9 +5,9 @@ import (
 )
 
 type CampaignAsset struct {
-	Id      string                 `json:"id"`
-	Name    string                 `json:"name"`
-	Metrics map[string]interface{} `json:"metrics"`
+	Id      string         `json:"id"`
+	Name    string         `json:"name"`
+	Metrics map[string]int `json:"metrics"`
 }
 
 type CampaignAssetsResponse struct {

@@ -14,7 +14,7 @@ type Campaign struct {
 }
 
 type BusinessUnit struct {
-	Id string `json:"id"`
+	Id int `json:"id"`
 }
 
 type CampaignsResponse struct {

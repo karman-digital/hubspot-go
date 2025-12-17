@@ -1,33 +1,33 @@
 package emailanalyticseventsmodels
 
 type EmailEvent struct {
-	Id              int64               `json:"id"`
-	AppId           int64               `json:"appId"`
-	AppName         string              `json:"appName"`
-	Created         int64               `json:"created"`
-	EmailCampaignId int64               `json:"emailCampaignId"`
-	PortalId        int64               `json:"portalId"`
-	Recipient       string              `json:"recipient"`
-	Type            string              `json:"type"`
-	Browser         *EmailEventBrowser  `json:"browser,omitempty"`
-	Hmid            string              `json:"hmid,omitempty"`
-	Location        *EmailEventLocation `json:"location,omitempty"`
-	Response        string              `json:"response,omitempty"`
-	SentBy          *EmailEventSentBy   `json:"sentBy,omitempty"`
-	SendId          int64               `json:"sendId,omitempty"`
-	SmtpId          string              `json:"smtpId,omitempty"`
-	Subject         string              `json:"subject,omitempty"`
-	UserAgent       string              `json:"userAgent,omitempty"`
+	Id              string               `json:"id"`
+	AppId           int64                `json:"appId"`
+	AppName         string               `json:"appName"`
+	Created         int64                `json:"created"`
+	EmailCampaignId int64                `json:"emailCampaignId"`
+	PortalId        int64                `json:"portalId"`
+	Recipient       string               `json:"recipient"`
+	Type            string               `json:"type"`
+	Browser         *EmailEventBrowser   `json:"browser,omitempty"`
+	Hmid            string               `json:"hmid,omitempty"`
+	Location        *EmailEventLocation  `json:"location,omitempty"`
+	Response        string               `json:"response,omitempty"`
+	SentBy          *EmailEventSentBy    `json:"sentBy,omitempty"`
+	SendId          string               `json:"sendId,omitempty"`
+	SmtpId          string               `json:"smtpId,omitempty"`
+	Subject         string               `json:"subject,omitempty"`
+	UserAgent       string               `json:"userAgent,omitempty"`
 }
 
 type EmailEventBrowser struct {
-	Family      string `json:"family"`
-	Name        string `json:"name"`
-	Producer    string `json:"producer"`
-	ProducerUrl string `json:"producerUrl"`
-	Type        string `json:"type"`
-	Url         string `json:"url"`
-	Version     string `json:"version"`
+	Family      string   `json:"family"`
+	Name        string   `json:"name"`
+	Producer    string   `json:"producer"`
+	ProducerUrl string   `json:"producerUrl"`
+	Type        string   `json:"type"`
+	Url         string   `json:"url"`
+	Version     []string `json:"version"`
 }
 
 type EmailEventLocation struct {
@@ -39,8 +39,8 @@ type EmailEventLocation struct {
 }
 
 type EmailEventSentBy struct {
-	Created int64 `json:"created"`
-	Id      int64 `json:"id"`
+	Created int64  `json:"created"`
+	Id      string `json:"id"`
 }
 
 type EmailEventsResponse struct {
