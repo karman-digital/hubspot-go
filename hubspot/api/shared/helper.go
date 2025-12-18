@@ -275,6 +275,18 @@ func HandleCampaignsResponse(resp *http.Response) (campaignsResp campaignmodels.
 	return campaignsResp, nil
 }
 
+func HandleCampaignResponse(resp *http.Response) (campaignResp campaignmodels.Campaign, err error) {
+	rawBody, err := handleBasicResponseCode(resp)
+	if err != nil {
+		return campaignResp, err
+	}
+	err = json.Unmarshal(rawBody, &campaignResp)
+	if err != nil {
+		return campaignResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	return campaignResp, nil
+}
+
 func HandleCampaignAssetsResponse(resp *http.Response) (assetsResp campaignassetsmodels.CampaignAssetsResponse, err error) {
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {

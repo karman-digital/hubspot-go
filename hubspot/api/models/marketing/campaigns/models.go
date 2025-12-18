@@ -2,6 +2,7 @@ package campaignmodels
 
 import (
 	"time"
+
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 )
 
@@ -22,4 +23,3 @@ type CampaignsResponse struct {
 	Total   int                 `json:"total"`
 	Paging  sharedmodels.Paging `json:"paging"`
 }
-
