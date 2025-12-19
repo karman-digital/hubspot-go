@@ -23,29 +23,40 @@ func (c *CampaignService) GetCampaigns(opts ...sharedmodels.GetOptions) (campaig
 
 func (c *CampaignService) GetCampaignAssets(campaignGuid string, assetType string, opts ...sharedmodels.GetOptions) (campaignassetsmodels.CampaignAssetsResponse, error) {
 	reqUrl := fmt.Sprintf("/marketing/v3/campaigns/%s/assets/%s", campaignGuid, assetType)
+	fmt.Printf("CampaignService.GetCampaignAssets - Request URL: %s\n", reqUrl)
+
 	resp, err := c.SendRequest(http.MethodGet, reqUrl, nil, opts...)
 	if err != nil {
+		fmt.Printf("CampaignService.GetCampaignAssets - SendRequest error: %v\n", err)
 		return campaignassetsmodels.CampaignAssetsResponse{}, fmt.Errorf("error creating request: %s", err)
 	}
-	return shared.HandleCampaignAssetsResponse(resp)
+
+	// Add logging before calling the handler
+	fmt.Printf("CampaignService.GetCampaignAssets - Response received, Status: %d\n", resp.StatusCode)
+	fmt.Printf("CampaignService.GetCampaignAssets - About to call HandleCampaignAssetsResponse\n")
+
+	result, err := shared.HandleCampaignAssetsResponse(resp)
+
+	fmt.Printf("CampaignService.GetCampaignAssets - HandleCampaignAssetsResponse completed, err=%v, results=%d\n", err, len(result.Results))
+
+	return result, err
 }
 
 func (c *CampaignService) PatchCampaign(campaignGuid string, properties crmmodels.Properties) (campaignmodels.Campaign, error) {
 	reqUrl := fmt.Sprintf("/marketing/v3/campaigns/%s", campaignGuid)
-	
+
 	reqBody := map[string]interface{}{
 		"properties": properties,
 	}
-	
+
 	body, err := json.Marshal(reqBody)
 	if err != nil {
 		return campaignmodels.Campaign{}, fmt.Errorf("error marshalling request body: %s", err)
 	}
-	
+
 	resp, err := c.SendRequest(http.MethodPatch, reqUrl, body)
 	if err != nil {
 		return campaignmodels.Campaign{}, fmt.Errorf("error creating request: %s", err)
 	}
 	return shared.HandleCampaignResponse(resp)
 }
-
