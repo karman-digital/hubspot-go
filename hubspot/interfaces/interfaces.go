@@ -79,7 +79,7 @@ type CustomObject interface {
 
 type Owners interface {
 	GetOwner(id int) (ownersmodels.Owner, error)
-	GetOwners(after ...string) (ownersmodels.OwnerResponse, error)
+	GetOwners(opts ...ownersmodels.GetOwnersOptions) (ownersmodels.OwnerResponse, error)
 	GetAllOwners() ([]ownersmodels.Owner, error)
 }
 

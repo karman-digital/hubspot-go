@@ -28,3 +28,10 @@ type OwnerResponse struct {
 	Results []Owner             `json:"results"`
 	Paging  sharedmodels.Paging `json:"paging"`
 }
+
+type GetOwnersOptions struct {
+	After    string `url:"after,omitempty"`
+	Archived bool   `url:"archived,omitempty"`
+	Email    string `url:"email,omitempty"`
+	Limit    int    `url:"limit,omitempty"`
+}

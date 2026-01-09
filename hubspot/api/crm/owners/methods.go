@@ -16,7 +16,11 @@ func (c *OwnerService) GetAllOwners() ([]ownersmodels.Owner, error) {
 	var allOwners []ownersmodels.Owner
 	after := ""
 	for {
-		ownerResponse, err := c.GetOwners(after)
+		opts := ownersmodels.GetOwnersOptions{}
+		if after != "" {
+			opts.After = after
+		}
+		ownerResponse, err := c.GetOwners(opts)
 		if err != nil {
 			return nil, err
 		}
@@ -30,7 +34,7 @@ func (c *OwnerService) GetAllOwners() ([]ownersmodels.Owner, error) {
 	return allOwners, nil
 }
 
-func (c *OwnerService) GetOwners(after ...string) (ownersmodels.OwnerResponse, error) {
+func (c *OwnerService) GetOwners(opts ...ownersmodels.GetOwnersOptions) (ownersmodels.OwnerResponse, error) {
 	ownerResponse := ownersmodels.OwnerResponse{}
 	reqUrl := "https://api.hubapi.com/crm/v3/owners"
 	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
@@ -40,9 +44,18 @@ func (c *OwnerService) GetOwners(after ...string) (ownersmodels.OwnerResponse, e
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
 	req.Header.Set("Content-Type", "application/json")
 	queryParams := url.Values{}
-	if len(after) != 0 {
-		if after[0] != "" {
-			queryParams.Add("after", after[0])
+	if len(opts) != 0 {
+		if opts[0].After != "" {
+			queryParams.Add("after", opts[0].After)
+		}
+		if opts[0].Archived {
+			queryParams.Add("archived", "true")
+		}
+		if opts[0].Email != "" {
+			queryParams.Add("email", opts[0].Email)
+		}
+		if opts[0].Limit != 0 {
+			queryParams.Add("limit", fmt.Sprintf("%d", opts[0].Limit))
 		}
 	}
 	req.URL.RawQuery = queryParams.Encode()
