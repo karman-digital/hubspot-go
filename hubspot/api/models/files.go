@@ -19,3 +19,9 @@ type SignedUrlOptions = filesmodels.SignedUrlOptions
 type UploadFileOptions = filesmodels.UploadFileOptions
 
 type UploadOptions = filesmodels.UploadOptions
+
+type FileStatResponse = filesmodels.FileStatResponse
+
+type UpdateFileOptions = filesmodels.UpdateFileOptions
+
+type UpdateOptions = filesmodels.UpdateOptions

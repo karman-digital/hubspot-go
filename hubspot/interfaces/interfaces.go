@@ -152,6 +152,8 @@ type Files interface {
 	ImportFileViaUrl(body filesmodels.FileImportBody) (filesmodels.FileUploadResult, error)
 	GetSignedUrl(fileId string, signedUrlOptions ...filesmodels.SignedUrlOptions) (filesmodels.SignedUrlResponse, error)
 	UploadFile(fileName string, fileContent []byte, opts ...filesmodels.UploadFileOptions) (filesmodels.FileUploadResult, error)
+	GetFileByPath(filePath string, properties ...[]string) (filesmodels.FileStatResponse, error)
+	UpdateFile(fileId string, fileName string, fileContent []byte, opts ...filesmodels.UpdateFileOptions) (filesmodels.FileUploadResult, error)
 }
 
 type Users interface {
