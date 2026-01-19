@@ -85,8 +85,8 @@ type UpdateOptions struct {
 }
 
 type FileStatResponse struct {
-	File   FileStat   `json:"file"`
-	Folder FolderStat `json:"folder,omitempty"`
+	File   FileStat    `json:"file"`
+	Folder *FolderStat `json:"folder,omitempty"`
 }
 
 type FileStat struct {
