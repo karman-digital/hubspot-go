@@ -18,6 +18,12 @@ type EmailEvent struct {
 	SmtpId          string               `json:"smtpId,omitempty"`
 	Subject         string               `json:"subject,omitempty"`
 	UserAgent       string               `json:"userAgent,omitempty"`
+	LinkId          int64                `json:"linkId,omitempty"`
+	DeviceType      string               `json:"deviceType,omitempty"`
+	LinkIdV2        string               `json:"linkIdV2,omitempty"`
+	Url             string               `json:"url,omitempty"`
+	Referer         string               `json:"referer,omitempty"`
+	FilteredEvent   bool                 `json:"filteredEvent,omitempty"`
 }
 
 type EmailEventBrowser struct {
