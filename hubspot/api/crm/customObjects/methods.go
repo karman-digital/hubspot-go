@@ -36,6 +36,9 @@ func (c *CustomObjectService) CreateCustomObject(body crmmodels.PostBody, object
 		return respStruct, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != http.StatusCreated {
+		if resp.StatusCode == http.StatusConflict {
+			return respStruct, shared.ErrResourceAlreadyExists
+		}
 		return respStruct, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
 	err = json.Unmarshal(contactRawBody, &respStruct)
