@@ -73,3 +73,47 @@ type UploadOptions struct {
 	Access string `json:"access"`
 	Ttl    string `json:"ttl"`
 }
+
+type UpdateFileOptions struct {
+	CharsetHunch string        `json:"charsetHunch,omitempty"`
+	Options      UpdateOptions `json:"options"`
+}
+
+type UpdateOptions struct {
+	Access    string `json:"access,omitempty"`
+	ExpiresAt string `json:"expiresAt,omitempty"`
+}
+
+type FileStatResponse struct {
+	File   FileStat   `json:"file"`
+	Folder FolderStat `json:"folder,omitempty"`
+}
+
+type FileStat struct {
+	ID                string `json:"id"`
+	CreatedAt         string `json:"createdAt"`
+	UpdatedAt         string `json:"updatedAt"`
+	Archived          bool   `json:"archived"`
+	ParentFolderID    string `json:"parentFolderId"`
+	Name              string `json:"name"`
+	Path              string `json:"path"`
+	Size              int64  `json:"size"`
+	Type              string `json:"type"`
+	Extension         string `json:"extension"`
+	DefaultHostingURL string `json:"defaultHostingUrl"`
+	URL               string `json:"url"`
+	IsUsableInContent bool   `json:"isUsableInContent"`
+	Access            string `json:"access"`
+	FileMD5           string `json:"fileMd5"`
+	SourceGroup       string `json:"sourceGroup"`
+}
+
+type FolderStat struct {
+	ID             string `json:"id"`
+	CreatedAt     string `json:"createdAt"`
+	UpdatedAt     string `json:"updatedAt"`
+	Archived      bool   `json:"archived"`
+	ParentFolderID string `json:"parentFolderId"`
+	Name          string `json:"name"`
+	Path          string `json:"path"`
+}

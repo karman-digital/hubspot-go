@@ -101,6 +101,34 @@ func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...filesmode
 	return signedUrlResponse, nil
 }
 
+func (f *FilesService) GetFileByPath(filePath string, properties ...[]string) (filesmodels.FileStatResponse, error) {
+	encodedPath := url.QueryEscape(filePath)
+	endpoint := fmt.Sprintf("/files/v3/files/stat/%s", encodedPath)
+	
+	if len(properties) > 0 && len(properties[0]) > 0 {
+		queryParams := url.Values{}
+		for _, property := range properties[0] {
+			queryParams.Add("properties", property)
+		}
+		endpoint += "?" + queryParams.Encode()
+	}
+	
+	resp, err := f.SendRequest("GET", endpoint, nil)
+	if err != nil {
+		return filesmodels.FileStatResponse{}, err
+	}
+	rawBody, err := shared.HandleBasicResponseCode(resp)
+	if err != nil {
+		return filesmodels.FileStatResponse{}, err
+	}
+	var fileStatResponse filesmodels.FileStatResponse
+	err = json.Unmarshal(rawBody, &fileStatResponse)
+	if err != nil {
+		return filesmodels.FileStatResponse{}, err
+	}
+	return fileStatResponse, nil
+}
+
 func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...filesmodels.UploadFileOptions) (filesmodels.FileUploadResult, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
@@ -162,6 +190,80 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...f
 		return filesmodels.FileUploadResult{}, fmt.Errorf("error reading body: %s", err)
 	}
 	if resp.StatusCode != 201 {
+		if resp.StatusCode == 404 {
+			return filesmodels.FileUploadResult{}, fmt.Errorf("resource not found")
+		}
+		var errorResp sharedmodels.ErrorResponseBody
+		err := json.Unmarshal(rawBody, &errorResp)
+		if err != nil {
+			return filesmodels.FileUploadResult{}, fmt.Errorf("error parsing error body: %s", err)
+		}
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error returned by endpoint: %+v", errorResp)
+	}
+	var result filesmodels.FileUploadResult
+	err = json.Unmarshal(rawBody, &result)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error parsing body: %s", err)
+	}
+	return result, nil
+}
+
+func (f *FilesService) UpdateFile(fileId string, fileName string, fileContent []byte, opts ...filesmodels.UpdateFileOptions) (filesmodels.FileUploadResult, error) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile("file", fileName)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, err
+	}
+	_, err = part.Write(fileContent)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, err
+	}
+	if len(opts) > 0 {
+		if opts[0].CharsetHunch != "" {
+			err = writer.WriteField("charsetHunch", opts[0].CharsetHunch)
+			if err != nil {
+				return filesmodels.FileUploadResult{}, err
+			}
+		}
+		options := map[string]string{}
+		if opts[0].Options.Access != "" {
+			options["access"] = opts[0].Options.Access
+		}
+		if opts[0].Options.ExpiresAt != "" {
+			options["expiresAt"] = opts[0].Options.ExpiresAt
+		}
+		if len(options) > 0 {
+			optionsJson, err := json.Marshal(options)
+			if err != nil {
+				return filesmodels.FileUploadResult{}, err
+			}
+			err = writer.WriteField("options", string(optionsJson))
+			if err != nil {
+				return filesmodels.FileUploadResult{}, err
+			}
+		}
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return filesmodels.FileUploadResult{}, err
+	}
+	req, err := retryablehttp.NewRequest("PUT", fmt.Sprintf("https://api.hubapi.com/files/v3/files/%s", fileId), body)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", f.Credentials.AccessToken()))
+	resp, err := f.Credentials.Client().Do(req)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error making request: %s", err)
+	}
+	rawBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return filesmodels.FileUploadResult{}, fmt.Errorf("error reading body: %s", err)
+	}
+	if resp.StatusCode != 200 {
 		if resp.StatusCode == 404 {
 			return filesmodels.FileUploadResult{}, fmt.Errorf("resource not found")
 		}
