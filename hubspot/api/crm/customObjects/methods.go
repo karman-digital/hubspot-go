@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/hashicorp/go-retryablehttp"
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
@@ -38,6 +39,14 @@ func (c *CustomObjectService) CreateCustomObject(body crmmodels.PostBody, object
 	if resp.StatusCode != http.StatusCreated {
 		if resp.StatusCode == http.StatusConflict {
 			return respStruct, shared.ErrResourceAlreadyExists
+		}
+		if resp.StatusCode == http.StatusBadRequest {
+			var errorResp sharedmodels.ErrorResponseBody
+			if err := json.Unmarshal(contactRawBody, &errorResp); err == nil {
+				if errorResp.Category == "VALIDATION_ERROR" && strings.Contains(errorResp.Message, "already has that value") {
+					return respStruct, shared.ErrResourceAlreadyExists
+				}
+			}
 		}
 		return respStruct, fmt.Errorf("error returned by endpoint: %s", contactRawBody)
 	}
