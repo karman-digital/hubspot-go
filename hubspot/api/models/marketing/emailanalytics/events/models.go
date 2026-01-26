@@ -37,6 +37,7 @@ type EmailEvent struct {
 	ReplyTo                 []string                    `json:"replyTo,omitempty"`
 	Cc                      []string                    `json:"cc,omitempty"`
 	Bcc                     []string                    `json:"bcc,omitempty"`
+	Duration                int64                       `json:"duration,omitempty"`
 }
 
 type EmailEventBrowser struct {
