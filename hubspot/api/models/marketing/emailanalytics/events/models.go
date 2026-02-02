@@ -38,6 +38,10 @@ type EmailEvent struct {
 	Cc                      []string                    `json:"cc,omitempty"`
 	Bcc                     []string                    `json:"bcc,omitempty"`
 	Duration                int64                       `json:"duration,omitempty"`
+	DropMessage             string                     `json:"dropMessage,omitempty"`
+	DropReason              string                     `json:"dropReason,omitempty"`
+	ImpactedByGlobalBounce  bool                       `json:"impactedByGlobalBounce,omitempty"`
+	CausedBy                *EmailEventCausedBy        `json:"causedBy,omitempty"`
 }
 
 type EmailEventBrowser struct {
@@ -61,6 +65,10 @@ type EmailEventLocation struct {
 type EmailEventSentBy struct {
 	Created int64  `json:"created"`
 	Id      string `json:"id"`
+}
+
+type EmailEventCausedBy struct {
+	Created int64 `json:"created"`
 }
 
 type EmailEventSubscription struct {
