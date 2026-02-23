@@ -22,29 +22,7 @@ func (c *Credentials) SendRequest(method, path string, body []byte, opts ...shar
 		queryParams := generateQueryParams(opts[0])
 		req.URL.RawQuery = queryParams.Encode()
 	}
-	
-	// Log the exact request being made
-	fmt.Printf("SendRequest - Method: %s\n", method)
-	fmt.Printf("SendRequest - Full URL: %s\n", req.URL.String())
-	fmt.Printf("SendRequest - Headers:\n")
-	for name, values := range req.Header {
-		if name == "Authorization" {
-			token := c.AccessToken().String()
-			if len(token) > 20 {
-				fmt.Printf("  %s: Bearer %s...\n", name, token[:20])
-			} else {
-				fmt.Printf("  %s: Bearer %s\n", name, token)
-			}
-		} else {
-			fmt.Printf("  %s: %v\n", name, values)
-		}
-	}
-	if req.URL.RawQuery != "" {
-		fmt.Printf("SendRequest - Query Params: %s\n", req.URL.RawQuery)
-	} else {
-		fmt.Printf("SendRequest - Query Params: (none)\n")
-	}
-	
+
 	resp, err := c.Client().Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error making request: %s", err)
