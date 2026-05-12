@@ -38,12 +38,13 @@ func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject strin
 	return associationResp, nil
 }
 
-func (c *AssociationService) GetAssociations(fromObject, toObject string, id int) (associationsmodels.AssociationGetResponse, error) {
+func (c *AssociationService) GetAssociations(fromObject, toObject string, id int, opts ...sharedmodels.GetOptions) (associationsmodels.AssociationGetResponse, error) {
 	var association associationsmodels.AssociationGetResponse
 	resp, err := c.SendRequest(
 		http.MethodGet,
 		fmt.Sprintf("/crm/v4/objects/%s/%d/associations/%s", fromObject, id, toObject),
 		nil,
+		opts...,
 	)
 	if err != nil {
 		return association, err
