@@ -6,15 +6,16 @@ type PropertyGroupBody struct {
 }
 
 type PropertyBody struct {
-	Name                   string               `json:"name,omitempty"`
-	Label                  string               `json:"label,omitempty"`
-	GroupName              string               `json:"groupName,omitempty"`
-	Type                   string               `json:"type,omitempty"`
-	FieldType              string               `json:"fieldType,omitempty"`
-	Options                []EnumerationOptions `json:"options,omitempty"`
-	FormField              bool                 `json:"formField,omitempty"`
-	ExternalOptions        bool                 `json:"externalOptions,omitempty"`
-	ReferencedObjectType   string               `json:"referencedObjectType,omitempty"`
+	Name                 string               `json:"name,omitempty"`
+	Label                string               `json:"label,omitempty"`
+	GroupName            string               `json:"groupName,omitempty"`
+	Type                 string               `json:"type,omitempty"`
+	FieldType            string               `json:"fieldType,omitempty"`
+	Options              []EnumerationOptions `json:"options,omitempty"`
+	FormField            bool                 `json:"formField,omitempty"`
+	HasUniqueValue       bool                 `json:"hasUniqueValue,omitempty"`
+	ExternalOptions      bool                 `json:"externalOptions,omitempty"`
+	ReferencedObjectType string               `json:"referencedObjectType,omitempty"`
 }
 
 type EnumerationOptions struct {
