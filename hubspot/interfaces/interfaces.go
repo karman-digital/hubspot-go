@@ -11,6 +11,7 @@ import (
 	notemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/notes"
 	ownersmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/owners"
 	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
+	schemasmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/schemas"
 	taskmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/tasks"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
 	graphqlmodels "github.com/karman-digital/hubspot/hubspot/api/models/graphql"
@@ -88,6 +89,10 @@ type Properties interface {
 	CreateProperty(objectType string, propertyData propertiesmodels.PropertyBody) error
 	GetProperty(objectType, propertyName string) (propertiesmodels.PropertyResponse, error)
 	UpdateProperty(objectType, propertyName string, propertyData propertiesmodels.PropertyBody) (propertiesmodels.PropertyResponse, error)
+}
+
+type Schemas interface {
+	CreateAssociationDefinition(objectType string, body schemasmodels.AssociationDefinitionBody) error
 }
 
 type CommunicationPreferences interface {
