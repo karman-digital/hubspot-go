@@ -1,6 +1,7 @@
 package schemasmodels
 
 type Schema struct {
+	ObjectTypeID string                  `json:"objectTypeId"`
 	Associations []AssociationDefinition `json:"associations"`
 }
 
