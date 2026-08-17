@@ -92,7 +92,7 @@ type Properties interface {
 }
 
 type Schemas interface {
-	CreateAssociationDefinition(objectType string, body schemasmodels.AssociationDefinitionBody) error
+	GetSchema(objectType string) (schemasmodels.Schema, error)
 }
 
 type CommunicationPreferences interface {
