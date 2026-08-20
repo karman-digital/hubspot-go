@@ -91,6 +91,48 @@ func (s *Service) RemoveCompanyAssociation(invoiceID, companyID string) error {
 	return shared.HandleDeleteResponse(response)
 }
 
+func (s *Service) GetInvoiceAssociations(invoiceID, objectType string) (associationsmodels.AssociationGetResponse, error) {
+	response, err := s.SendRequest(http.MethodGet, invoiceAssociationsPath(invoiceID, objectType), nil)
+	if err != nil {
+		return associationsmodels.AssociationGetResponse{}, fmt.Errorf("get invoice associations: %w", err)
+	}
+	defer response.Body.Close()
+	body, err := shared.HandleBasicResponseCode(response)
+	if err != nil {
+		return associationsmodels.AssociationGetResponse{}, err
+	}
+	var result associationsmodels.AssociationGetResponse
+	if err := json.Unmarshal(body, &result); err != nil {
+		return result, fmt.Errorf("decode invoice associations: %w", err)
+	}
+	return result, nil
+}
+
+func (s *Service) AssociateInvoice(invoiceID, objectType, objectID string, associationTypeID int) error {
+	body, err := json.Marshal([]associationsmodels.AssociationType{{
+		AssociationCategory: "USER_DEFINED", AssociationTypeId: associationTypeID,
+	}})
+	if err != nil {
+		return fmt.Errorf("marshal invoice association: %w", err)
+	}
+	response, err := s.SendRequest(http.MethodPut, invoiceAssociationPath(invoiceID, objectType, objectID), body)
+	if err != nil {
+		return fmt.Errorf("associate invoice: %w", err)
+	}
+	defer response.Body.Close()
+	_, err = shared.HandleBasicResponseCode(response)
+	return err
+}
+
+func (s *Service) RemoveInvoiceAssociation(invoiceID, objectType, objectID string) error {
+	response, err := s.SendRequest(http.MethodDelete, invoiceAssociationPath(invoiceID, objectType, objectID), nil)
+	if err != nil {
+		return fmt.Errorf("remove invoice association: %w", err)
+	}
+	defer response.Body.Close()
+	return shared.HandleDeleteResponse(response)
+}
+
 func invoicePath(id string) string {
 	if id == "" {
 		return "/crm/v3/objects/invoices"
@@ -112,4 +154,12 @@ func invoiceCompanyAssociationPath(invoiceID, companyID string) string {
 
 func invoiceCompanyAssociationDeletePath(invoiceID, companyID string) string {
 	return invoiceCompanyAssociationsPath(invoiceID) + "/" + companyID
+}
+
+func invoiceAssociationsPath(invoiceID, objectType string) string {
+	return "/crm/v4/objects/invoices/" + invoiceID + "/associations/" + objectType
+}
+
+func invoiceAssociationPath(invoiceID, objectType, objectID string) string {
+	return invoiceAssociationsPath(invoiceID, objectType) + "/" + objectID
 }

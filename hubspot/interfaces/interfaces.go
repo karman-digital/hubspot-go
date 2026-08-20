@@ -62,6 +62,9 @@ type Invoice interface {
 	GetCompanyAssociations(id string) (associationsmodels.AssociationGetResponse, error)
 	AssociateCompany(invoiceID, companyID string) error
 	RemoveCompanyAssociation(invoiceID, companyID string) error
+	GetInvoiceAssociations(invoiceID, objectType string) (associationsmodels.AssociationGetResponse, error)
+	AssociateInvoice(invoiceID, objectType, objectID string, associationTypeID int) error
+	RemoveInvoiceAssociation(invoiceID, objectType, objectID string) error
 }
 
 type Deal interface {
