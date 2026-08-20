@@ -54,6 +54,16 @@ type Company interface {
 	DeleteCompany(id int) error
 }
 
+type Invoice interface {
+	CreateInvoice(body crmmodels.PostBody) (crmmodels.Result, error)
+	UpdateInvoice(id string, body crmmodels.PatchBody) (crmmodels.Result, error)
+	GetInvoice(id string, options ...sharedmodels.GetOptions) (crmmodels.Result, error)
+	SearchInvoices(body crmmodels.SearchBody) (crmmodels.SearchResponse, error)
+	GetCompanyAssociations(id string) (associationsmodels.AssociationGetResponse, error)
+	AssociateCompany(invoiceID, companyID string) error
+	RemoveCompanyAssociation(invoiceID, companyID string) error
+}
+
 type Deal interface {
 	Batch
 	UpdateDeal(id int, patchBody crmmodels.PatchBody) (crmmodels.Result, error)

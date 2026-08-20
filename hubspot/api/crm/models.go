@@ -14,6 +14,7 @@ type CRM struct {
 	CustomObjects interfaces.CustomObject
 	Engagements   engagements.Engagements
 	Companies     interfaces.Company
+	Invoices      interfaces.Invoice
 	Products      interfaces.Products
 	LineItems     interfaces.LineItems
 	GraphQL       interfaces.GraphQL
