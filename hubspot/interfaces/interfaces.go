@@ -105,7 +105,7 @@ type Properties interface {
 }
 
 type Pipelines interface {
-	GetPipelines(objectType string) (pipelinemodels.ListResponse, error)
+	GetPipelines(objectType string, archived bool) (pipelinemodels.ListResponse, error)
 }
 
 type CommunicationPreferences interface {

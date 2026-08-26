@@ -8,11 +8,12 @@ import (
 	"net/url"
 
 	pipelinemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/pipelines"
+	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 )
 
-func (service *PipelineService) GetPipelines(objectType string) (pipelinemodels.ListResponse, error) {
+func (service *PipelineService) GetPipelines(objectType string, archived bool) (pipelinemodels.ListResponse, error) {
 	var responseBody pipelinemodels.ListResponse
-	response, err := service.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/pipelines/%s", url.PathEscape(objectType)), nil)
+	response, err := service.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/pipelines/%s", url.PathEscape(objectType)), nil, sharedmodels.GetOptions{Archived: archived})
 	if err != nil {
 		return responseBody, err
 	}

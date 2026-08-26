@@ -23,6 +23,9 @@ func TestGetPipelinesReadsDealStageClosureMetadata(t *testing.T) {
 		if got := request.URL.Path; got != "/crm/v3/pipelines/deals" {
 			t.Fatalf("path = %q", got)
 		}
+		if got := request.URL.Query().Get("archived"); got != "true" {
+			t.Fatalf("archived = %q", got)
+		}
 		return &http.Response{
 			StatusCode: http.StatusOK,
 			Header:     make(http.Header),
@@ -32,7 +35,7 @@ func TestGetPipelinesReadsDealStageClosureMetadata(t *testing.T) {
 	creds := credentials.NewHubspotOauthCredentials("", "", "", "token", "")
 	creds.SetClient(client)
 
-	response, err := NewPipelineService(creds).GetPipelines("deals")
+	response, err := NewPipelineService(creds).GetPipelines("deals", true)
 	if err != nil {
 		t.Fatalf("GetPipelines() error = %v", err)
 	}
