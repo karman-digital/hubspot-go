@@ -253,6 +253,9 @@ func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...shared
 		if opts[0].After != "" {
 			queryParams.Add("after", opts[0].After)
 		}
+		if opts[0].Limit != 0 {
+			queryParams.Add("limit", fmt.Sprintf("%d", opts[0].Limit))
+		}
 		if len(opts[0].Properties) != 0 {
 			for _, property := range opts[0].Properties {
 				queryParams.Add("properties", property)
