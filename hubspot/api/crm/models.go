@@ -9,6 +9,7 @@ type CRM struct {
 	Contacts      interfaces.Contact
 	Owners        interfaces.Owners
 	Properties    interfaces.Properties
+	Pipelines     interfaces.Pipelines
 	Associations  interfaces.Associations
 	Deals         interfaces.Deal
 	CustomObjects interfaces.CustomObject

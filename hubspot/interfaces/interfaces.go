@@ -10,6 +10,7 @@ import (
 	listsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/lists"
 	notemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/notes"
 	ownersmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/owners"
+	pipelinemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/pipelines"
 	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
 	taskmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/tasks"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
@@ -101,6 +102,10 @@ type Properties interface {
 	CreateProperty(objectType string, propertyData propertiesmodels.PropertyBody) error
 	GetProperty(objectType, propertyName string) (propertiesmodels.PropertyResponse, error)
 	UpdateProperty(objectType, propertyName string, propertyData propertiesmodels.PropertyBody) (propertiesmodels.PropertyResponse, error)
+}
+
+type Pipelines interface {
+	GetPipelines(objectType string) (pipelinemodels.ListResponse, error)
 }
 
 type CommunicationPreferences interface {
