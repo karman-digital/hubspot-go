@@ -1,71 +1,84 @@
 package hsvalidate
 
 import (
-	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"hash"
-	"math"
 	"strconv"
+	"strings"
 	"time"
 )
 
-func ValidateWebhookSignature(secret []byte, host string, urlPath string, timestamp string, method string, signature string, body []byte) error {
-	checkSum := ""
-	if method == "POST" || method == "PUT" || method == "PATCH" {
-		if isJSON(body) {
-			JSONString, err := toCompactJSONString(body)
-			if err != nil {
-				return err
-			}
-			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, JSONString, timestamp)
-		} else {
-			checkSum = fmt.Sprintf("%shttps://%s%s%s%s", method, host, urlPath, string(body), timestamp)
-		}
-	} else {
-		checkSum = fmt.Sprintf("%shttps://%s%s%s", method, host, urlPath, timestamp)
+const maximumTimestampAge = 5 * time.Minute
+
+type V3Request struct {
+	Method    string
+	URI       string
+	Body      []byte
+	Timestamp string
+	Signature string
+}
+
+func ValidateV3Request(secret []byte, request V3Request, now func() time.Time) error {
+	if now == nil {
+		now = time.Now
 	}
-	hash := encrypt(secret, checkSum)
-	if base64.StdEncoding.EncodeToString(hash.Sum(nil)) != signature {
-		fmt.Printf("signatures mismatched sent: %s, generated: %s", signature, base64.StdEncoding.EncodeToString(hash.Sum(nil)))
+	if err := validateTimestampAt(request.Timestamp, now().UTC()); err != nil {
+		return err
+	}
+	return validateV3Signature(secret, request)
+}
+
+func validateV3Signature(secret []byte, request V3Request) error {
+	source := request.Method + decodeSignatureURI(request.URI) + string(request.Body) + request.Timestamp
+	hash := hmac.New(sha256.New, secret)
+	_, _ = hash.Write([]byte(source))
+	expected := base64.StdEncoding.EncodeToString(hash.Sum(nil))
+	if !hmac.Equal([]byte(expected), []byte(request.Signature)) {
 		return ErrMismatchedSignatures
 	}
 	return nil
 }
 
-func encrypt(secret []byte, input string) hash.Hash {
-	hash := hmac.New(sha256.New, secret)
-	hash.Write([]byte(input))
-	return hash
-}
-
-func toCompactJSONString(input []byte) (string, error) {
-	buffer := new(bytes.Buffer)
-	if err := json.Compact(buffer, input); err != nil {
-		return "", err
-	}
-	return buffer.String(), nil
-}
-
-func isJSON(input []byte) bool {
-	var js json.RawMessage
-	return json.Unmarshal(input, &js) == nil
+func ValidateWebhookSignature(secret []byte, host, requestURI, timestamp, method, signature string, body []byte) error {
+	return validateV3Signature(secret, V3Request{
+		Method: method, URI: "https://" + host + requestURI, Body: body, Timestamp: timestamp, Signature: signature,
+	})
 }
 
 func ValidateTimeStamp(timestamp string) error {
-	timestampInt, err := strconv.ParseInt(timestamp, 10, 64)
+	return validateTimestampAt(timestamp, time.Now().UTC())
+}
+
+func validateTimestampAt(timestamp string, now time.Time) error {
+	milliseconds, err := strconv.ParseInt(timestamp, 10, 64)
 	if err != nil {
 		return ErrTimestampInvalid
 	}
-	timeUnix := time.Unix(int64(math.Round(float64(timestampInt/1000))), 0)
-	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
-	if timeUnix.Before(fiveMinutesAgo) {
-		return ErrTimestampExpired
-	} else if timeUnix.After(time.Now()) {
+	requestTime := time.UnixMilli(milliseconds)
+	if requestTime.After(now) {
 		return ErrTimestampInvalid
 	}
+	if now.Sub(requestTime) > maximumTimestampAge {
+		return ErrTimestampExpired
+	}
 	return nil
+}
+
+func decodeSignatureURI(uri string) string {
+	replacer := strings.NewReplacer(
+		"%3A", ":", "%3a", ":",
+		"%2F", "/", "%2f", "/",
+		"%3F", "?", "%3f", "?",
+		"%40", "@",
+		"%21", "!",
+		"%24", "$",
+		"%27", "'",
+		"%28", "(",
+		"%29", ")",
+		"%2A", "*", "%2a", "*",
+		"%2C", ",", "%2c", ",",
+		"%3B", ";", "%3b", ";",
+	)
+	return replacer.Replace(uri)
 }
