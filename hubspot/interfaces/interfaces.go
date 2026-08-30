@@ -102,6 +102,7 @@ type Properties interface {
 	CreateProperty(objectType string, propertyData propertiesmodels.PropertyBody) error
 	GetProperty(objectType, propertyName string) (propertiesmodels.PropertyResponse, error)
 	UpdateProperty(objectType, propertyName string, propertyData propertiesmodels.PropertyBody) (propertiesmodels.PropertyResponse, error)
+	UpdatePropertyOptions(objectType, propertyName string, options []propertiesmodels.EnumerationOptions) (propertiesmodels.PropertyResponse, error)
 }
 
 type Pipelines interface {

@@ -3,10 +3,11 @@ package properties
 import (
 	"encoding/json"
 	"fmt"
-	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
-	"github.com/karman-digital/hubspot/hubspot/api/shared"
 	"io"
 	"net/http"
+
+	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
+	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 func (c *PropertiesService) CreatePropertyGroup(propertyGroup propertiesmodels.PropertyGroupBody, objectType string) error {
@@ -14,7 +15,7 @@ func (c *PropertiesService) CreatePropertyGroup(propertyGroup propertiesmodels.P
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s/groups", objectType), reqBody)
+	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s/groups", objectType), reqBody)
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData prope
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s", objectType), reqBody)
+	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s", objectType), reqBody)
 	if err != nil {
 		return err
 	}
@@ -56,7 +57,7 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData prope
 }
 
 func (c *PropertiesService) GetProperty(objectType string, propertyName string) (propertiesmodels.PropertyResponse, error) {
-	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), nil)
+	resp, err := c.sender.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), nil)
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, err
 	}
@@ -81,7 +82,7 @@ func (c *PropertiesService) UpdateProperty(objectType string, propertyName strin
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
+	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, err
 	}
@@ -98,4 +99,43 @@ func (c *PropertiesService) UpdateProperty(objectType string, propertyName strin
 		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error decoding response: %s", err)
 	}
 	return propertyResponse, nil
+}
+
+func (c *PropertiesService) UpdatePropertyOptions(objectType, propertyName string, options []propertiesmodels.EnumerationOptions) (propertiesmodels.PropertyResponse, error) {
+	current, err := c.GetProperty(objectType, propertyName)
+	if err != nil {
+		return propertiesmodels.PropertyResponse{}, err
+	}
+	body, err := json.Marshal(propertiesmodels.PropertyUpdateBody{
+		Label:              current.Label,
+		Description:        current.Description,
+		GroupName:          current.GroupName,
+		Type:               current.Type,
+		FieldType:          current.FieldType,
+		Options:            options,
+		FormField:          current.FormField,
+		Hidden:             current.Hidden,
+		DisplayOrder:       current.DisplayOrder,
+		CalculationFormula: current.CalculationFormula,
+	})
+	if err != nil {
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error marshalling body: %s", err)
+	}
+	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
+	if err != nil {
+		return propertiesmodels.PropertyResponse{}, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		body, readErr := io.ReadAll(resp.Body)
+		if readErr != nil {
+			return propertiesmodels.PropertyResponse{}, fmt.Errorf("error reading body: %v", readErr)
+		}
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error returned by endpoint. status code: %s, error: %v", resp.Status, string(body))
+	}
+	var updated propertiesmodels.PropertyResponse
+	if err := json.NewDecoder(resp.Body).Decode(&updated); err != nil {
+		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error decoding response: %s", err)
+	}
+	return updated, nil
 }

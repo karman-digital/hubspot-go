@@ -18,6 +18,19 @@ type PropertyBody struct {
 	ReferencedObjectType string               `json:"referencedObjectType,omitempty"`
 }
 
+type PropertyUpdateBody struct {
+	Label              string               `json:"label"`
+	Description        string               `json:"description"`
+	GroupName          string               `json:"groupName"`
+	Type               string               `json:"type"`
+	FieldType          string               `json:"fieldType"`
+	Options            []EnumerationOptions `json:"options"`
+	FormField          bool                 `json:"formField"`
+	Hidden             bool                 `json:"hidden"`
+	DisplayOrder       int                  `json:"displayOrder"`
+	CalculationFormula string               `json:"calculationFormula,omitempty"`
+}
+
 type EnumerationOptions struct {
 	Label        string `json:"label"`
 	Value        string `json:"value"`
@@ -35,9 +48,14 @@ type ModificationMetadata struct {
 
 type PropertyResponse struct {
 	PropertyBody
+	Description          string               `json:"description"`
 	Hidden               bool                 `json:"hidden"`
 	DisplayOrder         int                  `json:"displayOrder"`
 	HasUniqueValue       bool                 `json:"hasUniqueValue"`
 	FormField            bool                 `json:"formField"`
+	Archived             bool                 `json:"archived"`
+	CreatedAt            string               `json:"createdAt"`
+	UpdatedAt            string               `json:"updatedAt"`
+	CalculationFormula   string               `json:"calculationFormula"`
 	ModificationMetadata ModificationMetadata `json:"modificationMetadata"`
 }
