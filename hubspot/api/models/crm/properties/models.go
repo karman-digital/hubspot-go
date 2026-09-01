@@ -36,7 +36,7 @@ type EnumerationOptions struct {
 	Value        string `json:"value"`
 	Hidden       bool   `json:"hidden"`
 	Description  string `json:"description,omitempty"`
-	DisplayOrder int    `json:"displayOrder,omitempty"`
+	DisplayOrder int    `json:"displayOrder"`
 }
 
 type ModificationMetadata struct {
