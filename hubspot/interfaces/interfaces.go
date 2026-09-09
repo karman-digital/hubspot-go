@@ -28,6 +28,7 @@ type Associations interface {
 	CreateDefaultAssociation(fromObject, toObject string, fromId, toId int) (crmmodels.BatchResponse, error)
 	BatchCreateDefaultAssociations(fromObject, toObject string, associations associationsmodels.BatchCreateDefaultAssociationsBody) (crmmodels.BatchResponse, error)
 	BatchGetAssociations(fromObject, toObject string, body associationsmodels.BatchGetAssociationsBody) (associationsmodels.BatchAssociationGetResponse, error)
+	BatchGetAllAssociations(fromObject, toObject string, sourceIDs []string) ([]associationsmodels.BatchAssociationResult, error)
 	GetAssociations(fromObject, toObject string, id int, opts ...sharedmodels.GetOptions) (associationsmodels.AssociationGetResponse, error)
 	BatchCreateAssociations(fromObject, toObject string, body associationsmodels.BatchCreateAssociationsBody) (crmmodels.BatchResponse, error)
 	CreateAssociation(fromObject, toObject, fromObjectType, toObjectType string, body []associationsmodels.AssociationType) (crmmodels.Result, error)

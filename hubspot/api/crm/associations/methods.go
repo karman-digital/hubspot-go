@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	associationsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/associations"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
+
+const batchGetAssociationsLimit = 1000
 
 func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject string, fromId, toId int) (crmmodels.BatchResponse, error) {
 	var associationResp crmmodels.BatchResponse
@@ -128,6 +131,90 @@ func (c *AssociationService) BatchGetAssociations(fromObject, toObject string, b
 		return batchResp, shared.ErrBatchGet
 	}
 	return batchResp, nil
+}
+
+func (c *AssociationService) BatchGetAllAssociations(fromObject, toObject string, sourceIDs []string) ([]associationsmodels.BatchAssociationResult, error) {
+	if len(sourceIDs) == 0 {
+		return []associationsmodels.BatchAssociationResult{}, nil
+	}
+	if len(sourceIDs) > batchGetAssociationsLimit {
+		return nil, fmt.Errorf("association batch read accepts at most %d source IDs", batchGetAssociationsLimit)
+	}
+
+	resultIndexes := make(map[string]int, len(sourceIDs))
+	seenCursors := make(map[string]map[string]struct{}, len(sourceIDs))
+	seenTargets := make(map[string]map[int]struct{}, len(sourceIDs))
+	results := make([]associationsmodels.BatchAssociationResult, len(sourceIDs))
+	pending := make([]associationsmodels.BatchGetAssociationsInput, len(sourceIDs))
+	for index, sourceID := range sourceIDs {
+		if strings.TrimSpace(sourceID) == "" {
+			return nil, fmt.Errorf("association batch read source ID is required")
+		}
+		if _, duplicate := resultIndexes[sourceID]; duplicate {
+			return nil, fmt.Errorf("association batch read has duplicate source ID %q", sourceID)
+		}
+		resultIndexes[sourceID] = index
+		seenCursors[sourceID] = map[string]struct{}{"": {}}
+		seenTargets[sourceID] = make(map[int]struct{})
+		results[index] = associationsmodels.BatchAssociationResult{
+			From: associationsmodels.From{ID: sourceID},
+			To:   make([]associationsmodels.ToItem, 0),
+		}
+		pending[index] = associationsmodels.BatchGetAssociationsInput{Id: sourceID}
+	}
+
+	for len(pending) > 0 {
+		response, err := c.BatchGetAssociations(fromObject, toObject, associationsmodels.BatchGetAssociationsBody{Inputs: pending})
+		if err != nil {
+			return nil, fmt.Errorf("read complete associations: %w", err)
+		}
+		if response.NumErrors != 0 {
+			return nil, fmt.Errorf("association batch read reported %d errors", response.NumErrors)
+		}
+
+		expected := make(map[string]struct{}, len(pending))
+		for _, input := range pending {
+			expected[input.Id] = struct{}{}
+		}
+		returned := make(map[string]struct{}, len(response.Results))
+		next := make([]associationsmodels.BatchGetAssociationsInput, 0)
+		for _, source := range response.Results {
+			sourceID := source.From.ID
+			if _, requested := expected[sourceID]; !requested {
+				return nil, fmt.Errorf("association batch read returned unknown source ID %q", sourceID)
+			}
+			if _, duplicate := returned[sourceID]; duplicate {
+				return nil, fmt.Errorf("association batch read returned duplicate source ID %q", sourceID)
+			}
+			returned[sourceID] = struct{}{}
+
+			index := resultIndexes[sourceID]
+			for _, target := range source.To {
+				if _, duplicate := seenTargets[sourceID][target.ToObjectId]; duplicate {
+					return nil, fmt.Errorf("association batch read returned duplicate target %d for source ID %q", target.ToObjectId, sourceID)
+				}
+				seenTargets[sourceID][target.ToObjectId] = struct{}{}
+				results[index].To = append(results[index].To, target)
+			}
+
+			cursor := source.Paging.Next.After
+			if cursor != "" {
+				if _, repeated := seenCursors[sourceID][cursor]; repeated {
+					return nil, fmt.Errorf("association batch read returned repeated cursor %q for source ID %q", cursor, sourceID)
+				}
+				seenCursors[sourceID][cursor] = struct{}{}
+				next = append(next, associationsmodels.BatchGetAssociationsInput{Id: sourceID, After: cursor})
+			}
+		}
+		for _, input := range pending {
+			if _, found := returned[input.Id]; !found {
+				return nil, fmt.Errorf("association batch read omitted source ID %q", input.Id)
+			}
+		}
+		pending = next
+	}
+
+	return results, nil
 }
 
 func (c *AssociationService) BatchCreateAssociations(fromObject, toObject string, body associationsmodels.BatchCreateAssociationsBody) (crmmodels.BatchResponse, error) {
