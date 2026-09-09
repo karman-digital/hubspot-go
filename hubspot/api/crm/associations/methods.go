@@ -2,6 +2,7 @@ package associations
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -164,19 +165,27 @@ func (c *AssociationService) BatchGetAllAssociations(fromObject, toObject string
 	}
 
 	for len(pending) > 0 {
-		response, err := c.BatchGetAssociations(fromObject, toObject, associationsmodels.BatchGetAssociationsBody{Inputs: pending})
-		if err != nil {
-			return nil, fmt.Errorf("read complete associations: %w", err)
-		}
-		if response.NumErrors != 0 {
-			return nil, fmt.Errorf("association batch read reported %d errors", response.NumErrors)
-		}
-
 		expected := make(map[string]struct{}, len(pending))
 		for _, input := range pending {
 			expected[input.Id] = struct{}{}
 		}
+		response, err := c.BatchGetAssociations(fromObject, toObject, associationsmodels.BatchGetAssociationsBody{Inputs: pending})
+		if err != nil {
+			if !errors.Is(err, shared.ErrBatchGet) {
+				return nil, fmt.Errorf("read complete associations: %w", err)
+			}
+			if _, valid := initialNoAssociationSources(response, pending); !valid {
+				return nil, fmt.Errorf("read complete associations: %w", err)
+			}
+		}
+		if err == nil && response.NumErrors != 0 {
+			return nil, fmt.Errorf("association batch read reported %d errors", response.NumErrors)
+		}
+
 		returned := make(map[string]struct{}, len(response.Results))
+		if err != nil {
+			returned, _ = initialNoAssociationSources(response, pending)
+		}
 		next := make([]associationsmodels.BatchGetAssociationsInput, 0)
 		for _, source := range response.Results {
 			sourceID := source.From.ID
@@ -215,6 +224,34 @@ func (c *AssociationService) BatchGetAllAssociations(fromObject, toObject string
 	}
 
 	return results, nil
+}
+
+func initialNoAssociationSources(response associationsmodels.BatchAssociationGetResponse, pending []associationsmodels.BatchGetAssociationsInput) (map[string]struct{}, bool) {
+	if response.Status != "COMPLETE" || response.NumErrors == 0 || response.NumErrors != len(response.Errors) {
+		return nil, false
+	}
+	requested := make(map[string]string, len(pending))
+	for _, input := range pending {
+		requested[input.Id] = input.After
+	}
+	emptySources := make(map[string]struct{}, response.NumErrors)
+	for _, detail := range response.Errors {
+		subCategory, stringValue := detail.SubCategory.(string)
+		sourceIDs := detail.Context["fromObjectId"]
+		if !stringValue || subCategory != "crm.associations.NO_ASSOCIATIONS_FOUND" || detail.Category != "OBJECT_NOT_FOUND" || detail.Status != "error" || len(sourceIDs) != 1 {
+			return nil, false
+		}
+		sourceID := sourceIDs[0]
+		cursor, found := requested[sourceID]
+		if !found || cursor != "" {
+			return nil, false
+		}
+		if _, duplicate := emptySources[sourceID]; duplicate {
+			return nil, false
+		}
+		emptySources[sourceID] = struct{}{}
+	}
+	return emptySources, true
 }
 
 func (c *AssociationService) BatchCreateAssociations(fromObject, toObject string, body associationsmodels.BatchCreateAssociationsBody) (crmmodels.BatchResponse, error) {

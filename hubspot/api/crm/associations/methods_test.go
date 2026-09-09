@@ -168,6 +168,34 @@ func TestBatchGetAllAssociationsReturnsNoPartialResultsAfterLater207(t *testing.
 	}
 }
 
+func TestBatchGetAllAssociationsTreatsInitialNoAssociations207AsAnEmptySource(t *testing.T) {
+	service := associationTestService(t, func(_ int, _ associationsmodels.BatchGetAssociationsBody) (int, string) {
+		return http.StatusMultiStatus, `{"numErrors":1,"status":"COMPLETE","errors":[{"status":"error","category":"OBJECT_NOT_FOUND","subCategory":"crm.associations.NO_ASSOCIATIONS_FOUND","message":"No contact is associated with email 116521643857.","context":{"fromObjectId":["116521643857"],"fromObjectType":["email"],"toObjectType":["contact"]}}],"results":[{"from":{"id":"116521643858"},"to":[{"toObjectId":42}]}]}`
+	})
+
+	results, err := service.BatchGetAllAssociations("emails", "contacts", []string{"116521643857", "116521643858"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(results) != 2 || results[0].From.ID != "116521643857" || len(results[0].To) != 0 || results[1].From.ID != "116521643858" || len(results[1].To) != 1 || results[1].To[0].ToObjectId != 42 {
+		t.Fatalf("results = %#v", results)
+	}
+}
+
+func TestBatchGetAllAssociationsRejectsNoAssociations207OnALaterPage(t *testing.T) {
+	service := associationTestService(t, func(requestNumber int, _ associationsmodels.BatchGetAssociationsBody) (int, string) {
+		if requestNumber == 1 {
+			return http.StatusOK, `{"results":[{"from":{"id":"116521643857"},"to":[{"toObjectId":41}],"paging":{"next":{"after":"page-2"}}}]}`
+		}
+		return http.StatusMultiStatus, `{"numErrors":1,"status":"COMPLETE","errors":[{"status":"error","category":"OBJECT_NOT_FOUND","subCategory":"crm.associations.NO_ASSOCIATIONS_FOUND","message":"No contact is associated with email 116521643857.","context":{"fromObjectId":["116521643857"],"fromObjectType":["email"],"toObjectType":["contact"]}}],"results":[]}`
+	})
+
+	results, err := service.BatchGetAllAssociations("emails", "contacts", []string{"116521643857"})
+	if err == nil || results != nil {
+		t.Fatalf("results = %#v, error = %v", results, err)
+	}
+}
+
 func associationTestService(t *testing.T, respond func(int, associationsmodels.BatchGetAssociationsBody) (int, string)) *AssociationService {
 	t.Helper()
 	requestNumber := 0
