@@ -17,6 +17,16 @@ type BatchCreateDefaultAssociationsBody struct {
 	Inputs []AssociationPair `json:"inputs"`
 }
 
+type BatchAssociationCreateResponse struct {
+	sharedmodels.BatchResponseBase
+	Results []BatchAssociationCreateResult `json:"results"`
+}
+
+type BatchAssociationCreateResult struct {
+	AssociationPair
+	AssociationSpec AssociationType `json:"associationSpec"`
+}
+
 type BatchCreateAssociationBody struct {
 	Inputs []BatchCreateAssociationInput `json:"inputs"`
 }

@@ -68,8 +68,8 @@ func (c *AssociationService) GetAssociations(fromObject, toObject string, id int
 	return association, nil
 }
 
-func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject string, associations associationsmodels.BatchCreateDefaultAssociationsBody) (crmmodels.BatchResponse, error) {
-	var associationResp crmmodels.BatchResponse
+func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject string, associations associationsmodels.BatchCreateDefaultAssociationsBody) (associationsmodels.BatchAssociationCreateResponse, error) {
+	var associationResp associationsmodels.BatchAssociationCreateResponse
 	reqBody, err := json.Marshal(associations)
 	if err != nil {
 		return associationResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -87,12 +87,15 @@ func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject
 	if err != nil {
 		return associationResp, fmt.Errorf("error reading body: %s", err)
 	}
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusMultiStatus {
 		return associationResp, fmt.Errorf("error returned by endpoint: %s", associationRawBody)
 	}
 	err = json.Unmarshal(associationRawBody, &associationResp)
 	if err != nil {
 		return associationResp, fmt.Errorf("error parsing body: %s", err)
+	}
+	if resp.StatusCode == http.StatusMultiStatus {
+		return associationResp, shared.ErrBatchCreate
 	}
 	return associationResp, nil
 }

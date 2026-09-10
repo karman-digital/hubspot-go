@@ -26,7 +26,7 @@ type Auth interface {
 
 type Associations interface {
 	CreateDefaultAssociation(fromObject, toObject string, fromId, toId int) (crmmodels.BatchResponse, error)
-	BatchCreateDefaultAssociations(fromObject, toObject string, associations associationsmodels.BatchCreateDefaultAssociationsBody) (crmmodels.BatchResponse, error)
+	BatchCreateDefaultAssociations(fromObject, toObject string, associations associationsmodels.BatchCreateDefaultAssociationsBody) (associationsmodels.BatchAssociationCreateResponse, error)
 	BatchGetAssociations(fromObject, toObject string, body associationsmodels.BatchGetAssociationsBody) (associationsmodels.BatchAssociationGetResponse, error)
 	BatchGetAllAssociations(fromObject, toObject string, sourceIDs []string) ([]associationsmodels.BatchAssociationResult, error)
 	GetAssociations(fromObject, toObject string, id int, opts ...sharedmodels.GetOptions) (associationsmodels.AssociationGetResponse, error)
