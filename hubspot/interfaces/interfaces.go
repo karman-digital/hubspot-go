@@ -126,6 +126,7 @@ type Batch interface {
 }
 
 type CustomBatch interface {
+	BatchUpsert(body crmmodels.BatchUpsertBody, objectType string) (crmmodels.BatchResponse, error)
 	BatchCreate(body crmmodels.BatchCreateBody, objectType string) (crmmodels.BatchResponse, error)
 	BatchGet(body crmmodels.BatchGetBody, objectType string) (crmmodels.BatchResponse, error)
 	BatchUpdate(body crmmodels.BatchUpdateBody, objectType string) (crmmodels.BatchResponse, error)

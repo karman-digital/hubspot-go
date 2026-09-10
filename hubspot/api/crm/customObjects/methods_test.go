@@ -8,13 +8,29 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/karman-digital/hubspot/hubspot/api/credentials"
+	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
+	"github.com/karman-digital/hubspot/hubspot/interfaces"
 )
 
 type roundTripFunc func(*http.Request) (*http.Response, error)
 
 func (function roundTripFunc) RoundTrip(request *http.Request) (*http.Response, error) {
 	return function(request)
+}
+
+func TestCustomObjectInterfaceExposesBatchUpsert(t *testing.T) {
+	client := retryablehttp.NewClient()
+	client.Logger = nil
+	client.HTTPClient.Transport = roundTripFunc(func(request *http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"status":"COMPLETE","results":[]}`))}, nil
+	})
+	creds := credentials.NewHubspotOauthCredentials("", "", "", "token", "")
+	creds.SetClient(client)
+	var service interfaces.CustomObject = NewCustomObjectService(creds)
+	if _, err := service.BatchUpsert(crmmodels.BatchUpsertBody{}, "2-123"); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestGetCustomObjectsHonoursLimit(t *testing.T) {
