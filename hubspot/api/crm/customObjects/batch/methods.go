@@ -5,12 +5,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/hashicorp/go-retryablehttp"
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
+
+func (c *BatchCustomObjectService) BatchUpsert(body crmmodels.BatchUpsertBody, objectType string) (crmmodels.BatchResponse, error) {
+	reqBody, err := json.Marshal(body)
+	if err != nil {
+		return crmmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %w", err)
+	}
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/objects/%s/batch/upsert", url.PathEscape(objectType)), reqBody)
+	if err != nil {
+		return crmmodels.BatchResponse{}, err
+	}
+	defer resp.Body.Close()
+	return shared.HandleBatchResponse(resp, http.MethodPost)
+}
 
 func (c *BatchCustomObjectService) BatchUpdate(body crmmodels.BatchUpdateBody, objectType string) (crmmodels.BatchResponse, error) {
 	var batchResp crmmodels.BatchResponse
