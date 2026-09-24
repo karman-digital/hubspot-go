@@ -35,12 +35,19 @@ type PostBody struct {
 }
 
 type Result struct {
-	ID           string                                    `json:"id"`
-	Properties   Properties                                `json:"properties"`
-	CreatedAt    time.Time                                 `json:"createdAt"`
-	UpdatedAt    time.Time                                 `json:"updatedAt"`
-	Archived     bool                                      `json:"archived"`
-	Associations map[string]associationsmodels.Association `json:"associations"`
+	ID                    string                                    `json:"id"`
+	Properties            Properties                                `json:"properties"`
+	PropertiesWithHistory map[string][]PropertyHistory              `json:"propertiesWithHistory,omitempty"`
+	CreatedAt             time.Time                                 `json:"createdAt"`
+	UpdatedAt             time.Time                                 `json:"updatedAt"`
+	Archived              bool                                      `json:"archived"`
+	Associations          map[string]associationsmodels.Association `json:"associations"`
+}
+
+type PropertyHistory struct {
+	Value      string    `json:"value"`
+	Timestamp  time.Time `json:"timestamp"`
+	SourceType string    `json:"sourceType"`
 }
 
 type ListResponse struct {
