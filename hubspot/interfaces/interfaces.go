@@ -12,6 +12,7 @@ import (
 	ownersmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/owners"
 	pipelinemodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/pipelines"
 	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
+	schemasmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/schemas"
 	taskmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/tasks"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
 	graphqlmodels "github.com/karman-digital/hubspot/hubspot/api/models/graphql"
@@ -108,6 +109,10 @@ type Properties interface {
 
 type Pipelines interface {
 	GetPipelines(objectType string, archived bool) (pipelinemodels.ListResponse, error)
+}
+
+type Schemas interface {
+	GetSchema(objectType string) (schemasmodels.Schema, error)
 }
 
 type CommunicationPreferences interface {
