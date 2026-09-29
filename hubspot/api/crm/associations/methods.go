@@ -20,7 +20,7 @@ func (c *AssociationService) CreateDefaultAssociation(fromObject, toObject strin
 	var associationResp crmmodels.BatchResponse
 	resp, err := c.SendRequest(
 		http.MethodPut,
-		fmt.Sprintf("/crm/v4/objects/%s/%d/associations/default/%s/%d", fromObject, fromId, toObject, toId),
+		fmt.Sprintf("/crm/objects/2026-09/%s/%d/associations/default/%s/%d", fromObject, fromId, toObject, toId),
 		nil,
 	)
 	if err != nil {
@@ -46,7 +46,7 @@ func (c *AssociationService) GetAssociations(fromObject, toObject string, id int
 	var association associationsmodels.AssociationGetResponse
 	resp, err := c.SendRequest(
 		http.MethodGet,
-		fmt.Sprintf("/crm/v4/objects/%s/%d/associations/%s", fromObject, id, toObject),
+		fmt.Sprintf("/crm/objects/2026-09/%s/%d/associations/%s", fromObject, id, toObject),
 		nil,
 		opts...,
 	)
@@ -76,7 +76,7 @@ func (c *AssociationService) BatchCreateDefaultAssociations(fromObject, toObject
 	}
 	resp, err := c.SendRequest(
 		http.MethodPost,
-		fmt.Sprintf("/crm/v4/associations/%s/%s/batch/associate/default", fromObject, toObject),
+		fmt.Sprintf("/crm/associations/2026-09/%s/%s/batch/associate/default", fromObject, toObject),
 		reqBody,
 	)
 	if err != nil {
@@ -108,7 +108,7 @@ func (c *AssociationService) BatchGetAssociations(fromObject, toObject string, b
 	}
 	resp, err := c.SendRequest(
 		http.MethodPost,
-		fmt.Sprintf("/crm/v4/associations/%s/%s/batch/read", fromObject, toObject),
+		fmt.Sprintf("/crm/associations/2026-09/%s/%s/batch/read", fromObject, toObject),
 		reqBody,
 	)
 	if err != nil {
@@ -265,7 +265,7 @@ func (c *AssociationService) BatchCreateAssociations(fromObject, toObject string
 	}
 	resp, err := c.SendRequest(
 		http.MethodPost,
-		fmt.Sprintf("/crm/v4/associations/%s/%s/batch/create", fromObject, toObject),
+		fmt.Sprintf("/crm/associations/2026-09/%s/%s/batch/create", fromObject, toObject),
 		reqBody,
 	)
 	if err != nil {
@@ -294,7 +294,7 @@ func (c *AssociationService) CreateAssociation(fromObject, toObject, fromObjectT
 	}
 	resp, err := c.SendRequest(
 		http.MethodPut,
-		fmt.Sprintf("/crm/v4/objects/%s/%s/associations/%s/%s", fromObjectType, fromObject, toObjectType, toObject),
+		fmt.Sprintf("/crm/objects/2026-09/%s/%s/associations/%s/%s", fromObjectType, fromObject, toObjectType, toObject),
 		reqBody,
 	)
 	if err != nil {
@@ -322,7 +322,7 @@ func (c *AssociationService) BatchArchiveAssociationLabels(fromObject, toObject 
 	}
 	resp, err := c.SendRequest(
 		http.MethodPost,
-		fmt.Sprintf("/crm/v4/associations/%s/%s/batch/labels/archive", fromObject, toObject),
+		fmt.Sprintf("/crm/associations/2026-09/%s/%s/batch/labels/archive", fromObject, toObject),
 		reqBody,
 	)
 	if err != nil {

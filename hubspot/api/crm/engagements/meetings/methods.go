@@ -10,7 +10,7 @@ import (
 )
 
 func (e *MeetingsService) GetMeeting(id string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	resp, err := e.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/meetings/%s", id), nil, opts...)
+	resp, err := e.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/meetings/%s", id), nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}

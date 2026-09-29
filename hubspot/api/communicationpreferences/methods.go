@@ -3,155 +3,105 @@ package communicationpreferences
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
+	"net/url"
 
-	"github.com/hashicorp/go-retryablehttp"
 	communicationmodels "github.com/karman-digital/hubspot/hubspot/api/models/communicationpreferences"
-	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
 	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
+const (
+	communicationChannelEmail = "EMAIL"
+	statusSubscribed          = "SUBSCRIBED"
+	statusUnsubscribed        = "UNSUBSCRIBED"
+)
+
 func (c *CommunicationPreferencesService) GetCommunicationPreferences() (communicationmodels.CommunicationPreferencesResponse, error) {
-	var communicationPreferencesResp communicationmodels.CommunicationPreferencesResponse
-	reqUrl := "https://api.hubapi.com/communication-preferences/v3/definitions"
-	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
+	var result communicationmodels.CommunicationPreferencesResponse
+	resp, err := c.SendRequest(http.MethodGet, "/communication-preferences/2026-09/definitions", nil)
 	if err != nil {
-		return communicationPreferencesResp, fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return communicationPreferencesResp, fmt.Errorf("error making request: %s", err)
+		return result, fmt.Errorf("get communication preference definitions: %w", err)
 	}
 	defer resp.Body.Close()
-	communicationPreferencesRawBody, err := io.ReadAll(resp.Body)
+
+	rawBody, err := shared.HandleBasicResponseCode(resp)
 	if err != nil {
-		return communicationPreferencesResp, fmt.Errorf("error reading body: %s", err)
+		return result, err
 	}
-	if resp.StatusCode != 200 {
-		return communicationPreferencesResp, fmt.Errorf("error returned by endpoint: %s", communicationPreferencesRawBody)
+	if err := json.Unmarshal(rawBody, &result); err != nil {
+		return result, fmt.Errorf("decode communication preference definitions: %w", err)
 	}
-	err = json.Unmarshal(communicationPreferencesRawBody, &communicationPreferencesResp)
-	if err != nil {
-		return communicationPreferencesResp, fmt.Errorf("error parsing body: %s", err)
-	}
-	return communicationPreferencesResp, nil
+	return result, nil
 }
 
-func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
-	reqUrl := "https://api.hubapi.com/communication-preferences/v3/unsubscribe"
-	reqBody := communicationmodels.CommunicationPreferencesPostBody{
-		EmailAddress:   contactEmail,
-		SubscriptionId: fmt.Sprintf("%d", subscriptionId),
+func (c *CommunicationPreferencesService) UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionID int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
+	body := communicationmodels.CommunicationPreferencesPostBody{
+		Channel:        communicationChannelEmail,
+		StatusState:    statusUnsubscribed,
+		SubscriptionID: int64(subscriptionID),
 	}
 	if len(legalOptions) > 0 {
-		reqBody.CommunicationLegalBasis = legalOptions[0]
+		body.CommunicationLegalBasis = legalOptions[0]
 	}
-	reqBodyJson, err := json.Marshal(reqBody)
-	if err != nil {
-		return fmt.Errorf("error marshalling post body: %s", err)
-	}
-	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBodyJson)
-	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return fmt.Errorf("error making request: %s", err)
-	}
-	defer resp.Body.Close()
-	unsubscribeRawBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("error reading body: %s", err)
-	}
-	if resp.StatusCode != http.StatusOK {
-		if resp.StatusCode == http.StatusBadRequest {
-			var errBody sharedmodels.ErrorResponseBody
-			err = json.Unmarshal(unsubscribeRawBody, &errBody)
-			if err != nil {
-				return fmt.Errorf("error parsing error body: %s", err)
-			}
-			return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
-		}
-		return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
-	}
-	return nil
+	_, err := c.SetCommunicationPreferenceStatus(contactEmail, body)
+	return err
 }
 
-func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
-	reqUrl := "https://api.hubapi.com/communication-preferences/v3/subscribe"
-	reqBody := communicationmodels.CommunicationPreferencesPostBody{
-		EmailAddress:   contactEmail,
-		SubscriptionId: fmt.Sprintf("%d", subscriptionId),
+func (c *CommunicationPreferencesService) SubscribeToCommunicationPreference(contactEmail string, subscriptionID int, legalOptions ...communicationmodels.CommunicationLegalBasis) error {
+	body := communicationmodels.CommunicationPreferencesPostBody{
+		Channel:        communicationChannelEmail,
+		StatusState:    statusSubscribed,
+		SubscriptionID: int64(subscriptionID),
 	}
 	if len(legalOptions) > 0 {
-		reqBody.CommunicationLegalBasis = legalOptions[0]
+		body.CommunicationLegalBasis = legalOptions[0]
 	}
-	reqBodyJson, err := json.Marshal(reqBody)
+	_, err := c.SetCommunicationPreferenceStatus(contactEmail, body)
+	return err
+}
+
+// SetCommunicationPreferenceStatus exposes the 2026-09 status contract directly.
+// The subscribe and unsubscribe helpers remain convenience wrappers for callers
+// that only need success or failure.
+func (c *CommunicationPreferencesService) SetCommunicationPreferenceStatus(contactEmail string, body communicationmodels.CommunicationPreferencesPostBody) (communicationmodels.CommunicationPreferenceStatusResponse, error) {
+	var result communicationmodels.CommunicationPreferenceStatusResponse
+	reqBody, err := json.Marshal(body)
 	if err != nil {
-		return fmt.Errorf("error marshalling post body: %s", err)
+		return result, fmt.Errorf("marshal communication preference status: %w", err)
 	}
-	req, err := retryablehttp.NewRequest("POST", reqUrl, reqBodyJson)
+
+	path := fmt.Sprintf("/communication-preferences/2026-09/statuses/%s", url.PathEscape(contactEmail))
+	resp, err := c.SendRequest(http.MethodPost, path, reqBody)
 	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return fmt.Errorf("error making request: %s", err)
+		return result, fmt.Errorf("set communication preference status: %w", err)
 	}
 	defer resp.Body.Close()
-	unsubscribeRawBody, err := io.ReadAll(resp.Body)
+
+	rawBody, err := shared.HandleBasicResponseCode(resp)
 	if err != nil {
-		return fmt.Errorf("error reading body: %s", err)
+		return result, err
 	}
-	if resp.StatusCode != http.StatusOK {
-		if resp.StatusCode == http.StatusBadRequest {
-			var errBody sharedmodels.ErrorResponseBody
-			err = json.Unmarshal(unsubscribeRawBody, &errBody)
-			if err != nil {
-				return fmt.Errorf("error parsing error body: %s", err)
-			}
-			if errBody.Category == "VALIDATION_ERROR" {
-				return shared.ErrSubscriptionAlreadySubscribed
-			} else {
-				return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
-			}
-		}
-		return fmt.Errorf("error returned by endpoint: %s", unsubscribeRawBody)
+	if err := json.Unmarshal(rawBody, &result); err != nil {
+		return result, fmt.Errorf("decode communication preference status: %w", err)
 	}
-	return nil
+	return result, nil
 }
 
 func (c *CommunicationPreferencesService) GetCommunicationPreferenceStatus(contactEmail string) (communicationmodels.CommunicationPreferenceStatusResponse, error) {
-	var communicationPreferenceStatus communicationmodels.CommunicationPreferenceStatusResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/communication-preferences/v3/status/email/%s", contactEmail)
-	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
+	var result communicationmodels.CommunicationPreferenceStatusResponse
+	path := fmt.Sprintf("/communication-preferences/2026-09/statuses/%s?channel=%s", url.PathEscape(contactEmail), communicationChannelEmail)
+	resp, err := c.SendRequest(http.MethodGet, path, nil)
 	if err != nil {
-		return communicationPreferenceStatus, fmt.Errorf("error creating request: %s", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken()))
-	resp, err := c.Client().Do(req)
-	if err != nil {
-		return communicationPreferenceStatus, fmt.Errorf("error making request: %s", err)
+		return result, fmt.Errorf("get communication preference status: %w", err)
 	}
 	defer resp.Body.Close()
-	communicationPreferenceStatusRawBody, err := io.ReadAll(resp.Body)
+
+	rawBody, err := shared.HandleBasicResponseCode(resp)
 	if err != nil {
-		return communicationPreferenceStatus, fmt.Errorf("error reading body: %s", err)
+		return result, err
 	}
-	if resp.StatusCode != 200 {
-		return communicationPreferenceStatus, fmt.Errorf("error returned by endpoint: %s", communicationPreferenceStatusRawBody)
+	if err := json.Unmarshal(rawBody, &result); err != nil {
+		return result, fmt.Errorf("decode communication preference status: %w", err)
 	}
-	err = json.Unmarshal(communicationPreferenceStatusRawBody, &communicationPreferenceStatus)
-	if err != nil {
-		return communicationPreferenceStatus, fmt.Errorf("error parsing body: %s", err)
-	}
-	return communicationPreferenceStatus, nil
+	return result, nil
 }

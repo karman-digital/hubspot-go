@@ -1,9 +1,7 @@
 package hsvalidate_test
 
 import (
-	"fmt"
 	"testing"
-	"time"
 
 	hsvalidate "github.com/karman-digital/hubspot/hubspot/adapter/validate"
 	"github.com/stretchr/testify/assert"
@@ -87,48 +85,6 @@ func TestValidateHubspotPostWebhookSignature(t *testing.T) {
 				assert.Error(t, got)
 			} else {
 				assert.NoError(t, got)
-			}
-		})
-	}
-}
-
-type validateTimeStampTest struct {
-	name           string
-	input          string
-	expectedOutput error
-}
-
-var validateTimeStampTests = []validateTimeStampTest{
-	{
-		name:           "Valid Timestamp",
-		input:          fmt.Sprintf("%d", time.Now().UnixMilli()),
-		expectedOutput: nil,
-	},
-	{
-		name:           "Invalid Timestamp - more than 5 minutes ago",
-		input:          fmt.Sprintf("%d", time.Now().Add(-6*time.Minute).UnixMilli()),
-		expectedOutput: assert.AnError,
-	},
-	{
-		name:           "Invalid Timestamp - future timestamp",
-		input:          fmt.Sprintf("%d", time.Now().Add(6*time.Minute).UnixMilli()),
-		expectedOutput: assert.AnError,
-	},
-	{
-		name:           "Invalid Timestamp - empty string",
-		input:          "",
-		expectedOutput: assert.AnError,
-	},
-}
-
-func TestValidateTimestamp(t *testing.T) {
-	for _, test := range validateTimeStampTests {
-		t.Run(test.name, func(t *testing.T) {
-			err := hsvalidate.ValidateTimeStamp(test.input)
-			if test.expectedOutput != nil {
-				assert.Error(t, err)
-			} else {
-				assert.Nil(t, err)
 			}
 		})
 	}

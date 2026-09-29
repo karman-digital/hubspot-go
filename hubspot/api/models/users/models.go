@@ -9,5 +9,7 @@ type UserBody struct {
 	PrimaryTeamId    string   `json:"primaryTeamId,omitempty"`
 	SendWelcomeEmail bool     `json:"sendWelcomeEmail"`
 	RoleId           string   `json:"roleId,omitempty"`
+	RoleIds          []string `json:"roleIds,omitempty"`
+	SeatNames        []string `json:"seatNames,omitempty"`
 	SecondaryTeamIds []string `json:"secondaryTeamIds,omitempty"`
 }

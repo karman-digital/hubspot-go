@@ -22,7 +22,7 @@ func (f *FilesService) ImportFileViaUrl(body filesmodels.FileImportBody) (filesm
 	if err != nil {
 		return filesmodels.FileUploadResult{}, err
 	}
-	resp, err := f.SendRequest("POST", "/files/v3/files/import-from-url/async", reqBody)
+	resp, err := f.SendRequest("POST", "/files/2026-09/files/import-from-url/async", reqBody)
 	if err != nil {
 		return filesmodels.FileUploadResult{}, err
 	}
@@ -43,7 +43,7 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (filesmodel
 		if checkCount == 0 {
 			time.Sleep(10 * time.Second)
 		}
-		resp, err = f.SendRequest("GET", fmt.Sprintf("/files/v3/files/import-from-url/async/tasks/%s/status", taskId), nil)
+		resp, err = f.SendRequest("GET", fmt.Sprintf("/files/2026-09/files/import-from-url/async/tasks/%s/status", taskId), nil)
 		if err != nil {
 			return filesmodels.FileUploadResult{}, err
 		}
@@ -71,7 +71,7 @@ func (f *FilesService) handleFileUploadResponse(resp *http.Response) (filesmodel
 }
 
 func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...filesmodels.SignedUrlOptions) (filesmodels.SignedUrlResponse, error) {
-	endpoint := fmt.Sprintf("/files/v3/files/%s/signed-url", fileId)
+	endpoint := fmt.Sprintf("/files/2026-09/files/%s/signed-url", fileId)
 	if len(signedUrlOptions) > 0 {
 		queryParams := url.Values{}
 		if signedUrlOptions[0].ExpirationSeconds > 0 {
@@ -104,7 +104,7 @@ func (f *FilesService) GetSignedUrl(fileId string, signedUrlOptions ...filesmode
 func (f *FilesService) GetFileByPath(filePath string, properties ...[]string) (filesmodels.FileStatResponse, error) {
 	encodedPath := url.QueryEscape(filePath)
 	endpoint := fmt.Sprintf("/files/v3/files/stat/%s", encodedPath)
-	
+
 	if len(properties) > 0 && len(properties[0]) > 0 {
 		queryParams := url.Values{}
 		for _, property := range properties[0] {
@@ -112,7 +112,7 @@ func (f *FilesService) GetFileByPath(filePath string, properties ...[]string) (f
 		}
 		endpoint += "?" + queryParams.Encode()
 	}
-	
+
 	resp, err := f.SendRequest("GET", endpoint, nil)
 	if err != nil {
 		return filesmodels.FileStatResponse{}, err
@@ -175,7 +175,7 @@ func (f *FilesService) UploadFile(fileName string, fileContent []byte, opts ...f
 	if err != nil {
 		return filesmodels.FileUploadResult{}, err
 	}
-	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/v3/files", body)
+	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/files/2026-09/files", body)
 	if err != nil {
 		return filesmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
 	}
@@ -249,7 +249,7 @@ func (f *FilesService) UpdateFile(fileId string, fileName string, fileContent []
 	if err != nil {
 		return filesmodels.FileUploadResult{}, err
 	}
-	req, err := retryablehttp.NewRequest("PUT", fmt.Sprintf("https://api.hubapi.com/files/v3/files/%s", fileId), body)
+	req, err := retryablehttp.NewRequest("PUT", fmt.Sprintf("https://api.hubapi.com/files/2026-09/files/%s", fileId), body)
 	if err != nil {
 		return filesmodels.FileUploadResult{}, fmt.Errorf("error creating request: %s", err)
 	}

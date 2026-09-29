@@ -14,7 +14,7 @@ import (
 
 func (c *BatchDealService) BatchUpdate(body crmmodels.BatchUpdateBody) (crmmodels.BatchResponse, error) {
 	var dealResp crmmodels.BatchResponse
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/update"
+	reqUrl := "https://api.hubapi.com/crm/objects/2026-09/deals/batch/update"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -54,7 +54,7 @@ func (c *BatchDealService) BatchUpdate(body crmmodels.BatchUpdateBody) (crmmodel
 
 func (c *BatchDealService) BatchCreate(body crmmodels.BatchCreateBody) (crmmodels.BatchResponse, error) {
 	var dealResp crmmodels.BatchResponse
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/create"
+	reqUrl := "https://api.hubapi.com/crm/objects/2026-09/deals/batch/create"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -94,7 +94,7 @@ func (c *BatchDealService) BatchCreate(body crmmodels.BatchCreateBody) (crmmodel
 
 func (c *BatchDealService) BatchGet(body crmmodels.BatchGetBody) (crmmodels.BatchResponse, error) {
 	var dealResp crmmodels.BatchResponse
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/batch/read"
+	reqUrl := "https://api.hubapi.com/crm/objects/2026-09/deals/batch/read"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return dealResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -137,7 +137,7 @@ func (c *BatchDealService) BatchDelete(body crmmodels.BatchDeleteBody) error {
 	if err != nil {
 		return fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, "/crm/v3/objects/deals/batch/archive", reqBody)
+	resp, err := c.SendRequest(http.MethodPost, "/crm/objects/2026-09/deals/batch/archive", reqBody)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}

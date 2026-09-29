@@ -13,7 +13,7 @@ import (
 
 func (service *PipelineService) GetPipelines(objectType string, archived bool) (pipelinemodels.ListResponse, error) {
 	var responseBody pipelinemodels.ListResponse
-	response, err := service.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/pipelines/%s", url.PathEscape(objectType)), nil, sharedmodels.GetOptions{Archived: archived})
+	response, err := service.SendRequest(http.MethodGet, fmt.Sprintf("/crm/pipelines/2026-09/%s", url.PathEscape(objectType)), nil, sharedmodels.GetOptions{Archived: archived})
 	if err != nil {
 		return responseBody, err
 	}

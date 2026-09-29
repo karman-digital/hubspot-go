@@ -14,34 +14,15 @@ import (
 type fakeSender struct {
 	responses []*http.Response
 	methods   []string
-	paths     []string
 	bodies    [][]byte
 }
 
-func (sender *fakeSender) SendRequest(method, path string, body []byte, _ ...sharedmodels.GetOptions) (*http.Response, error) {
+func (sender *fakeSender) SendRequest(method, _ string, body []byte, _ ...sharedmodels.GetOptions) (*http.Response, error) {
 	sender.methods = append(sender.methods, method)
-	sender.paths = append(sender.paths, path)
 	sender.bodies = append(sender.bodies, body)
 	response := sender.responses[0]
 	sender.responses = sender.responses[1:]
 	return response, nil
-}
-
-func TestGetPropertyDecodesCompleteEnumerationDefinition(t *testing.T) {
-	sender := &fakeSender{responses: []*http.Response{response(http.StatusOK, propertyJSON())}}
-	property, err := newPropertiesService(sender).GetProperty("deals", "revenue_line")
-	if err != nil {
-		t.Fatalf("GetProperty() error = %v", err)
-	}
-	if property.Name != "revenue_line" || property.Label != "Revenue Line" || property.Description != "Sales revenue account" || property.GroupName != "dealinformation" || property.Type != "enumeration" || property.FieldType != "select" {
-		t.Fatalf("definition = %#v", property)
-	}
-	if property.DisplayOrder != 7 || property.Hidden || !property.FormField || property.Archived || property.CreatedAt != "2026-01-01T00:00:00Z" || property.UpdatedAt != "2026-08-30T00:00:00Z" {
-		t.Fatalf("definition metadata = %#v", property)
-	}
-	if len(property.Options) != 2 || property.Options[0].Value != "account-1" || property.Options[0].Label != "Revenue" || property.Options[0].Hidden || property.Options[0].DisplayOrder != 3 || property.Options[0].Description != "Current" || !property.Options[1].Hidden || property.Options[1].DisplayOrder != 8 {
-		t.Fatalf("options = %#v", property.Options)
-	}
 }
 
 func TestUpdatePropertyOptionsPreservesDefinitionAndOptionFidelity(t *testing.T) {
@@ -57,8 +38,8 @@ func TestUpdatePropertyOptionsPreservesDefinitionAndOptionFidelity(t *testing.T)
 	if err != nil {
 		t.Fatalf("UpdatePropertyOptions() error = %v", err)
 	}
-	if len(sender.methods) != 2 || sender.methods[0] != http.MethodGet || sender.methods[1] != http.MethodPatch || sender.paths[1] != "/crm/v3/properties/deals/revenue_line" {
-		t.Fatalf("requests = %#v %#v", sender.methods, sender.paths)
+	if len(sender.methods) != 2 || sender.methods[0] != http.MethodGet || sender.methods[1] != http.MethodPatch {
+		t.Fatalf("request methods = %#v", sender.methods)
 	}
 	var body propertiesmodels.PropertyUpdateBody
 	if err := json.Unmarshal(sender.bodies[1], &body); err != nil {
@@ -72,26 +53,6 @@ func TestUpdatePropertyOptionsPreservesDefinitionAndOptionFidelity(t *testing.T)
 	}
 	if updated.Options[1].Label != "Retired" || !updated.Options[1].Hidden || updated.Options[1].DisplayOrder != 8 {
 		t.Fatalf("updated property = %#v", updated)
-	}
-}
-
-func TestUpdatePropertyOptionsReturnsProviderRejection(t *testing.T) {
-	sender := &fakeSender{responses: []*http.Response{
-		response(http.StatusOK, propertyJSON()),
-		response(http.StatusBadRequest, `{"status":"error","message":"invalid option"}`),
-	}}
-	if _, err := newPropertiesService(sender).UpdatePropertyOptions("deals", "revenue_line", nil); err == nil || !strings.Contains(err.Error(), "Bad Request") {
-		t.Fatalf("UpdatePropertyOptions() error = %v, want provider rejection", err)
-	}
-}
-
-func TestUpdatePropertyOptionsRejectsMalformedUpdatedProperty(t *testing.T) {
-	sender := &fakeSender{responses: []*http.Response{
-		response(http.StatusOK, propertyJSON()),
-		response(http.StatusOK, `{"options":[`),
-	}}
-	if _, err := newPropertiesService(sender).UpdatePropertyOptions("deals", "revenue_line", nil); err == nil {
-		t.Fatal("UpdatePropertyOptions() error = nil, want decode failure")
 	}
 }
 

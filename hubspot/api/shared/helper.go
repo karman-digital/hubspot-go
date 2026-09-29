@@ -10,8 +10,8 @@ import (
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	listsmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/lists"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
-	campaignassetsmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/campaigns/assets"
 	campaignmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/campaigns"
+	campaignassetsmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/campaigns/assets"
 	emailanalyticscampaignmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emailanalytics/campaigns"
 	emailanalyticseventsmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emailanalytics/events"
 	emailmodels "github.com/karman-digital/hubspot/hubspot/api/models/marketing/emails"
@@ -288,24 +288,14 @@ func HandleCampaignResponse(resp *http.Response) (campaignResp campaignmodels.Ca
 }
 
 func HandleCampaignAssetsResponse(resp *http.Response) (assetsResp campaignassetsmodels.CampaignAssetsResponse, err error) {
-	fmt.Printf("HandleCampaignAssetsResponse - HTTP Status Code: %d\n", resp.StatusCode)
 	rawBody, err := handleBasicResponseCode(resp)
 	if err != nil {
-		fmt.Printf("HandleCampaignAssetsResponse - Error from handleBasicResponseCode: %v\n", err)
 		return assetsResp, err
-	}
-	fmt.Printf("HandleCampaignAssetsResponse - Raw body length: %d bytes\n", len(rawBody))
-	if len(rawBody) > 0 && len(rawBody) < 2000 {
-		fmt.Printf("HandleCampaignAssetsResponse - Raw body: %s\n", string(rawBody))
-	} else if len(rawBody) > 0 {
-		fmt.Printf("HandleCampaignAssetsResponse - Raw body (first 500 chars): %s\n", string(rawBody[:500]))
 	}
 	err = json.Unmarshal(rawBody, &assetsResp)
 	if err != nil {
-		fmt.Printf("HandleCampaignAssetsResponse - JSON unmarshal error: %v\n", err)
 		return assetsResp, fmt.Errorf("error parsing body: %s", err)
 	}
-	fmt.Printf("HandleCampaignAssetsResponse - Parsed successfully, Results count: %d\n", len(assetsResp.Results))
 	return assetsResp, nil
 }
 

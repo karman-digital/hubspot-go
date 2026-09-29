@@ -10,7 +10,7 @@ import (
 )
 
 func (h *HubDBService) GetTableRow(tableId, rowId string) (hubdbmodels.HubDBRowResponse, error) {
-	resp, err := h.SendRequest(http.MethodGet, fmt.Sprintf("/cms/v3/hubdb/tables/%s/rows/%s", tableId, rowId), nil)
+	resp, err := h.SendRequest(http.MethodGet, fmt.Sprintf("/cms/hubdb/2026-09/tables/%s/rows/%s", tableId, rowId), nil)
 	if err != nil {
 		return hubdbmodels.HubDBRowResponse{}, fmt.Errorf("error making request: %s", err)
 	}

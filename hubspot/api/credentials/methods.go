@@ -14,42 +14,46 @@ import (
 	authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 )
 
-func GenerateTokenPair(code string, clientId string, clientSecret string, redirectURI string) (authmodels.TokenBody, error) {
-	resBodyStruct := authmodels.TokenBody{}
+const (
+	oauthTokenURL      = "https://api.hubapi.com/oauth/2026-09/token"
+	oauthIntrospectURL = "https://api.hubapi.com/oauth/2026-09/token/introspect"
+	accessTokenHint    = "access_token"
+)
+
+func GenerateTokenPair(code string, clientID string, clientSecret string, redirectURI string) (authmodels.TokenBody, error) {
+	result := authmodels.TokenBody{}
 	data := url.Values{}
 	data.Set("grant_type", "authorization_code")
 	data.Set("code", code)
-	data.Set("client_id", clientId)
+	data.Set("client_id", clientID)
 	data.Set("client_secret", clientSecret)
 	data.Set("redirect_uri", redirectURI)
-	req, err := http.NewRequest(http.MethodPost, "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
+
+	req, err := http.NewRequest(http.MethodPost, oauthTokenURL, strings.NewReader(data.Encode()))
 	if err != nil {
-		return resBodyStruct, err
+		return result, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	client := http.Client{
-		Timeout: 30 * time.Second,
-	}
-	res, err := client.Do(req)
+	res, err := (&http.Client{Timeout: 30 * time.Second}).Do(req)
 	if err != nil {
-		return resBodyStruct, err
+		return result, err
 	}
+	defer res.Body.Close()
+
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		return resBodyStruct, err
+		return result, err
 	}
-	if res.StatusCode != 200 {
-		return resBodyStruct, errors.New(string(resBody))
+	if res.StatusCode != http.StatusOK {
+		return result, oauthResponseError(res.StatusCode, resBody)
 	}
-	err = json.Unmarshal(resBody, &resBodyStruct)
-	if err != nil {
-		return resBodyStruct, err
+	if err := json.Unmarshal(resBody, &result); err != nil {
+		return result, err
 	}
-	return resBodyStruct, nil
+	return result, nil
 }
 
 func (c *Credentials) RefreshTokenPair() error {
-	tokenBody := authmodels.TokenBody{}
 	data := url.Values{
 		"grant_type":    []string{"refresh_token"},
 		"redirect_uri":  []string{c.RedirectUri().String()},
@@ -57,26 +61,27 @@ func (c *Credentials) RefreshTokenPair() error {
 		"client_secret": []string{c.ClientSecret().String()},
 		"refresh_token": []string{c.RefreshToken().String()},
 	}
-	req, err := retryablehttp.NewRequest("POST", "https://api.hubapi.com/oauth/v1/token", strings.NewReader(data.Encode()))
+	req, err := retryablehttp.NewRequest(http.MethodPost, oauthTokenURL, strings.NewReader(data.Encode()))
 	if err != nil {
-		return fmt.Errorf("error creating request: %s", err)
+		return fmt.Errorf("create refresh request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := c.Client().Do(req)
 	if err != nil {
-		return fmt.Errorf("error making post request: %s", err)
+		return fmt.Errorf("refresh token: %w", err)
 	}
 	defer resp.Body.Close()
-	tokenRawBody, err := io.ReadAll(resp.Body)
+
+	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("error reading body: %s", err)
+		return fmt.Errorf("read refresh response: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("error returned by endpoint: %s", tokenRawBody)
+		return oauthResponseError(resp.StatusCode, rawBody)
 	}
-	err = json.Unmarshal(tokenRawBody, &tokenBody)
-	if err != nil {
-		return fmt.Errorf("error parsing body: %s", err)
+	var tokenBody authmodels.TokenBody
+	if err := json.Unmarshal(rawBody, &tokenBody); err != nil {
+		return fmt.Errorf("decode refresh response: %w", err)
 	}
 	return c.SetTokens(tokenBody.AccessToken, tokenBody.RefreshToken)
 }
@@ -92,42 +97,70 @@ func (c *Credentials) SetTokens(accessToken authmodels.AccessToken, refreshToken
 }
 
 func (c *Credentials) ValidateBearerToken() (bool, error) {
-	resBodyStruct := authmodels.BearerTokenBody{}
-	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", c.AccessToken().String()))
+	result, err := c.GetBearerTokenData(c.AccessToken().String(), accessTokenHint)
 	if err != nil {
 		return false, err
 	}
-	defer res.Body.Close()
-	resBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return false, err
-	}
-	err = json.Unmarshal(resBody, &resBodyStruct)
-	if err != nil {
-		return false, err
-	}
-	if res.StatusCode != 200 || resBodyStruct.ExpiresIn < 150 {
-		return false, nil
-	}
-	return true, nil
+	return result.Active && result.ExpiresIn >= 150, nil
 }
 
-func GetBearerTokenData(bearerToken string) (authmodels.BearerTokenBody, error) {
-	resBodyStruct := authmodels.BearerTokenBody{}
-	res, err := http.Get(fmt.Sprintf("https://api.hubapi.com/oauth/v1/access-tokens/%s", bearerToken))
+// GetBearerTokenData introspects a token using the client credentials held by
+// this Credentials instance. tokenTypeHint must be access_token or refresh_token.
+func (c *Credentials) GetBearerTokenData(token string, tokenTypeHint string) (authmodels.TokenInfoResponse, error) {
+	return introspectToken(c.Client(), token, c.ClientId().String(), c.ClientSecret().String(), tokenTypeHint)
+}
+
+// GetBearerTokenData introspects a token when no Credentials instance is
+// available. Client credentials are required by the 2026-09 endpoint.
+func GetBearerTokenData(token string, clientID string, clientSecret string, tokenTypeHint string) (authmodels.TokenInfoResponse, error) {
+	client := retryablehttp.NewClient()
+	client.Logger = nil
+	return introspectToken(client, token, clientID, clientSecret, tokenTypeHint)
+}
+
+func introspectToken(client *retryablehttp.Client, token string, clientID string, clientSecret string, tokenTypeHint string) (authmodels.TokenInfoResponse, error) {
+	var result authmodels.TokenInfoResponse
+	if client == nil {
+		return result, errors.New("oauth client is required")
+	}
+	data := url.Values{}
+	data.Set("client_id", clientID)
+	data.Set("client_secret", clientSecret)
+	data.Set("token", token)
+	data.Set("token_type_hint", tokenTypeHint)
+	req, err := retryablehttp.NewRequest(http.MethodPost, oauthIntrospectURL, strings.NewReader(data.Encode()))
 	if err != nil {
-		return resBodyStruct, err
+		return result, fmt.Errorf("create token introspection request: %w", err)
 	}
-	resBody, err := io.ReadAll(res.Body)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := client.Do(req)
 	if err != nil {
-		return resBodyStruct, err
+		return result, fmt.Errorf("introspect token: %w", err)
 	}
-	if res.StatusCode != 200 {
-		return resBodyStruct, errors.New(string(resBody))
-	}
-	err = json.Unmarshal(resBody, &resBodyStruct)
+	defer resp.Body.Close()
+
+	rawBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return resBodyStruct, err
+		return result, fmt.Errorf("read token introspection response: %w", err)
 	}
-	return resBodyStruct, nil
+	if resp.StatusCode != http.StatusOK {
+		return result, oauthResponseError(resp.StatusCode, rawBody)
+	}
+	if err := json.Unmarshal(rawBody, &result); err != nil {
+		return result, fmt.Errorf("decode token introspection response: %w", err)
+	}
+	return result, nil
+}
+
+func oauthResponseError(statusCode int, rawBody []byte) error {
+	var response authmodels.OAuthErrorResponse
+	if err := json.Unmarshal(rawBody, &response); err == nil {
+		if response.Error != "" || response.ErrorDescription != "" {
+			return fmt.Errorf("oauth request returned %d: %s: %s", statusCode, response.Error, response.ErrorDescription)
+		}
+		if response.Message != "" {
+			return fmt.Errorf("oauth request returned %d: %s", statusCode, response.Message)
+		}
+	}
+	return fmt.Errorf("oauth request returned %d", statusCode)
 }

@@ -15,7 +15,7 @@ func (s *LineItemsService) CreateLineItem(body crmmodels.PostBody) (crmmodels.Re
 	if err != nil {
 		return crmmodels.Result{}, err
 	}
-	resp, err := s.SendRequest(http.MethodPost, "/crm/v3/objects/line_items", reqBody)
+	resp, err := s.SendRequest(http.MethodPost, "/crm/objects/2026-09/line_items", reqBody)
 	if err != nil {
 		return crmmodels.Result{}, err
 	}
@@ -27,7 +27,7 @@ func (s *LineItemsService) UpdateLineItem(id int, patchBody crmmodels.PatchBody)
 	if err != nil {
 		return crmmodels.Result{}, err
 	}
-	resp, err := s.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/objects/line_items/%d", id), reqBody)
+	resp, err := s.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/objects/2026-09/line_items/%d", id), reqBody)
 	if err != nil {
 		return crmmodels.Result{}, err
 	}
@@ -35,7 +35,7 @@ func (s *LineItemsService) UpdateLineItem(id int, patchBody crmmodels.PatchBody)
 }
 
 func (s *LineItemsService) GetLineItem(id int, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	resp, err := s.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/line_items/%d", id), nil, opts...)
+	resp, err := s.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/line_items/%d", id), nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, err
 	}

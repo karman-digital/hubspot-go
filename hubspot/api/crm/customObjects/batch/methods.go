@@ -18,7 +18,7 @@ func (c *BatchCustomObjectService) BatchUpsert(body crmmodels.BatchUpsertBody, o
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %w", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/objects/%s/batch/upsert", url.PathEscape(objectType)), reqBody)
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/objects/2026-09/%s/batch/upsert", url.PathEscape(objectType)), reqBody)
 	if err != nil {
 		return crmmodels.BatchResponse{}, err
 	}
@@ -28,7 +28,7 @@ func (c *BatchCustomObjectService) BatchUpsert(body crmmodels.BatchUpsertBody, o
 
 func (c *BatchCustomObjectService) BatchUpdate(body crmmodels.BatchUpdateBody, objectType string) (crmmodels.BatchResponse, error) {
 	var batchResp crmmodels.BatchResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/update", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/batch/update", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -68,7 +68,7 @@ func (c *BatchCustomObjectService) BatchUpdate(body crmmodels.BatchUpdateBody, o
 
 func (c *BatchCustomObjectService) BatchCreate(body crmmodels.BatchCreateBody, objectType string) (crmmodels.BatchResponse, error) {
 	var batchResp crmmodels.BatchResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/create", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/batch/create", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -108,7 +108,7 @@ func (c *BatchCustomObjectService) BatchCreate(body crmmodels.BatchCreateBody, o
 
 func (c *BatchCustomObjectService) BatchGet(body crmmodels.BatchGetBody, objectType string) (crmmodels.BatchResponse, error) {
 	var batchResp crmmodels.BatchResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/batch/read", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/batch/read", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return batchResp, fmt.Errorf("error marshalling post body: %s", err)
@@ -151,7 +151,7 @@ func (c *BatchCustomObjectService) BatchDelete(body crmmodels.BatchDeleteBody, o
 	if err != nil {
 		return fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/objects/%s/batch/archive", objectType), reqBody)
+	resp, err := c.SendRequest(http.MethodPost, fmt.Sprintf("/crm/objects/2026-09/%s/batch/archive", objectType), reqBody)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}

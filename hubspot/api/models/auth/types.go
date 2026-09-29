@@ -61,23 +61,60 @@ func (r *RedirectUri) Set(s string) {
 
 type TokenBody struct {
 	AccessToken  AccessToken  `json:"access_token"`
-	ExpiresIn    int          `json:"expires_in"`
+	ExpiresIn    int64        `json:"expires_in"`
 	RefreshToken RefreshToken `json:"refresh_token"`
 	TokenType    string       `json:"token_type"`
+	TokenUse     string       `json:"token_use"`
 	IDToken      string       `json:"id_token"`
+	HubID        int          `json:"hub_id"`
+	UserID       int          `json:"user_id"`
+	Scopes       []string     `json:"scopes"`
 }
 
-type BearerTokenBody struct {
-	Token                     string   `json:"token"`
-	User                      string   `json:"user"`
-	HubDomain                 string   `json:"hub_domain"`
-	Scopes                    []string `json:"scopes"`
-	ScopeToScopeGroupPks      []string `json:"scope_to_scope_group_pks"`
-	TrialScopes               []string `json:"trial_scopes"`
-	TrialScopeToScopeGroupPks []string `json:"trial_scope_to_scope_group_pks"`
-	HubID                     int      `json:"hub_id"`
-	AppID                     int      `json:"app_id"`
-	ExpiresIn                 int      `json:"expires_in"`
-	UserID                    int      `json:"user_id"`
-	TokenType                 string   `json:"token_type"`
+type TokenInfoResponse struct {
+	Active                bool               `json:"active"`
+	AppID                 int                `json:"app_id"`
+	ClientID              string             `json:"client_id"`
+	ExpiresIn             int64              `json:"expires_in"`
+	HubDomain             string             `json:"hub_domain"`
+	HubID                 int                `json:"hub_id"`
+	IsPrivateDistribution bool               `json:"is_private_distribution"`
+	Scopes                []string           `json:"scopes"`
+	SignedAccessToken     *SignedAccessToken `json:"signed_access_token,omitempty"`
+	Token                 string             `json:"token"`
+	TokenType             string             `json:"token_type"`
+	TokenUse              string             `json:"token_use"`
+	User                  string             `json:"user"`
+	UserID                int                `json:"user_id"`
 }
+
+type SignedAccessToken struct {
+	AppID                     int    `json:"appId"`
+	AppInstallID              string `json:"appInstallId"`
+	Audience                  string `json:"audience"`
+	ExpiresAt                 int64  `json:"expiresAt"`
+	HubID                     int    `json:"hubId"`
+	Hublet                    string `json:"hublet"`
+	InstallingUserID          int    `json:"installingUserId"`
+	IsPrivateDistribution     bool   `json:"isPrivateDistribution"`
+	IsServiceAccount          bool   `json:"isServiceAccount"`
+	IsUserLevel               bool   `json:"isUserLevel"`
+	NewSignature              string `json:"newSignature"`
+	ScopeToScopeGroupPKs      string `json:"scopeToScopeGroupPks"`
+	Scopes                    string `json:"scopes"`
+	Signature                 string `json:"signature"`
+	TrialScopeToScopeGroupPKs string `json:"trialScopeToScopeGroupPks"`
+	TrialScopes               string `json:"trialScopes"`
+	UserID                    int    `json:"userId"`
+}
+
+type OAuthErrorResponse struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
+	Status           string `json:"status"`
+	Message          string `json:"message"`
+}
+
+// BearerTokenBody is retained as an alias while callers migrate to the dated
+// token introspection model.
+type BearerTokenBody = TokenInfoResponse

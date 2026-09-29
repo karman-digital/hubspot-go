@@ -36,7 +36,7 @@ func (c *OwnerService) GetAllOwners() ([]ownersmodels.Owner, error) {
 
 func (c *OwnerService) GetOwners(opts ...ownersmodels.GetOwnersOptions) (ownersmodels.OwnerResponse, error) {
 	ownerResponse := ownersmodels.OwnerResponse{}
-	reqUrl := "https://api.hubapi.com/crm/v3/owners"
+	reqUrl := "https://api.hubapi.com/crm/owners/2026-09"
 	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
 	if err != nil {
 		return ownerResponse, err
@@ -82,7 +82,7 @@ func (c *OwnerService) GetOwners(opts ...ownersmodels.GetOwnersOptions) (ownersm
 
 func (c *OwnerService) GetOwner(id int) (ownersmodels.Owner, error) {
 	owner := ownersmodels.Owner{}
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/owners/%d", id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/owners/2026-09/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, strings.NewReader(""))
 	if err != nil {
 		return owner, err

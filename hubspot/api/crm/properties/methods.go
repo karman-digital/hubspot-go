@@ -15,7 +15,7 @@ func (c *PropertiesService) CreatePropertyGroup(propertyGroup propertiesmodels.P
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s/groups", objectType), reqBody)
+	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/properties/2026-09/%s/groups", objectType), reqBody)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData prope
 	if err != nil {
 		return fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/v3/properties/%s", objectType), reqBody)
+	resp, err := c.sender.SendRequest(http.MethodPost, fmt.Sprintf("/crm/properties/2026-09/%s", objectType), reqBody)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (c *PropertiesService) CreateProperty(objectType string, propertyData prope
 }
 
 func (c *PropertiesService) GetProperty(objectType string, propertyName string) (propertiesmodels.PropertyResponse, error) {
-	resp, err := c.sender.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), nil)
+	resp, err := c.sender.SendRequest(http.MethodGet, fmt.Sprintf("/crm/properties/2026-09/%s/%s", objectType, propertyName), nil)
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, err
 	}
@@ -82,7 +82,7 @@ func (c *PropertiesService) UpdateProperty(objectType string, propertyName strin
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
+	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/properties/2026-09/%s/%s", objectType, propertyName), body)
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, err
 	}
@@ -121,7 +121,7 @@ func (c *PropertiesService) UpdatePropertyOptions(objectType, propertyName strin
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, fmt.Errorf("error marshalling body: %s", err)
 	}
-	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/properties/%s/%s", objectType, propertyName), body)
+	resp, err := c.sender.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/properties/2026-09/%s/%s", objectType, propertyName), body)
 	if err != nil {
 		return propertiesmodels.PropertyResponse{}, err
 	}

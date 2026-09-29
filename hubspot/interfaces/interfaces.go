@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
 	blogmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/blogs"
 	blogtagmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/blogtags"
 	hubdbmodels "github.com/karman-digital/hubspot/hubspot/api/models/cms/hubdb"
@@ -23,6 +24,7 @@ import (
 type Auth interface {
 	RefreshTokenPair() error
 	ValidateBearerToken() (bool, error)
+	GetBearerTokenData(token string, tokenTypeHint string) (authmodels.TokenInfoResponse, error)
 }
 
 type Associations interface {
@@ -120,6 +122,7 @@ type CommunicationPreferences interface {
 	GetCommunicationPreferences() (communicationmodels.CommunicationPreferencesResponse, error)
 	UnsubscribeFromCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error
 	SubscribeToCommunicationPreference(contactEmail string, subscriptionId int, legalOptions ...communicationmodels.CommunicationLegalBasis) error
+	SetCommunicationPreferenceStatus(contactEmail string, body communicationmodels.CommunicationPreferencesPostBody) (communicationmodels.CommunicationPreferenceStatusResponse, error)
 	GetCommunicationPreferenceStatus(contactEmail string) (communicationmodels.CommunicationPreferenceStatusResponse, error)
 }
 

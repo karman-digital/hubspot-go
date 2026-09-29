@@ -15,7 +15,7 @@ import (
 
 func (c *DealService) CreateDeal(body crmmodels.PostBody) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals"
+	reqUrl := "https://api.hubapi.com/crm/objects/2026-09/deals"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling post body: %s", err)
@@ -47,7 +47,7 @@ func (c *DealService) CreateDeal(body crmmodels.PostBody) (crmmodels.Result, err
 
 func (c *DealService) UpdateDeal(id int, patchBody crmmodels.PatchBody) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/deals/%d", id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/deals/%d", id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling patch body: %s", err)
@@ -79,7 +79,7 @@ func (c *DealService) UpdateDeal(id int, patchBody crmmodels.PatchBody) (crmmode
 
 func (c *DealService) SearchDeals(body crmmodels.SearchBody) (crmmodels.SearchResponse, error) {
 	var respStruct crmmodels.SearchResponse
-	reqUrl := "https://api.hubapi.com/crm/v3/objects/deals/search"
+	reqUrl := "https://api.hubapi.com/crm/objects/2026-09/deals/search"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling search body: %s", err)
@@ -111,7 +111,7 @@ func (c *DealService) SearchDeals(body crmmodels.SearchBody) (crmmodels.SearchRe
 
 func (c *DealService) GetDeal(id int, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/deals/%d", id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/deals/%d", id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)
@@ -160,7 +160,7 @@ func (c *DealService) GetDeal(id int, opts ...sharedmodels.GetOptions) (crmmodel
 }
 
 func (c *DealService) DeleteDeal(id int) (err error) {
-	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/deals/%d", id), nil)
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/objects/2026-09/deals/%d", id), nil)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}
@@ -168,18 +168,18 @@ func (c *DealService) DeleteDeal(id int) (err error) {
 }
 
 func (c *DealService) GetDealByUniqueProperty(value string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	if opts[0].IdProperty == "" {
+	if len(opts) == 0 || opts[0].IdProperty == "" {
 		return crmmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
 	}
-	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/deals/%s", value), nil, opts...)
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/deals/%s", url.PathEscape(value)), nil, opts...)
 	if err != nil {
-		return shared.HandleError(resp, err)
+		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
 	return shared.HandleResponse(resp)
 }
 
 func (c *DealService) GetDeals(opts ...sharedmodels.GetOptions) (crmmodels.ListResponse, error) {
-	resp, err := c.SendRequest(http.MethodGet, "/crm/v3/objects/deals", nil, opts...)
+	resp, err := c.SendRequest(http.MethodGet, "/crm/objects/2026-09/deals", nil, opts...)
 	if err != nil {
 		return crmmodels.ListResponse{}, fmt.Errorf("error making request: %s", err)
 	}

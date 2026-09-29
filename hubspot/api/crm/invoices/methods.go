@@ -135,9 +135,9 @@ func (s *Service) RemoveInvoiceAssociation(invoiceID, objectType, objectID strin
 
 func invoicePath(id string) string {
 	if id == "" {
-		return "/crm/v3/objects/invoices"
+		return "/crm/objects/2026-09/invoices"
 	}
-	return "/crm/v3/objects/invoices/" + id
+	return "/crm/objects/2026-09/invoices/" + id
 }
 
 func invoiceSearchPath() string {
@@ -145,11 +145,11 @@ func invoiceSearchPath() string {
 }
 
 func invoiceCompanyAssociationsPath(invoiceID string) string {
-	return "/crm/v4/objects/invoices/" + invoiceID + "/associations/companies"
+	return "/crm/objects/2026-09/invoices/" + invoiceID + "/associations/companies"
 }
 
 func invoiceCompanyAssociationPath(invoiceID, companyID string) string {
-	return "/crm/v4/objects/invoices/" + invoiceID + "/associations/default/companies/" + companyID
+	return "/crm/objects/2026-09/invoices/" + invoiceID + "/associations/default/companies/" + companyID
 }
 
 func invoiceCompanyAssociationDeletePath(invoiceID, companyID string) string {
@@ -157,7 +157,7 @@ func invoiceCompanyAssociationDeletePath(invoiceID, companyID string) string {
 }
 
 func invoiceAssociationsPath(invoiceID, objectType string) string {
-	return "/crm/v4/objects/invoices/" + invoiceID + "/associations/" + objectType
+	return "/crm/objects/2026-09/invoices/" + invoiceID + "/associations/" + objectType
 }
 
 func invoiceAssociationPath(invoiceID, objectType, objectID string) string {

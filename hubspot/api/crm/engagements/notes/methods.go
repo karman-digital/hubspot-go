@@ -24,7 +24,7 @@ func (n *NotesService) CreateNoteWithAssociations(noteBody notemodels.NotePostBo
 	if err != nil {
 		return notesResp, err
 	}
-	resp, err := n.SendRequest(http.MethodPost, "/crm/v3/objects/notes", reqBody)
+	resp, err := n.SendRequest(http.MethodPost, "/crm/objects/2026-09/notes", reqBody)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -32,7 +32,7 @@ func (n *NotesService) CreateNoteWithAssociations(noteBody notemodels.NotePostBo
 }
 
 func (n *NotesService) GetNote(noteId string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	resp, err := n.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/notes/%s", noteId), nil, opts...)
+	resp, err := n.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/notes/%s", noteId), nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}

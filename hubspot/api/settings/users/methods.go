@@ -14,7 +14,7 @@ func (u *UsersService) Create(body usermodels.UserBody) (usermodels.UserBody, er
 	if err != nil {
 		return usermodels.UserBody{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := u.SendRequest(http.MethodPost, "/settings/v3/users", reqBody)
+	resp, err := u.SendRequest(http.MethodPost, "/settings/users/2026-09", reqBody)
 	if err != nil {
 		return usermodels.UserBody{}, fmt.Errorf("error making request: %s", err)
 	}

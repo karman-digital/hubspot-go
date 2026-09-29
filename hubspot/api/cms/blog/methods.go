@@ -30,7 +30,7 @@ func (b *BlogService) GetAllBlogPosts(opts blogmodels.BlogFilterOptions) (blogmo
 	if opts.State != "" {
 		queryParams.Add("state", opts.State)
 	}
-	path := "/cms/v3/blogs/posts"
+	path := "/cms/blogs/2026-09/posts"
 	if encoded := queryParams.Encode(); encoded != "" {
 		path = fmt.Sprintf("%s?%s", path, encoded)
 	}

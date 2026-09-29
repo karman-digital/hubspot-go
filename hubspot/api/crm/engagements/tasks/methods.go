@@ -23,7 +23,7 @@ func (t *TasksService) CreateTaskWithAssociations(taskBody taskmodels.TaskPostBo
 	if err != nil {
 		return tasksResp, err
 	}
-	resp, err := t.SendRequest(http.MethodPost, "/crm/v3/objects/tasks", reqBody)
+	resp, err := t.SendRequest(http.MethodPost, "/crm/objects/2026-09/tasks", reqBody)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}

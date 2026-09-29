@@ -16,7 +16,7 @@ import (
 
 func (c *CustomObjectService) CreateCustomObject(body crmmodels.PostBody, objectType string) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling post body: %s", err)
@@ -59,7 +59,7 @@ func (c *CustomObjectService) CreateCustomObject(body crmmodels.PostBody, object
 
 func (c *CustomObjectService) UpdateCustomObject(id int, patchBody crmmodels.PatchBody, objectType string) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%d", objectType, id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/%d", objectType, id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling patch body: %s", err)
@@ -94,7 +94,7 @@ func (c *CustomObjectService) UpdateCustomObjectByUniqueId(id, idProperty string
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error marshalling patch body: %s", err)
 	}
-	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/v3/objects/%s/%s?idProperty=%s", objectType, id, idProperty), reqBody)
+	resp, err := c.SendRequest(http.MethodPatch, fmt.Sprintf("/crm/objects/2026-09/%s/%s?idProperty=%s", objectType, id, idProperty), reqBody)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -103,7 +103,7 @@ func (c *CustomObjectService) UpdateCustomObjectByUniqueId(id, idProperty string
 
 func (c *CustomObjectService) SearchCustomObjects(body crmmodels.SearchBody, objectType string) (crmmodels.SearchResponse, error) {
 	var respStruct crmmodels.SearchResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/search", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/search", objectType)
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return respStruct, fmt.Errorf("error marshalling search body: %s", err)
@@ -135,7 +135,7 @@ func (c *CustomObjectService) SearchCustomObjects(body crmmodels.SearchBody, obj
 
 func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%d", objectType, id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/%d", objectType, id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)
@@ -185,7 +185,7 @@ func (c *CustomObjectService) GetCustomObject(id int, objectType string, opts ..
 
 func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectType string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
 	var respStruct crmmodels.Result
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s/%s", objectType, id)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s/%s", objectType, id)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)
@@ -241,7 +241,7 @@ func (c *CustomObjectService) GetCustomObjectByUniqueProperty(id string, objectT
 
 func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...sharedmodels.GetOptions) (crmmodels.ListResponse, error) {
 	var respStruct crmmodels.ListResponse
-	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/v3/objects/%s", objectType)
+	reqUrl := fmt.Sprintf("https://api.hubapi.com/crm/objects/2026-09/%s", objectType)
 	req, err := retryablehttp.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return respStruct, fmt.Errorf("error creating request: %s", err)
@@ -296,7 +296,7 @@ func (c *CustomObjectService) GetCustomObjects(objectType string, opts ...shared
 }
 
 func (c *CustomObjectService) DeleteCustomObject(id int, objectType string) (err error) {
-	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/%s/%d", objectType, id), nil)
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/objects/2026-09/%s/%d", objectType, id), nil)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}

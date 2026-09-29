@@ -14,7 +14,7 @@ func (s *BlogTagsService) GetBatchBlogTags(opts blogtagmodels.BlogTagsBatchInput
 	if err != nil {
 		return blogtagmodels.BatchBlogTagResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := s.SendRequest(http.MethodPost, "/cms/v3/blogs/tags/batch/read", reqBody)
+	resp, err := s.SendRequest(http.MethodPost, "/cms/blogs/2026-09/tags/batch/read", reqBody)
 	if err != nil {
 		return blogtagmodels.BatchBlogTagResponse{}, fmt.Errorf("error making request: %s", err)
 	}

@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	schemasmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/schemas"
 )
 
 func (s *SchemaService) GetSchema(objectType string) (schemasmodels.Schema, error) {
-	response, err := s.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/schemas/%s", objectType), nil)
+	response, err := s.SendRequest(http.MethodGet, fmt.Sprintf("/crm-object-schemas/2026-09/schemas/%s", url.PathEscape(objectType)), nil)
 	if err != nil {
 		return schemasmodels.Schema{}, fmt.Errorf("error getting schema: %w", err)
 	}

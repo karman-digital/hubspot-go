@@ -13,7 +13,7 @@ import (
 )
 
 func (c *CampaignService) GetCampaigns(opts ...sharedmodels.GetOptions) (campaignmodels.CampaignsResponse, error) {
-	reqUrl := "/marketing/v3/campaigns"
+	reqUrl := "/marketing/campaigns/2026-09"
 	resp, err := c.SendRequest(http.MethodGet, reqUrl, nil, opts...)
 	if err != nil {
 		return campaignmodels.CampaignsResponse{}, fmt.Errorf("error creating request: %s", err)
@@ -22,28 +22,17 @@ func (c *CampaignService) GetCampaigns(opts ...sharedmodels.GetOptions) (campaig
 }
 
 func (c *CampaignService) GetCampaignAssets(campaignGuid string, assetType string, opts ...sharedmodels.GetOptions) (campaignassetsmodels.CampaignAssetsResponse, error) {
-	reqUrl := fmt.Sprintf("/marketing/v3/campaigns/%s/assets/%s", campaignGuid, assetType)
-	fmt.Printf("CampaignService.GetCampaignAssets - Request URL: %s\n", reqUrl)
+	reqUrl := fmt.Sprintf("/marketing/campaigns/2026-09/%s/assets/%s", campaignGuid, assetType)
 
 	resp, err := c.SendRequest(http.MethodGet, reqUrl, nil, opts...)
 	if err != nil {
-		fmt.Printf("CampaignService.GetCampaignAssets - SendRequest error: %v\n", err)
 		return campaignassetsmodels.CampaignAssetsResponse{}, fmt.Errorf("error creating request: %s", err)
 	}
-
-	// Add logging before calling the handler
-	fmt.Printf("CampaignService.GetCampaignAssets - Response received, Status: %d\n", resp.StatusCode)
-	fmt.Printf("CampaignService.GetCampaignAssets - About to call HandleCampaignAssetsResponse\n")
-
-	result, err := shared.HandleCampaignAssetsResponse(resp)
-
-	fmt.Printf("CampaignService.GetCampaignAssets - HandleCampaignAssetsResponse completed, err=%v, results=%d\n", err, len(result.Results))
-
-	return result, err
+	return shared.HandleCampaignAssetsResponse(resp)
 }
 
 func (c *CampaignService) PatchCampaign(campaignGuid string, properties crmmodels.Properties) (campaignmodels.Campaign, error) {
-	reqUrl := fmt.Sprintf("/marketing/v3/campaigns/%s", campaignGuid)
+	reqUrl := fmt.Sprintf("/marketing/campaigns/2026-09/%s", campaignGuid)
 
 	reqBody := map[string]interface{}{
 		"properties": properties,

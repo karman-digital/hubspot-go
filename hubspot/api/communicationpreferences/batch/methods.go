@@ -14,7 +14,7 @@ func (b *BatchCommunicationPreferencesService) BatchUpdateCommunicationPreferenc
 	if err != nil {
 		return communicationmodels.BatchCommunicationPreferencesResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/communication-preferences/v4/statuses/batch/write", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/communication-preferences/2026-09/statuses/batch/write", reqBody)
 	if err != nil {
 		return communicationmodels.BatchCommunicationPreferencesResponse{}, fmt.Errorf("error making request: %s", err)
 	}

@@ -14,7 +14,7 @@ func (b *BatchProductService) BatchUpdate(body crmmodels.BatchUpdateBody) (crmmo
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/products/batch/update", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/objects/2026-09/products/batch/update", reqBody)
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -26,7 +26,7 @@ func (b *BatchProductService) BatchCreate(body crmmodels.BatchCreateBody) (crmmo
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/products/batch/create", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/objects/2026-09/products/batch/create", reqBody)
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -38,7 +38,7 @@ func (b *BatchProductService) BatchGet(body crmmodels.BatchGetBody) (crmmodels.B
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/products/batch/read", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/objects/2026-09/products/batch/read", reqBody)
 	if err != nil {
 		return crmmodels.BatchResponse{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -50,7 +50,7 @@ func (b *BatchProductService) BatchDelete(body crmmodels.BatchDeleteBody) error 
 	if err != nil {
 		return fmt.Errorf("error marshalling post body: %s", err)
 	}
-	resp, err := b.SendRequest(http.MethodPost, "/crm/v3/objects/products/batch/archive", reqBody)
+	resp, err := b.SendRequest(http.MethodPost, "/crm/objects/2026-09/products/batch/archive", reqBody)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}

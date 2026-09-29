@@ -10,7 +10,7 @@ import (
 )
 
 func (c *CallsService) GetCall(id string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/calls/%s", id), nil, opts...)
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/calls/%s", id), nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}

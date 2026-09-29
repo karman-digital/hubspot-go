@@ -9,11 +9,10 @@ import (
 )
 
 func (e *MarketingEmailService) GetMarketingEmail(emailId string) (emailmodels.MarketingEmail, error) {
-	reqUrl := fmt.Sprintf("/marketing/v3/emails/%s", emailId)
+	reqUrl := fmt.Sprintf("/marketing/emails/2026-09/%s", emailId)
 	resp, err := e.SendRequest(http.MethodGet, reqUrl, nil)
 	if err != nil {
 		return emailmodels.MarketingEmail{}, fmt.Errorf("error creating request: %s", err)
 	}
 	return shared.HandleMarketingEmailResponse(resp)
 }
-

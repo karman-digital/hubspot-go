@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	crmmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
@@ -11,7 +12,7 @@ import (
 )
 
 func (c *ContactService) CreateContact(body crmmodels.PostBody) (crmmodels.Result, error) {
-	reqUrl := "/crm/v3/objects/contacts"
+	reqUrl := "/crm/objects/2026-09/contacts"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error marshalling post body: %s", err)
@@ -24,7 +25,7 @@ func (c *ContactService) CreateContact(body crmmodels.PostBody) (crmmodels.Resul
 }
 
 func (c *ContactService) UpdateContact(id int, patchBody crmmodels.PatchBody) (crmmodels.Result, error) {
-	reqUrl := fmt.Sprintf("/crm/v3/objects/contacts/%d", id)
+	reqUrl := fmt.Sprintf("/crm/objects/2026-09/contacts/%d", id)
 	reqBody, err := json.Marshal(patchBody)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error marshalling patch body: %s", err)
@@ -37,7 +38,7 @@ func (c *ContactService) UpdateContact(id int, patchBody crmmodels.PatchBody) (c
 }
 
 func (c *ContactService) SearchContacts(body crmmodels.SearchBody) (crmmodels.SearchResponse, error) {
-	reqUrl := "/crm/v3/objects/contacts/search"
+	reqUrl := "/crm/objects/2026-09/contacts/search"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return crmmodels.SearchResponse{}, fmt.Errorf("error marshalling search body: %s", err)
@@ -50,7 +51,7 @@ func (c *ContactService) SearchContacts(body crmmodels.SearchBody) (crmmodels.Se
 }
 
 func (c *ContactService) GetContact(id int, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	reqUrl := fmt.Sprintf("/crm/v3/objects/contacts/%d", id)
+	reqUrl := fmt.Sprintf("/crm/objects/2026-09/contacts/%d", id)
 	resp, err := c.SendRequest(http.MethodGet, reqUrl, nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error creating request: %s", err)
@@ -59,10 +60,10 @@ func (c *ContactService) GetContact(id int, opts ...sharedmodels.GetOptions) (cr
 }
 
 func (c *ContactService) GetContactByUniqueProperty(value string, opts ...sharedmodels.GetOptions) (crmmodels.Result, error) {
-	if opts[0].IdProperty == "" {
+	if len(opts) == 0 || opts[0].IdProperty == "" {
 		return crmmodels.Result{}, fmt.Errorf("idProperty must be set for unique property search")
 	}
-	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/v3/objects/contacts/%s", value), nil, opts...)
+	resp, err := c.SendRequest(http.MethodGet, fmt.Sprintf("/crm/objects/2026-09/contacts/%s", url.PathEscape(value)), nil, opts...)
 	if err != nil {
 		return crmmodels.Result{}, fmt.Errorf("error making request: %s", err)
 	}
@@ -70,7 +71,7 @@ func (c *ContactService) GetContactByUniqueProperty(value string, opts ...shared
 }
 
 func (c *ContactService) DeleteContact(id int) (err error) {
-	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/v3/objects/contacts/%d", id), nil)
+	resp, err := c.SendRequest(http.MethodDelete, fmt.Sprintf("/crm/objects/2026-09/contacts/%d", id), nil)
 	if err != nil {
 		return fmt.Errorf("error making request: %s", err)
 	}
