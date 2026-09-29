@@ -6,13 +6,13 @@ Assessment date: 2026-09-25
 
 Implementation date: 2026-09-29
 
-Target: HubSpot's current GA REST API release, `2026-09`. Beta endpoints are out of scope.
+Target: HubSpot's current documented GA REST API release for each route family. Most families are `2026-09`; CRM Associations and CRM Lists are currently `2026-03`. Beta endpoints are out of scope.
 
 Repository: `github.com/karman-digital/hubspot`
 
 ## Purpose
 
-This document inventories the outbound HubSpot API surface in this package, compares each legacy route family with HubSpot's documented `2026-09` equivalent, and records the resulting implementation. The comparison and live canaries were completed before package code was changed.
+This document inventories the outbound HubSpot API surface in this package, compares each legacy route family with HubSpot's current documented dated equivalent, and records the resulting implementation. The comparison and live canaries were completed before package code was changed.
 
 At assessment start, the repository contained 133 exported functions or methods in `methods.go` files. Some are local orchestration helpers or expose the same HTTP operation, so the tables below group them by remote route contract rather than treating each Go method as a distinct API.
 
@@ -35,7 +35,7 @@ At assessment start, the repository contained 133 exported functions or methods 
 
 ## Implementation record
 
-The package now uses the exact documented `2026-09` routes for every inventoried operation that has a dated equivalent. It deliberately retains Email Analytics v1, Files `stat/{filePath}`, and the unversioned GraphQL collector because no equivalent dated operation was found.
+The package now uses the current documented dated routes for every inventoried operation that has a dated equivalent. Most are `2026-09`; CRM Associations and CRM Lists are documented at `2026-03`. It deliberately retains Email Analytics v1, Files `stat/{filePath}`, and the unversioned GraphQL collector because no equivalent dated operation was found.
 
 The contract migrations were implemented explicitly:
 
@@ -48,6 +48,10 @@ The contract migrations were implemented explicitly:
 - Campaign asset response-body debug logging was removed.
 
 The package remains portal-agnostic. CRM property maps and Communication Preferences legal-basis fields are serialized from caller input without portal-specific defaults. HubSpot remains responsible for validating the target portal's configuration.
+
+### Final post-merge documentation audit
+
+On 2026-09-29, every implemented route family was checked again against HubSpot's current Developer documentation. That audit found two accepted-but-undocumented `2026-09` aliases in the initial implementation: generic CRM Associations and CRM Lists. Both are documented at `2026-03`, so the package was corrected to those exact routes. Invoice-specific association operations remain on their separately documented `2026-09` invoice routes. No other route-family mismatch was found.
 
 ## Executive findings
 
@@ -64,7 +68,7 @@ The package remains portal-agnostic. CRM property maps and Communication Prefere
 
 Verification date: 2026-09-25
 
-All dated CRM results in this section use the exact documented route layout, `/crm/objects/2026-09/...`. HubSpot also accepted the alternate layout `/crm/2026-09/objects/...`, but that undocumented alias is not the migration target and must not be used in the package.
+The original live canaries used the dated routes available to the portal at the time. A final documentation audit after merge found that generic CRM Associations and CRM Lists are currently documented at `2026-03`, while the other dated CRM object families are documented at `2026-09`. HubSpot accepted undocumented aliases during the canaries, but accepted runtime aliases are not used as the package contract.
 
 ### Authentication and scopes
 
@@ -135,7 +139,7 @@ Other live write details:
 
 ### Associations and metadata
 
-Single default and typed associations, batch default creation, batch typed creation, batch reads, and batch label archive all passed on v4 and the exact dated association routes. Association result arrays can differ in order; they are equal after sorting their association types by ID.
+Single default and typed associations, batch default creation, batch typed creation, batch reads, and batch label archive all passed on v4 and dated association aliases. The final documentation audit corrected the implementation to HubSpot's documented `2026-03` association routes. Association result arrays can differ in order; they are equal after sorting their association types by ID.
 
 Invoice-company default and typed association create/read/remove flows passed on both route families. The correct live invoice-to-company association type is `179`; the bidirectional default-association response also included reverse type `180`, which is not valid for an invoice-to-company typed request.
 
@@ -218,13 +222,13 @@ Contract notes:
 
 | Go methods covered | Current | Target | Contract result |
 | --- | --- | --- | --- |
-| `CreateDefaultAssociation` | `PUT /crm/v4/objects/{fromType}/{fromId}/associations/default/{toType}/{toId}` | `PUT /crm/objects/2026-09/{fromType}/{fromId}/associations/default/{toType}/{toId}` | URL only |
-| `GetAssociations` | `GET /crm/v4/objects/{fromType}/{fromId}/associations/{toType}` | `GET /crm/objects/2026-09/{fromType}/{fromId}/associations/{toType}` | URL only |
-| `BatchCreateDefaultAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/associate/default` | `POST /crm/associations/2026-09/{fromType}/{toType}/batch/associate/default` | URL only |
-| `BatchGetAssociations`, `BatchGetAllAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/read` | `POST /crm/associations/2026-09/{fromType}/{toType}/batch/read` | URL only; dated API documents up to 1,000 source IDs per read |
-| `BatchCreateAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/create` | `POST /crm/associations/2026-09/{fromType}/{toType}/batch/create` | URL only |
-| `CreateAssociation` | `PUT /crm/v4/objects/{fromType}/{fromId}/associations/{toType}/{toId}` | `PUT /crm/objects/2026-09/{fromType}/{fromId}/associations/{toType}/{toId}` | URL only |
-| `BatchArchiveAssociationLabels` | `POST /crm/v4/associations/{fromType}/{toType}/batch/labels/archive` | `POST /crm/associations/2026-09/{fromType}/{toType}/batch/labels/archive` | URL only |
+| `CreateDefaultAssociation` | `PUT /crm/v4/objects/{fromType}/{fromId}/associations/default/{toType}/{toId}` | `PUT /crm/objects/2026-03/{fromType}/{fromId}/associations/default/{toType}/{toId}` | URL only |
+| `GetAssociations` | `GET /crm/v4/objects/{fromType}/{fromId}/associations/{toType}` | `GET /crm/objects/2026-03/{fromType}/{fromId}/associations/{toType}` | URL only |
+| `BatchCreateDefaultAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/associate/default` | `POST /crm/associations/2026-03/{fromType}/{toType}/batch/associate/default` | URL only |
+| `BatchGetAssociations`, `BatchGetAllAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/read` | `POST /crm/associations/2026-03/{fromType}/{toType}/batch/read` | URL only; dated API documents up to 1,000 source IDs per read |
+| `BatchCreateAssociations` | `POST /crm/v4/associations/{fromType}/{toType}/batch/create` | `POST /crm/associations/2026-03/{fromType}/{toType}/batch/create` | URL only |
+| `CreateAssociation` | `PUT /crm/v4/objects/{fromType}/{fromId}/associations/{toType}/{toId}` | `PUT /crm/objects/2026-03/{fromType}/{fromId}/associations/{toType}/{toId}` | URL only |
+| `BatchArchiveAssociationLabels` | `POST /crm/v4/associations/{fromType}/{toType}/batch/labels/archive` | `POST /crm/associations/2026-03/{fromType}/{toType}/batch/labels/archive` | URL only |
 | Six invoice association methods | The same `/crm/v4/objects/...` association families | The corresponding `/crm/objects/2026-09/...` families | URL only |
 
 ### CRM metadata, owners, and lists
@@ -234,9 +238,9 @@ Contract notes:
 | Properties: group create, property create/get/update | `/crm/v3/properties/{objectType}...` | `/crm/properties/2026-09/{objectType}...` | URL only for package fields |
 | Pipelines: `GetPipelines` | `/crm/v3/pipelines/{objectType}` | `/crm/pipelines/2026-09/{objectType}` | URL only |
 | Owners: `GetOwners`, `GetAllOwners`, `GetOwner` | `/crm/v3/owners...` | `/crm/owners/2026-09...` | URL only |
-| Lists: `SearchLists` | `/crm/v3/lists/search` | `/crm/lists/2026-09/search` | URL only |
-| Lists: `GetLists` | `/crm/v3/lists/?listIds=...` | `/crm/lists/2026-09?listIds=...` | URL only; remove the package's unnecessary trailing slash |
-| Lists: `GetListMemberships` | `/crm/v3/lists/{listId}/memberships` | `/crm/lists/2026-09/{listId}/memberships` | URL only |
+| Lists: `SearchLists` | `/crm/v3/lists/search` | `/crm/lists/2026-03/search` | URL only |
+| Lists: `GetLists` | `/crm/v3/lists/?listIds=...` | `/crm/lists/2026-03?listIds=...` | URL only; remove the package's unnecessary trailing slash |
+| Lists: `GetListMemberships` | `/crm/v3/lists/{listId}/memberships` | `/crm/lists/2026-03/{listId}/memberships` | URL only |
 
 ### OAuth and credentials
 
@@ -335,7 +339,8 @@ These are not reasons to broaden the migration silently, but they affect safe de
 - [Legacy API migration guide](https://developers.hubspot.com/docs/api-reference/legacy/migration-guide)
 - [Developer platform and API versioning](https://developers.hubspot.com/docs/developer-tooling/platform/versioning)
 - [CRM Search API](https://developers.hubspot.com/docs/api-reference/latest/crm/search-the-crm)
-- [CRM associations guide](https://developers.hubspot.com/docs/api-reference/latest/crm/associations/associate-records/guide)
+- [CRM Associations 2026-03 guide](https://developers.hubspot.com/docs/api-reference/2026-03/crm/associations/associate-records/guide)
+- [CRM Lists 2026-03 guide](https://developers.hubspot.com/docs/api-reference/2026-03/crm/lists/guide)
 - [OAuth v1 migration guide](https://developers.hubspot.com/docs/api-reference/legacy/authentication/oauth-tokens/v1/migration-guide)
 - [Communication Preferences guide](https://developers.hubspot.com/docs/api-reference/latest/communication-preferences/guide)
 - [Files API guide](https://developers.hubspot.com/docs/api-reference/latest/files/guide)

@@ -11,7 +11,7 @@ import (
 )
 
 func (l *ListDataService) SearchLists(body listsmodels.SearchListsBody) (listsmodels.SearchListsResponse, error) {
-	reqUrl := "/crm/lists/2026-09/search"
+	reqUrl := "/crm/lists/2026-03/search"
 	reqBody, err := json.Marshal(body)
 	if err != nil {
 		return listsmodels.SearchListsResponse{}, fmt.Errorf("error marshalling search body: %s", err)
@@ -24,7 +24,7 @@ func (l *ListDataService) SearchLists(body listsmodels.SearchListsBody) (listsmo
 }
 
 func (l *ListDataService) GetLists(listIds []string, includeFilters bool) (listsmodels.ListsByIdResponse, error) {
-	reqUrl := "/crm/lists/2026-09"
+	reqUrl := "/crm/lists/2026-03"
 	queryParams := url.Values{}
 	for _, listId := range listIds {
 		queryParams.Add("listIds", listId)

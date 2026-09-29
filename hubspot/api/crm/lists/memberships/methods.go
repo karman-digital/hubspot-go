@@ -11,7 +11,7 @@ import (
 )
 
 func (m *MembershipsService) GetListMemberships(listId string, opts ...sharedmodels.GetOptions) (listsmodels.ListMembershipsResponse, error) {
-	reqUrl := fmt.Sprintf("/crm/lists/2026-09/%s/memberships", listId)
+	reqUrl := fmt.Sprintf("/crm/lists/2026-03/%s/memberships", listId)
 
 	if len(opts) != 0 {
 		queryParams := url.Values{}
