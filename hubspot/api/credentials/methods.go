@@ -12,7 +12,6 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	authmodels "github.com/karman-digital/hubspot/hubspot/api/models/auth"
-	"github.com/karman-digital/hubspot/hubspot/api/shared"
 )
 
 const (
@@ -157,11 +156,11 @@ func oauthResponseError(statusCode int, rawBody []byte) error {
 	var response authmodels.OAuthErrorResponse
 	if err := json.Unmarshal(rawBody, &response); err == nil {
 		if response.Error != "" || response.ErrorDescription != "" {
-			return fmt.Errorf("%w: oauth request returned %d: %s: %s", shared.ErrOAuthAuthentication, statusCode, response.Error, response.ErrorDescription)
+			return fmt.Errorf("oauth request returned %d: %s: %s", statusCode, response.Error, response.ErrorDescription)
 		}
 		if response.Message != "" {
-			return fmt.Errorf("%w: oauth request returned %d: %s", shared.ErrOAuthAuthentication, statusCode, response.Message)
+			return fmt.Errorf("oauth request returned %d: %s", statusCode, response.Message)
 		}
 	}
-	return fmt.Errorf("%w: oauth request returned %d", shared.ErrOAuthAuthentication, statusCode)
+	return fmt.Errorf("oauth request returned %d", statusCode)
 }

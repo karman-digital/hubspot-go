@@ -21,5 +21,3 @@ var ErrSubscriptionAlreadyUnsubscribed = errors.New("subscription already unsubs
 var ErrSubscriptionAlreadySubscribed = errors.New("subscription already subscribed")
 
 var ErrResourceNotFound = errors.New("resource not found")
-
-var ErrOAuthAuthentication = errors.New("oauth authentication failed")
