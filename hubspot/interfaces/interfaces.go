@@ -15,6 +15,7 @@ import (
 	propertiesmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/properties"
 	schemasmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/schemas"
 	taskmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/tasks"
+	transcriptmodels "github.com/karman-digital/hubspot/hubspot/api/models/crm/transcripts"
 	filesmodels "github.com/karman-digital/hubspot/hubspot/api/models/files"
 	graphqlmodels "github.com/karman-digital/hubspot/hubspot/api/models/graphql"
 	sharedmodels "github.com/karman-digital/hubspot/hubspot/api/models/shared"
@@ -215,4 +216,12 @@ type Lists interface {
 	SearchLists(body listsmodels.SearchListsBody) (listsmodels.SearchListsResponse, error)
 	GetLists(listIds []string, includeFilters bool) (listsmodels.ListsByIdResponse, error)
 	GetListMemberships(listId string, opts ...sharedmodels.GetOptions) (listsmodels.ListMembershipsResponse, error)
+}
+
+// Transcripts is the 2027-03-beta native call and meeting transcript API.
+type Transcripts interface {
+	Create(transcriptmodels.CreateRequest) (transcriptmodels.CreateResponse, error)
+	Get(string) (transcriptmodels.Transcript, error)
+	GetBest(string, string) (transcriptmodels.BestResponse, error)
+	Delete(string) error
 }

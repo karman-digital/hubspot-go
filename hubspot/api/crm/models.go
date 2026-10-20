@@ -6,6 +6,7 @@ import (
 )
 
 type CRM struct {
+	Transcripts   interfaces.Transcripts
 	Contacts      interfaces.Contact
 	Owners        interfaces.Owners
 	Properties    interfaces.Properties
