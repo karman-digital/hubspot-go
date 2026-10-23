@@ -68,7 +68,7 @@ func decodeResponse(resp *http.Response, result any) error {
 	defer resp.Body.Close()
 	raw, err := shared.HandleBasicResponseCode(resp)
 	if err != nil {
-		return err
+		return fmt.Errorf("transcript HTTP %d: %w; response=%s", resp.StatusCode, err, raw)
 	}
 	if err := json.Unmarshal(raw, result); err != nil {
 		return fmt.Errorf("decode transcript response: %w", err)

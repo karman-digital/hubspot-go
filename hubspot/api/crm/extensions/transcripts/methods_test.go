@@ -96,3 +96,13 @@ func TestMissingTranscriptRemainsDistinguishableFromOtherFailures(t *testing.T) 
 		t.Fatalf("error=%v", err)
 	}
 }
+
+func TestTranscriptValidationRetainsAPIFieldDetails(t *testing.T) {
+	service := testService(t, func(r *http.Request) (*http.Response, error) {
+		return reply(400, `{"message":"Error validating request.","category":"VALIDATION_ERROR","errors":[{"message":"Invalid email","code":"INVALID_EMAIL","in":"speaker.email"}]}`), nil
+	})
+	_, err := service.Create(models.CreateRequest{})
+	if err == nil || !strings.Contains(err.Error(), "400") || !strings.Contains(err.Error(), "INVALID_EMAIL") || !strings.Contains(err.Error(), "speaker.email") {
+		t.Fatalf("validation detail lost: %v", err)
+	}
+}
