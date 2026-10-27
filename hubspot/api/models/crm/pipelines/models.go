@@ -11,6 +11,7 @@ type Pipeline struct {
 }
 
 type Stage struct {
+	Label    string   `json:"label"`
 	ID       string   `json:"id"`
 	Archived bool     `json:"archived"`
 	Metadata Metadata `json:"metadata"`

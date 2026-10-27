@@ -13,15 +13,16 @@ type OwnerTeam struct {
 }
 
 type Owner struct {
-	ID        string      `json:"id"`
-	Email     string      `json:"email"`
-	FirstName string      `json:"firstName"`
-	LastName  string      `json:"lastName"`
-	UserID    int         `json:"userId"`
-	CreatedAt time.Time   `json:"createdAt"`
-	UpdatedAt time.Time   `json:"updatedAt"`
-	Archived  bool        `json:"archived"`
-	Teams     []OwnerTeam `json:"teams"`
+	ID                      string      `json:"id"`
+	Email                   string      `json:"email"`
+	FirstName               string      `json:"firstName"`
+	LastName                string      `json:"lastName"`
+	UserID                  int         `json:"userId"`
+	UserIDIncludingInactive int         `json:"userIdIncludingInactive"`
+	CreatedAt               time.Time   `json:"createdAt"`
+	UpdatedAt               time.Time   `json:"updatedAt"`
+	Archived                bool        `json:"archived"`
+	Teams                   []OwnerTeam `json:"teams"`
 }
 
 type OwnerResponse struct {
