@@ -188,6 +188,7 @@ type Files interface {
 
 type Users interface {
 	Create(body usermodels.UserBody) (usermodels.UserBody, error)
+	GetByEmail(email string) (usermodels.UserBody, bool, error)
 }
 
 type Blog interface {
